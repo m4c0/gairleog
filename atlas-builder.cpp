@@ -14,7 +14,8 @@ static unsigned next_id = 0;
 static hay<FILE *, fopen, fclose> lsp { "sprites/pixelite2.lsp", "wb" };
 
 static void process(jute::view file) {
-  fputln(lsp, "(def ", file, " ", next_id, ")");
+  auto fid = file.split('/').after.rsplit('.').before;
+  fputln(lsp, "(def ", fid, " ", next_id, ")");
   stbi::load(file, nullptr, [&](auto, auto & img) {
     auto data = reinterpret_cast<const stbi::pixel *>(*img.data);
     // TODO: deal with animations
