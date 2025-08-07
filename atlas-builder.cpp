@@ -1,4 +1,4 @@
-#pragma leco tool
+#pragma leco test
 
 import dotz;
 import jute;
@@ -12,17 +12,22 @@ static unsigned next_id = 0;
 
 static void process(jute::view file) {
   dotz::ivec2 id { next_id % 64, next_id / 64 };
+  auto sp = id * 16;
+
   stbi::load(file, nullptr, [&](auto, auto & img) {
-    auto data = reinterpret_cast<const stbi::pixel *>(&*img.data);
-    auto sp = id * 16;
+    auto data = reinterpret_cast<const stbi::pixel *>(*img.data);
+    // TODO: deal with animations
+    if (img.num_channels != 4) return;
+
     for (auto y = 0; y < 16; y++) {
       auto yp = out + (sp.y + y) * 1024 + sp.x;
-      auto yo = data + y * 16;
-      for (auto x = 0; x < 16; x++) yp[x] = yo[x];
+      auto yo = data + y * img.width;
+      for (auto x = 0; x < 16; x++) {
+        yp[x] = yo[x];
+      }
     }
+    next_id++;
   });
-
-  next_id++;
 }
 
 static void recurse(const char * dir) {
