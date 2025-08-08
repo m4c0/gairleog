@@ -9,6 +9,8 @@ import traits;
 import vinyl;
 import voo;
 
+static constexpr const auto max_sprites = 10240;
+
 struct sprite {
   dotz::vec2 pos;
   dotz::vec2 uv;
@@ -17,7 +19,7 @@ struct sprite {
 struct upc {
   dotz::vec2 grid_pos;
   dotz::vec2 grid_size;
-} g_pc;
+};
 
 struct app_stuff {
   voo::device_and_queue dq { "gairleog", casein::native_ptr };
@@ -35,15 +37,20 @@ struct app_stuff {
     },
     .bindings {
       voo::one_quad::vertex_input_bind(),
-      //vee::vertex_input_bind_per_instance(sizeof(sprite)),
+      vee::vertex_input_bind_per_instance(sizeof(sprite)),
     },
     .attributes {
       voo::one_quad::vertex_attribute(0),
-      //vee::vertex_attribute_vec2(1, traits::offset_of(&sprite::pos)),
-      //vee::vertex_attribute_vec2(1, traits::offset_of(&sprite::uv)),
+      vee::vertex_attribute_vec2(1, traits::offset_of(&sprite::pos)),
+      vee::vertex_attribute_vec2(1, traits::offset_of(&sprite::uv)),
     },
   });
   voo::one_quad oq { dq };
+  voo::bound_buffer buf = voo::bound_buffer::create_from_host(
+      dq.physical_device(),
+      max_sprites * sizeof(sprite),
+      vee::buffer_usage::vertex_buffer);
+  unsigned count {};
 } * g_as;
 
 struct ext_stuff {
@@ -52,7 +59,12 @@ struct ext_stuff {
 
 const int i = [] {
   using namespace vinyl;
-  on(START,  [] { g_as = new app_stuff {}; });
+  on(START,  [] {
+    g_as = new app_stuff {};
+
+    voo::memiter<sprite> m { *g_as->buf.memory, &g_as->count };
+    m += {};
+  });
   on(RESIZE, [] { g_es = new ext_stuff {}; });
   on(FRAME,  [] {
     auto q = g_as->dq.queue();
@@ -62,13 +74,19 @@ const int i = [] {
       auto cb = g_es->sw.command_buffer();
       auto ext = g_es->sw.extent();
 
+      upc pc {
+        .grid_pos {},
+        .grid_size { g_es->sw.aspect(), 1.0f },
+      };
+
       auto rp = g_es->sw.cmd_render_pass();
       vee::cmd_set_viewport(cb, ext);
       vee::cmd_set_scissor(cb, ext);
       vee::cmd_bind_gr_pipeline(cb, *g_as->ppl);
       vee::cmd_bind_descriptor_set(cb, *g_as->pl, 0, g_as->dset.descriptor_set());
-      vee::cmd_push_vertex_constants(cb, *g_as->pl, &g_pc);
-      g_as->oq.run(cb, 0, 1);
+      vee::cmd_push_vertex_constants(cb, *g_as->pl, &pc);
+      vee::cmd_bind_vertex_buffers(cb, 1, *g_as->buf.buffer);
+      g_as->oq.run(cb, 0, g_as->count);
     });
     g_es->sw.queue_present(q);
   });

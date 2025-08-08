@@ -5,10 +5,12 @@ layout(push_constant) uniform upc {
   vec2 grid_size;
 };
 
-layout(location = 0) in vec2 pos;
-//layout(location = 1) in vec2 i_pos;
-//layout(location = 2) in vec2 i_uv;
+layout(location = 0) in vec2 v_pos;
+layout(location = 1) in vec2 pos;
+layout(location = 2) in vec2 uv;
 
 void main() {
-  gl_Position = vec4(pos, 0, 1);
+  vec2 p = (v_pos + pos - grid_pos) / grid_size;
+
+  gl_Position = vec4(p, 0, 1);
 }
