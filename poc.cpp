@@ -35,15 +35,15 @@ struct app_stuff {
     },
     .bindings {
       voo::one_quad::vertex_input_bind(),
-      vee::vertex_input_bind_per_instance(sizeof(sprite)),
+      //vee::vertex_input_bind_per_instance(sizeof(sprite)),
     },
     .attributes {
       voo::one_quad::vertex_attribute(0),
-      vee::vertex_attribute_vec2(1, traits::offset_of(&sprite::pos)),
-      vee::vertex_attribute_vec2(1, traits::offset_of(&sprite::uv)),
+      //vee::vertex_attribute_vec2(1, traits::offset_of(&sprite::pos)),
+      //vee::vertex_attribute_vec2(1, traits::offset_of(&sprite::uv)),
     },
   });
-  voo::one_quad oqr { dq };
+  voo::one_quad oq { dq };
 } * g_as;
 
 struct ext_stuff {
@@ -68,7 +68,7 @@ const int i = [] {
       vee::cmd_bind_gr_pipeline(cb, *g_as->ppl);
       vee::cmd_bind_descriptor_set(cb, *g_as->pl, 0, g_as->dset.descriptor_set());
       vee::cmd_push_vertex_constants(cb, *g_as->pl, &g_pc);
-      g_as->oqr.run(cb, 1);
+      g_as->oq.run(cb, 0, 1);
     });
     g_es->sw.queue_present(q);
   });
