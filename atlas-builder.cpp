@@ -6,12 +6,13 @@ import jute;
 import hay;
 import pprent;
 import print;
+import sysstd;
 import stubby;
 
 static stbi::pixel out[1024 * 1024];
 
 static unsigned next_id = 0;
-static hay<FILE *, fopen, fclose> lsp { "sprites/pixelite2.lsp", "wb" };
+static hay<FILE *, sysstd::fopen, fclose> lsp { "sprites/pixelite2.lsp", "wb" };
 
 static void process(jute::view file) {
   auto fid = file.split('/').after.rsplit('.').before;
