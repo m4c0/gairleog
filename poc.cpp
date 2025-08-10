@@ -85,8 +85,10 @@ const int i = [] {
     m += { .pos { 2, 1 } };
     m += { .uv = uv(217) };
   });
-  on(RESIZE, [] { g_es = new ext_stuff {}; });
+  on(RESIZE, [] { delete g_es; g_es = nullptr; });
   on(FRAME,  [] {
+    if (!g_es) g_es = new ext_stuff {};
+
     auto q = g_as->dq.queue();
 
     g_es->sw.acquire_next_image();
