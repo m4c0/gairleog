@@ -5,6 +5,7 @@
 
 import casein;
 import dotz;
+import sires;
 import traits;
 import vinyl;
 import voo;
@@ -50,6 +51,7 @@ struct app_stuff {
       dq.physical_device(),
       max_sprites * sizeof(sprite),
       vee::buffer_usage::vertex_buffer);
+  voo::bound_image img {};
   unsigned count {};
 } * g_as;
 
@@ -61,6 +63,11 @@ const int i = [] {
   using namespace vinyl;
   on(START,  [] {
     g_as = new app_stuff {};
+
+    auto img = sires::real_path_name("pixelite2.png");
+    voo::load_image(img, g_as->dq.physical_device(), g_as->dq.queue(), &g_as->img, [] {
+      vee::update_descriptor_set(g_as->dset.descriptor_set(), 0, i, *g_as->img.iv);
+    });
 
     voo::memiter<sprite> m { *g_as->buf.memory, &g_as->count };
     m += {};
