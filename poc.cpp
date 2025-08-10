@@ -78,7 +78,8 @@ const int i = [] {
     });
 
     voo::memiter<sprite> m { *g_as->buf.memory, &g_as->count };
-    m += {};
+    m += { .pos { 2, 1 } };
+    m += { .uv { 27, 3 } };
   });
   on(RESIZE, [] { g_es = new ext_stuff {}; });
   on(FRAME,  [] {
@@ -90,8 +91,8 @@ const int i = [] {
       auto ext = g_es->sw.extent();
 
       upc pc {
-        .grid_pos {},
-        .grid_size { g_es->sw.aspect(), 1.0f },
+        .grid_pos { 8 },
+        .grid_size = dotz::vec2 { g_es->sw.aspect(), 1.0f } * 8,
       };
 
       auto rp = g_es->sw.cmd_render_pass({
