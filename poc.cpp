@@ -7,6 +7,7 @@ import casein;
 import dotz;
 import sires;
 import traits;
+import wagen;
 import vinyl;
 import voo;
 
@@ -46,6 +47,13 @@ struct app_stuff {
       vee::vertex_attribute_vec2(1, traits::offset_of(&sprite::uv)),
     },
   });
+  vee::sampler smp = [] {
+    auto info = vee::sampler_create_info {};
+    info.address_mode(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE);
+    info.nearest();
+    info.unnormalizedCoordinates = wagen::vk_true;
+    return vee::create_sampler(info);
+  }();
   voo::one_quad oq { dq };
   voo::bound_buffer buf = voo::bound_buffer::create_from_host(
       dq.physical_device(),
@@ -66,7 +74,7 @@ const int i = [] {
 
     auto img = sires::real_path_name("pixelite2.png");
     voo::load_image(img, g_as->dq.physical_device(), g_as->dq.queue(), &g_as->img, [] {
-      vee::update_descriptor_set(g_as->dset.descriptor_set(), 0, i, *g_as->img.iv);
+      vee::update_descriptor_set(g_as->dset.descriptor_set(), 0, i, *g_as->img.iv, *g_as->smp);
     });
 
     voo::memiter<sprite> m { *g_as->buf.memory, &g_as->count };
