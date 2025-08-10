@@ -67,6 +67,10 @@ struct ext_stuff {
   voo::swapchain_and_stuff sw { g_as->dq, *g_as->rp };
 } * g_es;
 
+[[nodiscard]] constexpr auto uv(unsigned i) {
+  return dotz::ivec2 { i % 64, i / 64 };
+}
+
 const int i = [] {
   using namespace vinyl;
   on(START,  [] {
@@ -79,7 +83,7 @@ const int i = [] {
 
     voo::memiter<sprite> m { *g_as->buf.memory, &g_as->count };
     m += { .pos { 2, 1 } };
-    m += { .uv { 27, 3 } };
+    m += { .uv = uv(217) };
   });
   on(RESIZE, [] { g_es = new ext_stuff {}; });
   on(FRAME,  [] {
