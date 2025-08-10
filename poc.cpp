@@ -79,7 +79,9 @@ const int i = [] {
         .grid_size { g_es->sw.aspect(), 1.0f },
       };
 
-      auto rp = g_es->sw.cmd_render_pass();
+      auto rp = g_es->sw.cmd_render_pass({
+        .clear_colours { vee::clear_colour(0, 0, 0, 1) },
+      });
       vee::cmd_set_viewport(cb, ext);
       vee::cmd_set_scissor(cb, ext);
       vee::cmd_bind_gr_pipeline(cb, *g_as->ppl);
