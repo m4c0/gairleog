@@ -109,8 +109,7 @@ const int i = [] {
     auto lsp = sires::real_path_name("pixelite2.lsp");
     lispy::run(lsp, ctx, [&](auto * node) {
       auto nn = static_cast<const custom_node *>(node);
-      if (!nn->valid) lispy::err(node, "unknown element");
-      sprites[nn->atom] = nn->spr_id;
+      if (nn->valid) sprites[nn->atom] = nn->spr_id;
     });
     lispy::alloc_node = [] -> void * { return nullptr; };
 
