@@ -13,15 +13,25 @@ import v;
   return uv(sprdefs[id] + idx);
 }
 
+static int g_map[8][8] {
+  { 1, 1, 1, 1, 1, 1, 1, 1 },
+  { 1, 0, 0, 0, 1, 0, 0, 1 },
+  { 1, 0, 1, 0, 1, 1, 0, 1 },
+  { 1, 0, 1, 0, 1, 0, 0, 1 },
+  { 1, 1, 1, 0, 0, 0, 0, 1 },
+  { 1, 0, 1, 1, 0, 1, 0, 1 },
+  { 1, 0, 0, 0, 0, 0, 0, 1 },
+  { 1, 1, 1, 1, 1, 1, 1, 1 },
+};
+
 static void on_frame() {
   auto m = v::map_buffer();
-  m += { .pos { 2, 1 }, .uv = uv("environment/walls/brick_clay", 3) };
-  m += { .pos { 2, 2 }, .uv = uv("environment/walls/brick_clay", 14) };
-  m += { .pos { 2, 3 }, .uv = uv("environment/walls/brick_clay", 19) };
-  m += { .pos { 2, 4 }, .uv = uv("environment/walls/brick_clay", 25) };
-  m += { .pos { 1, 3 }, .uv = uv("environment/walls/brick_clay", 33) };
-  m += { .pos { 3, 3 }, .uv = uv("environment/walls/brick_clay", 34) };
-  m += { .pos { 4, 3 }, .uv = uv("environment/walls/brick_clay", 35) };
+  for (auto y = 0; y < 8; y++) {
+    for (auto x = 0; x < 8; x++) {
+      if (!g_map[y][x]) continue;
+      m += { .pos { 2 + x, 2 + y }, .uv = uv("environment/walls/brick_clay", 36) };
+    }
+  }
   m += { .uv = uv("environment/props/mushroom1") };
   v::on_frame = [] {};
 }
