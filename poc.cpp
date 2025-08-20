@@ -13,14 +13,20 @@ import v;
   return uv(sprdefs[id] + idx);
 }
 
-  /*
-    voo::memiter<sprite> m { *g_as->buf.memory, &g_as->count };
-    m += { .pos { 2, 1 }, .uv = uv("environment/walls/brick_clay", 3) };
-    m += { .pos { 2, 2 }, .uv = uv("environment/walls/brick_clay", 14) };
-    m += { .pos { 2, 3 }, .uv = uv("environment/walls/brick_clay", 19) };
-    m += { .pos { 2, 4 }, .uv = uv("environment/walls/brick_clay", 25) };
-    m += { .pos { 1, 3 }, .uv = uv("environment/walls/brick_clay", 33) };
-    m += { .pos { 3, 3 }, .uv = uv("environment/walls/brick_clay", 34) };
-    m += { .pos { 4, 3 }, .uv = uv("environment/walls/brick_clay", 35) };
-    m += { .uv = uv("environment/props/mushroom1") };
-    */
+static void on_frame() {
+  auto m = v::map_buffer();
+  m += { .pos { 2, 1 }, .uv = uv("environment/walls/brick_clay", 3) };
+  m += { .pos { 2, 2 }, .uv = uv("environment/walls/brick_clay", 14) };
+  m += { .pos { 2, 3 }, .uv = uv("environment/walls/brick_clay", 19) };
+  m += { .pos { 2, 4 }, .uv = uv("environment/walls/brick_clay", 25) };
+  m += { .pos { 1, 3 }, .uv = uv("environment/walls/brick_clay", 33) };
+  m += { .pos { 3, 3 }, .uv = uv("environment/walls/brick_clay", 34) };
+  m += { .pos { 4, 3 }, .uv = uv("environment/walls/brick_clay", 35) };
+  m += { .uv = uv("environment/props/mushroom1") };
+  v::on_frame = [] {};
+}
+
+const int i = [] {
+  v::on_frame = on_frame;
+  return 0;
+}();

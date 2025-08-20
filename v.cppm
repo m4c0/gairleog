@@ -5,6 +5,7 @@
 export module v;
 import casein;
 import dotz;
+import hai;
 import sires;
 import traits;
 import vee;
@@ -68,6 +69,13 @@ struct ext_stuff {
   voo::swapchain_and_stuff sw { g_as->dq, *g_as->rp };
 } * g_es;
 
+namespace v {
+  export auto map_buffer() {
+    return voo::memiter<sprite> { *g_as->buf.memory, &g_as->count };
+  }
+  export hai::fn<void> on_frame = [] {};
+};
+
 const int i = [] {
   using namespace vinyl;
   on(START,  [] {
@@ -86,6 +94,8 @@ const int i = [] {
 
     g_es->sw.acquire_next_image();
     g_es->sw.queue_one_time_submit(q, [] {
+      v::on_frame();
+
       auto cb = g_es->sw.command_buffer();
       auto ext = g_es->sw.extent();
 
