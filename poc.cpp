@@ -25,11 +25,29 @@ static int g_map[8][8] {
 };
 
 static void on_frame() {
+  for (auto y = 0; y < 8; y++) {
+    for (auto x = 0; x < 8; x++) {
+      if (g_map[y][x] == 0) continue;
+
+      bool l = x > 0 && g_map[y][x - 1];
+      bool r = x < 7 && g_map[y][x + 1];
+      bool u = y > 0 && g_map[y - 1][x];
+      bool d = y < 7 && g_map[y + 1][x];
+      g_map[y][x] =
+        l && r && u && d ? 19 :
+        l && r && d ? 19 :
+        l && r ? 34 :
+        u && d ? 14 :
+        36;
+    }
+  }
+
   auto m = v::map_buffer();
   for (auto y = 0; y < 8; y++) {
     for (auto x = 0; x < 8; x++) {
-      if (!g_map[y][x]) continue;
-      m += { .pos { 2 + x, 2 + y }, .uv = uv("environment/walls/brick_clay", 36) };
+      auto c = g_map[y][x];
+      if (!c) continue;
+      m += { .pos { 2 + x, 2 + y }, .uv = uv("environment/walls/brick_clay", c) };
     }
   }
   m += { .uv = uv("environment/props/mushroom1") };
