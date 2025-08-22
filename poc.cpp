@@ -35,13 +35,20 @@ static void on_frame() {
       bool d = y < 7 && g_map[y + 1][x];
       g_map[y][x] =
         l && r && u && d ? 19 :
+        l && r && u ? 41 :
         l && r && d ? 19 :
+        l && u && d ? 18 :
+        r && u && d ? 15 :
         l && r ? 34 :
         u && l ? 24 :
         u && r ? 22 :
         u && d ? 14 :
         d && l ? 7 :
         d && r ? 4 :
+        l ? 35 :
+        r ? 33 :
+        u ? 25 :
+        d ? 3 :
         36;
     }
   }
