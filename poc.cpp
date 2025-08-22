@@ -37,7 +37,11 @@ static void on_frame() {
         l && r && u && d ? 19 :
         l && r && d ? 19 :
         l && r ? 34 :
+        u && l ? 24 :
+        u && r ? 22 :
         u && d ? 14 :
+        d && l ? 7 :
+        d && r ? 4 :
         36;
     }
   }
