@@ -2,9 +2,9 @@
 
 import dotz;
 import jute;
-import rng;
 import sprdef;
 import v;
+import wallbuilder;
 
 [[nodiscard]] constexpr auto uv(unsigned i) {
   return dotz::ivec2 { i % 64, i / 64 };
@@ -14,7 +14,7 @@ import v;
   return uv(sprdefs[id] + idx);
 }
 
-static int g_map[8][8] {
+static unsigned g_map[8][8] {
   { 1, 1, 1, 1, 1, 1, 1, 1 },
   { 1, 0, 0, 0, 1, 0, 0, 1 },
   { 1, 0, 1, 0, 1, 1, 0, 1 },
@@ -25,44 +25,8 @@ static int g_map[8][8] {
   { 1, 1, 1, 1, 1, 1, 1, 1 },
 };
 
-static auto rnd_rl() {
-  switch (rng::rand(10)) {
-    case 0: return 44;
-    case 1: return 45;
-    case 2: return 46;
-    case 3: return 47;
-    default: return 41;
-  }
-}
-
 static void on_frame() {
-  for (auto y = 0; y < 8; y++) {
-    for (auto x = 0; x < 8; x++) {
-      if (g_map[y][x] == 0) continue;
-
-      bool l = x > 0 && g_map[y][x - 1];
-      bool r = x < 7 && g_map[y][x + 1];
-      bool u = y > 0 && g_map[y - 1][x];
-      bool d = y < 7 && g_map[y + 1][x];
-      g_map[y][x] =
-        l && r && u && d ? 19 :
-        l && r && u ? rnd_rl() :
-        l && r && d ? 19 :
-        l && u && d ? 18 :
-        r && u && d ? 15 :
-        l && r ? rnd_rl() :
-        u && l ? 24 :
-        u && r ? 22 :
-        u && d ? 14 :
-        d && l ? 7 :
-        d && r ? 4 :
-        l ? 35 :
-        r ? 33 :
-        u ? 25 :
-        d ? 3 :
-        36;
-    }
-  }
+  wallbuilder::draw(g_map);
 
   auto m = v::map_buffer();
   for (auto y = 0; y < 8; y++) {
