@@ -14,14 +14,14 @@ constexpr auto rnd_rl() {
 namespace wallbuilder {
   export template<unsigned W, unsigned H>
   void draw(unsigned (&map)[H][W]) {
-    for (auto y = 0; y < 8; y++) {
-      for (auto x = 0; x < 8; x++) {
+    for (auto y = 0; y < H; y++) {
+      for (auto x = 0; x < W; x++) {
         if (map[y][x] == 0) continue;
 
-        bool l = x > 0 && map[y][x - 1];
-        bool r = x < 7 && map[y][x + 1];
-        bool u = y > 0 && map[y - 1][x];
-        bool d = y < 7 && map[y + 1][x];
+        bool l = x > 0   && map[y][x - 1];
+        bool r = x < W-1 && map[y][x + 1];
+        bool u = y > 0   && map[y - 1][x];
+        bool d = y < H-1 && map[y + 1][x];
         map[y][x] =
           l && r && u && d ? 19 :
           l && r && u ? rnd_rl() :
