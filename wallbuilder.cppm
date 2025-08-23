@@ -2,7 +2,7 @@ export module wallbuilder;
 import rng;
 
 constexpr auto rnd_rl() {
-  switch (rng::rand(10)) {
+  switch (rng::rand(30)) {
     case 0: return 44;
     case 1: return 45;
     case 2: return 46;
