@@ -14,7 +14,7 @@ import wallbuilder;
   return uv(sprdefs[id] + idx);
 }
 
-static unsigned g_map[8][12] {
+static unsigned g_map[12][16] {
   { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
   { 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1 },
   { 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1 },
@@ -25,18 +25,22 @@ static unsigned g_map[8][12] {
   { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 };
 
+template<unsigned W, unsigned H>
+static void load(auto & m, unsigned (&map)[H][W]) {
+  for (auto y = 0; y < H; y++) {
+    for (auto x = 0; x < W; x++) {
+      auto c = map[y][x];
+      if (!c) continue;
+      m += { .pos { x, y }, .uv = uv("environment/walls/brick_clay", c) };
+    }
+  }
+}
+
 static void on_frame() {
   wallbuilder::draw(g_map);
 
   auto m = v::map_buffer();
-  for (auto y = 0; y < 8; y++) {
-    for (auto x = 0; x < 12; x++) {
-      auto c = g_map[y][x];
-      if (!c) continue;
-      m += { .pos { 2 + x, 2 + y }, .uv = uv("environment/walls/brick_clay", c) };
-    }
-  }
-  m += { .uv = uv("environment/props/mushroom1") };
+  load(m, g_map);
   v::on_frame = [] {};
 }
 
