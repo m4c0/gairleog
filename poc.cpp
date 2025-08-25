@@ -2,6 +2,7 @@
 
 import dotz;
 import jute;
+import mapbuilder;
 import sprdef;
 import v;
 import wallbuilder;
@@ -14,16 +15,7 @@ import wallbuilder;
   return uv(sprdefs[id] + idx);
 }
 
-static unsigned g_map[12][16] {
-  { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-  { 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1 },
-  { 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1 },
-  { 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1 },
-  { 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-  { 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1 },
-  { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1 },
-  { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-};
+static unsigned g_map[12][16] {};
 
 template<unsigned W, unsigned H>
 static void load(auto & m, unsigned (&map)[H][W]) {
@@ -37,6 +29,7 @@ static void load(auto & m, unsigned (&map)[H][W]) {
 }
 
 static void on_frame() {
+  mapbuilder::build(g_map);
   wallbuilder::draw(g_map);
 
   auto m = v::map_buffer();
