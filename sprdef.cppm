@@ -1,3 +1,4 @@
+#pragma leco add_resource_dir sprites
 export module sprdef;
 import hai;
 import hashley;
