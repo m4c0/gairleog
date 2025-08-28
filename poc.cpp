@@ -5,9 +5,14 @@ import jute;
 import hashley;
 import mapbuilder;
 import sprdef;
-import v;
 import traits;
 import wallbuilder;
+
+#ifndef LECO_TARGET_WASM
+import v;
+#else
+import w;
+#endif
 
 static hashley::niamh g_spr_map { 1 };
 

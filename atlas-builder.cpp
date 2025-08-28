@@ -1,5 +1,7 @@
+#ifndef LECO_TARGET_WASM
 #pragma leco test
 #include <stdio.h>
+#endif
 
 import dotz;
 import jute;
