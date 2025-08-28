@@ -1,6 +1,7 @@
 export module sprdef;
 import hai;
 import hashley;
+import jojo;
 import lispy;
 import sires;
 
@@ -21,7 +22,7 @@ namespace sprdef {
     };
     hashley::niamh sprites { 1023 };
     auto lsp = sires::real_path_name("pixelite2.lsp");
-    lispy::run(lsp, cm.ctx, [&](auto * node) {
+    lispy::run(jojo::read_cstr(lsp), cm.ctx, [&](auto * node) {
       auto nn = static_cast<const custom_node *>(node);
       if (nn->valid) sprites[nn->atom] = nn->spr_id;
     });
