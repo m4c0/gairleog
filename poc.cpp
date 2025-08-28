@@ -2,17 +2,20 @@
 
 import dotz;
 import jute;
+import hashley;
 import mapbuilder;
 import sprdef;
 import v;
+import traits;
 import wallbuilder;
+
+static hashley::niamh g_spr_map { 1 };
 
 [[nodiscard]] constexpr auto uv(unsigned i) {
   return dotz::ivec2 { i % 64, i / 64 };
 }
 [[nodiscard]] auto uv(jute::view id, unsigned idx = 0) {
-  static const auto sprdefs = sprdef::load();
-  return uv(sprdefs[id] + idx);
+  return uv(g_spr_map[id] + idx);
 }
 
 static unsigned g_map[12][16] {};
@@ -38,6 +41,9 @@ static void on_frame() {
 }
 
 const int i = [] {
-  v::on_frame = on_frame;
+  sprdef::load([](auto map) {
+    g_spr_map = traits::move(map);
+    v::on_frame = on_frame;
+  });
   return 0;
 }();
