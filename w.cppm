@@ -28,12 +28,12 @@ namespace v {
     return mapper {};
   }
 
-  void setup();
+  void create_window();
 }
 
 const int i = [] {
   using namespace casein;
 
-  handle(CREATE_WINDOW, v::setup);
+  handle(CREATE_WINDOW, v::create_window);
   return 0;
 }();

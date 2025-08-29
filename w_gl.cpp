@@ -60,6 +60,8 @@ void main()
 
   static int g_program;
   static int g_quad_buffer;
+  static int g_inst_buffer;
+  static int g_texture;
   static int g_u_grid_pos;
   static int g_u_grid_size;
 
@@ -94,7 +96,7 @@ void main()
     blend_func(ONE, ONE_MINUS_SRC_ALPHA);
   }
 
-  auto clear() {
+  void clear() {
     using namespace gelo;
     gelo::clear(COLOR_BUFFER_BIT);
     uniform2f(g_u_grid_pos, 8, 8);
@@ -102,63 +104,52 @@ void main()
     viewport(0, 0, casein::window_size.x, casein::window_size.y);
   }
 
-  auto create_buffer() {
-    static constexpr const auto stride = 80;
+  void create_buffer() {
+    static constexpr const auto stride = 32;
 
     using namespace gelo;
 
-    auto b = gelo::create_buffer();
+    auto b = g_inst_buffer = gelo::create_buffer();
     bind_buffer(ARRAY_BUFFER, b);
 
     enable_vertex_attrib_array(1);
-    vertex_attrib_pointer(1, 4, FLOAT, false, stride, 0);
+    vertex_attrib_pointer(1, 2, FLOAT, false, stride, 0);
     vertex_attrib_divisor(1, 1);
 
     enable_vertex_attrib_array(2);
-    vertex_attrib_pointer(2, 4, FLOAT, false, stride, 32);
+    vertex_attrib_pointer(2, 2, FLOAT, false, stride, 16);
     vertex_attrib_divisor(2, 1);
-
-    enable_vertex_attrib_array(3);
-    vertex_attrib_pointer(3, 4, FLOAT, false, stride, 16);
-    vertex_attrib_divisor(3, 1);
-
-    enable_vertex_attrib_array(4);
-    vertex_attrib_pointer(4, 4, FLOAT, false, stride, 48);
-    vertex_attrib_divisor(4, 1);
-
-    enable_vertex_attrib_array(5);
-    vertex_attrib_pointer(5, 4, FLOAT, false, stride, 64);
-    vertex_attrib_divisor(5, 1);
-
-    return b;
   }
 
-  auto create_texture() {
+  void load_texture(jute::view name) {
     using namespace gelo;
 
     unsigned pix = 0xFF00FFFF;
 
-    auto t = gelo::create_texture();
+    auto t = g_texture = gelo::create_texture();
     active_texture(TEXTURE0);
     bind_texture(TEXTURE_2D, t);
     tex_image_2d(TEXTURE_2D, 0, RGBA, 1, 1, 0, RGBA, UNSIGNED_BYTE, &pix, sizeof(pix));
-    return t;
-  }
 
-  void load_texture(int t, jute::view name) {
-    stbi::load(name, nullptr, [=](auto, auto & img) {
+    stbi::load(name, nullptr, [name](auto, auto & img) {
       using namespace gelo;
 
       silog::log(silog::info, "[%*s] loaded", static_cast<int>(name.size()), name.begin());
 
       auto & [ w, h, ch, data ] = img;
-      bind_texture(TEXTURE_2D, t);
+      bind_texture(TEXTURE_2D, g_texture);
       tex_image_2d(TEXTURE_2D, 0, RGBA, w, h, 0, RGBA, UNSIGNED_BYTE, *data, w * h * 4);
       tex_parameter_i(TEXTURE_2D, TEXTURE_WRAP_S, CLAMP_TO_EDGE);
       tex_parameter_i(TEXTURE_2D, TEXTURE_WRAP_T, CLAMP_TO_EDGE);
       tex_parameter_i(TEXTURE_2D, TEXTURE_MIN_FILTER, NEAREST);
       tex_parameter_i(TEXTURE_2D, TEXTURE_MAG_FILTER, NEAREST);
     });
+  }
+
+  void create_window() {
+    setup();
+    create_buffer();
+    load_texture("pixelite2.png");
   }
 }
 
