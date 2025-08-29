@@ -25,7 +25,7 @@ layout(location = 2) in vec2 uv;
 void main()
 {
     vec2 p = ((v_pos + pos) - _18.grid_pos) / _18.grid_size;
-    gl_Position = vec4(p, 0.0, 1.0);
+    gl_Position = vec4(p.x, -p.y, 0.0, 1.0);
     f_uv = uv + v_pos;
 }
   )"_s;
