@@ -1,12 +1,12 @@
 module w;
-import gelo;
+import jojo;
 import jute;
 import silog;
 import stubby;
 
 using namespace jute::literals;
 
-namespace w {
+namespace v {
   static constexpr const float quad[] { 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0 };
   static constexpr const auto vert_shader = R"(#version 300 es
 struct upc
@@ -58,17 +58,15 @@ void main()
     attach_shader(prog, v);
   }
 
-  auto setup() {
+  static int g_program;
+  static int g_quad_buffer;
+  static int g_u_grid_pos;
+  static int g_u_grid_size;
+
+  void setup() {
     using namespace gelo;
 
-    struct {
-      int program;
-      int quad_buffer;
-      int u_grid_pos;
-      int u_grid_size;
-    } res;
-
-    auto p = res.program = create_program();
+    auto p = g_program = create_program();
     shader(p, VERTEX_SHADER, vert_shader);
     shader(p, FRAGMENT_SHADER, frag_shader);
 
@@ -81,12 +79,12 @@ void main()
 
     use_program(p);
 
-    res.u_grid_pos = get_uniform_location(p, "pc.grid_pos");
-    res.u_grid_size = get_uniform_location(p, "pc.grid_size");
+    g_u_grid_pos = get_uniform_location(p, "_18.grid_pos");
+    g_u_grid_size = get_uniform_location(p, "_18.grid_size");
     auto u_tex = get_uniform_location(p, "tex");
     uniform1i(u_tex, 0); 
 
-    auto b = res.quad_buffer = create_buffer();
+    auto b = g_quad_buffer = create_buffer();
     bind_buffer(ARRAY_BUFFER, b);
     buffer_data(ARRAY_BUFFER, quad, sizeof(quad), STATIC_DRAW);
     enable_vertex_attrib_array(0);
@@ -94,13 +92,13 @@ void main()
 
     enable(BLEND);
     blend_func(ONE, ONE_MINUS_SRC_ALPHA);
-
-    return res;
   }
 
   auto clear() {
     using namespace gelo;
     gelo::clear(COLOR_BUFFER_BIT);
+    uniform2f(g_u_grid_pos, 8, 8);
+    uniform2f(g_u_grid_size, 8, 8); // TODO: aspect
     viewport(0, 0, casein::window_size.x, casein::window_size.y);
   }
 
@@ -148,7 +146,7 @@ void main()
   }
 
   void load_texture(int t, jute::view name) {
-    stbi::load_from_resource(name, [=](auto & img) {
+    stbi::load(name, nullptr, [=](auto, auto & img) {
       using namespace gelo;
 
       silog::log(silog::info, "[%*s] loaded", static_cast<int>(name.size()), name.begin());

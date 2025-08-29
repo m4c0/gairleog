@@ -2,6 +2,7 @@
 export module w;
 import casein;
 import dotz;
+import gelo;
 import hai;
 import vaselin;
 
@@ -26,4 +27,13 @@ namespace v {
     buffer.truncate(0);
     return mapper {};
   }
+
+  void setup();
 }
+
+const int i = [] {
+  using namespace casein;
+
+  handle(CREATE_WINDOW, v::setup);
+  return 0;
+}();
