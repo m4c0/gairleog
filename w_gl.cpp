@@ -142,10 +142,12 @@ void main()
   void render() {
     using namespace gelo;
 
+    float aspect = casein::window_size.x / casein::window_size.y;
+
     clear_color(0, 0, 0, 1);
     clear(COLOR_BUFFER_BIT);
     uniform2f(g_u_grid_pos, 8, 8);
-    uniform2f(g_u_grid_size, 8, 8); // TODO: aspect
+    uniform2f(g_u_grid_size, 8 * aspect, 8); // TODO: aspect
     viewport(0, 0, casein::window_size.x, casein::window_size.y);
 
     bind_buffer(ARRAY_BUFFER, g_inst_buffer);
