@@ -29,11 +29,19 @@ namespace v {
   }
 
   void create_window();
+  void render();
+}
+
+static void frame(void *) {
+  v::on_frame();
+  v::render();
+  vaselin::set_timeout(frame, nullptr, 0);
 }
 
 const int i = [] {
   using namespace casein;
 
   handle(CREATE_WINDOW, v::create_window);
+  vaselin::set_timeout(frame, nullptr, 0);
   return 0;
 }();

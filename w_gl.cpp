@@ -96,14 +96,6 @@ void main()
     blend_func(ONE, ONE_MINUS_SRC_ALPHA);
   }
 
-  void clear() {
-    using namespace gelo;
-    gelo::clear(COLOR_BUFFER_BIT);
-    uniform2f(g_u_grid_pos, 8, 8);
-    uniform2f(g_u_grid_size, 8, 8); // TODO: aspect
-    viewport(0, 0, casein::window_size.x, casein::window_size.y);
-  }
-
   void create_buffer() {
     static constexpr const auto stride = 32;
 
@@ -150,6 +142,20 @@ void main()
     setup();
     create_buffer();
     load_texture("pixelite2.png");
+  }
+
+  void render() {
+    using namespace gelo;
+
+    clear_color(0, 0, 0, 1);
+    gelo::clear(COLOR_BUFFER_BIT);
+    uniform2f(g_u_grid_pos, 8, 8);
+    uniform2f(g_u_grid_size, 8, 8); // TODO: aspect
+    viewport(0, 0, casein::window_size.x, casein::window_size.y);
+
+    bind_buffer(ARRAY_BUFFER, g_inst_buffer);
+    buffer_data(ARRAY_BUFFER, buffer.begin(), buffer.size() * sizeof(sprite), STATIC_DRAW);
+    draw_arrays_instanced(TRIANGLES, 0, 6, 1);
   }
 }
 
