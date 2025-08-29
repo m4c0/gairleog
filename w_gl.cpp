@@ -81,6 +81,9 @@ void main()
 
     use_program(p);
 
+    enable(BLEND);
+    blend_func(ONE, ONE_MINUS_SRC_ALPHA);
+
     g_u_grid_pos = get_uniform_location(p, "_18.grid_pos");
     g_u_grid_size = get_uniform_location(p, "_18.grid_size");
     auto u_tex = get_uniform_location(p, "tex");
@@ -92,16 +95,9 @@ void main()
     enable_vertex_attrib_array(0);
     vertex_attrib_pointer(0, 2, FLOAT, false, 0, 0);
 
-    enable(BLEND);
-    blend_func(ONE, ONE_MINUS_SRC_ALPHA);
-  }
+    static constexpr const auto stride = 16;
 
-  void create_buffer() {
-    static constexpr const auto stride = 32;
-
-    using namespace gelo;
-
-    auto b = g_inst_buffer = gelo::create_buffer();
+    b = g_inst_buffer = gelo::create_buffer();
     bind_buffer(ARRAY_BUFFER, b);
 
     enable_vertex_attrib_array(1);
@@ -109,7 +105,7 @@ void main()
     vertex_attrib_divisor(1, 1);
 
     enable_vertex_attrib_array(2);
-    vertex_attrib_pointer(2, 2, FLOAT, false, stride, 16);
+    vertex_attrib_pointer(2, 2, FLOAT, false, stride, 8);
     vertex_attrib_divisor(2, 1);
   }
 
@@ -140,7 +136,6 @@ void main()
 
   void create_window() {
     setup();
-    create_buffer();
     load_texture("pixelite2.png");
   }
 
@@ -148,14 +143,14 @@ void main()
     using namespace gelo;
 
     clear_color(0, 0, 0, 1);
-    gelo::clear(COLOR_BUFFER_BIT);
+    clear(COLOR_BUFFER_BIT);
     uniform2f(g_u_grid_pos, 8, 8);
     uniform2f(g_u_grid_size, 8, 8); // TODO: aspect
     viewport(0, 0, casein::window_size.x, casein::window_size.y);
 
     bind_buffer(ARRAY_BUFFER, g_inst_buffer);
-    buffer_data(ARRAY_BUFFER, buffer.begin(), buffer.size() * sizeof(sprite), STATIC_DRAW);
-    draw_arrays_instanced(TRIANGLES, 0, 6, 1);
+    buffer_data(ARRAY_BUFFER, buffer.begin(), buffer.size() * sizeof(sprite), DYNAMIC_DRAW);
+    draw_arrays_instanced(TRIANGLES, 0, 6, buffer.size());
   }
 }
 
