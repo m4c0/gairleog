@@ -5,6 +5,13 @@ import rng;
 namespace mapbuilder {
   template<unsigned W, unsigned H>
   void hsplit(unsigned (&map)[H][W], dotz::ivec2 aa, dotz::ivec2 bb) {
+    auto x = 0;
+    do {
+      x = rng::rand(bb.x - aa.x + 1) + aa.x;
+    } while (!map[aa.y - 1][x] || !map[bb.y + 1][x]);
+
+    for (auto y = aa.y; y <= bb.y; y++) map[y][x] = 1;
+    map[rng::rand(bb.y - aa.y + 1) + aa.y][x] = 0;
   }
 
   template<unsigned W, unsigned H>
