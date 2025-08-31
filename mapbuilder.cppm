@@ -4,6 +4,9 @@ import rng;
 
 namespace mapbuilder {
   template<unsigned W, unsigned H>
+  void vsplit(unsigned (&map)[H][W], dotz::ivec2 aa, dotz::ivec2 bb);
+
+  template<unsigned W, unsigned H>
   void hsplit(unsigned (&map)[H][W], dotz::ivec2 aa, dotz::ivec2 bb) {
     auto x = 0;
     do {
@@ -12,6 +15,9 @@ namespace mapbuilder {
 
     for (auto y = aa.y; y <= bb.y; y++) map[y][x] = 1;
     map[rng::rand(bb.y - aa.y + 1) + aa.y][x] = 0;
+
+    if (x - aa.x > 2) vsplit(map, aa, {x-1, bb.y});
+    if (bb.x - x + 1 > 2) vsplit(map, {x+1, aa.y}, bb);
   }
 
   template<unsigned W, unsigned H>
@@ -23,6 +29,9 @@ namespace mapbuilder {
 
     for (auto x = aa.x; x <= bb.x; x++) map[y][x] = 1;
     map[y][rng::rand(bb.x - aa.x + 1) + aa.x] = 0;
+
+    if (y - aa.y > 2) hsplit(map, aa, {bb.x, y-1});
+    if (bb.y - y + 1 > 2) hsplit(map, {aa.x, y+1}, bb);
   }
 
   export
