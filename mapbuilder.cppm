@@ -1,5 +1,6 @@
 export module mapbuilder;
 import dotz;
+import rng;
 
 namespace mapbuilder {
   template<unsigned W, unsigned H>
@@ -8,6 +9,13 @@ namespace mapbuilder {
 
   template<unsigned W, unsigned H>
   void vsplit(unsigned (&map)[H][W], dotz::ivec2 aa, dotz::ivec2 bb) {
+    auto y = 0;
+    do {
+      y = rng::rand(bb.y - aa.y + 1) + aa.y;
+    } while (!map[y][aa.x - 1] || !map[y][bb.x + 1]);
+
+    for (auto x = aa.x; x <= bb.x; x++) map[y][x] = 1;
+    map[y][rng::rand(bb.x - aa.x + 1) + aa.x] = 0;
   }
 
   export
