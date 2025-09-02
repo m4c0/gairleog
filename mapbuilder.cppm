@@ -18,9 +18,12 @@ namespace mapbuilder {
     vsplit(map, aa, {x-1, bb.y});
     vsplit(map, {x+1, aa.y}, bb);
  
-    auto y = aa.y + 1;
-    if (bb.y - aa.y - 1 > 1) y += rng::rand(bb.y - aa.y - 1);
+    //auto y = (bb.y + aa.y) / 2;
+    auto y = aa.y;
+    if (bb.y - aa.y > 1) y += rng::rand(bb.y - aa.y);
+    map[y][x-1] = 0;
     map[y][x] = 0;
+    map[y][x+1] = 0;
   }
 
   template<unsigned W, unsigned H>
@@ -35,9 +38,12 @@ namespace mapbuilder {
     hsplit(map, aa, {bb.x, y-1});
     hsplit(map, {aa.x, y+1}, bb);
  
-    auto x = aa.x + 1;
-    if (bb.x - aa.x - 1 > 1) x += rng::rand(bb.x - aa.x - 1);
+    //auto x = (bb.x + aa.x) / 2;
+    auto x = aa.x;
+    if (bb.x - aa.x > 1) x += rng::rand(bb.x - aa.x);
+    map[y-1][x] = 0;
     map[y][x] = 0;
+    map[y+1][x] = 0;
   }
 
   export
