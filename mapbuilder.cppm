@@ -14,10 +14,13 @@ namespace mapbuilder {
     if (bb.x - aa.x - 1 > 1) x += rng::rand(bb.x - aa.x - 1);
 
     for (auto y = aa.y; y <= bb.y; y++) map[y][x] = 1;
-    //map[rng::rand(bb.y - aa.y + 1) + aa.y][x] = 0;
 
     vsplit(map, aa, {x-1, bb.y});
     vsplit(map, {x+1, aa.y}, bb);
+ 
+    auto y = aa.y + 1;
+    if (bb.y - aa.y - 1 > 1) y += rng::rand(bb.y - aa.y - 1);
+    map[y][x] = 0;
   }
 
   template<unsigned W, unsigned H>
@@ -28,10 +31,13 @@ namespace mapbuilder {
     if (bb.y - aa.y - 1 > 1) y += rng::rand(bb.y - aa.y - 1);
 
     for (auto x = aa.x; x <= bb.x; x++) map[y][x] = 1;
-    //map[y][rng::rand(bb.x - aa.x + 1) + aa.x] = 0;
 
     hsplit(map, aa, {bb.x, y-1});
     hsplit(map, {aa.x, y+1}, bb);
+ 
+    auto x = aa.x + 1;
+    if (bb.x - aa.x - 1 > 1) x += rng::rand(bb.x - aa.x - 1);
+    map[y][x] = 0;
   }
 
   export
