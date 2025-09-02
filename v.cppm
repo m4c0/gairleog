@@ -23,7 +23,7 @@ namespace v {
 
   export struct mapper {
     virtual ~mapper() {}
-    virtual void push(sprite s) {}
+    virtual void push(sprite s) = 0;
   };
   export hai::uptr<mapper> map();
 

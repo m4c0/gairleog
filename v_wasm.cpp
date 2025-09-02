@@ -171,7 +171,7 @@ struct mapper : v::mapper {
 };
 
 hai::uptr<v::mapper> v::map() {
-  return hai::uptr<v::mapper> { new mapper {} };
+  return hai::uptr<v::mapper> { new ::mapper {} };
 }
 
 static void frame(void *) {

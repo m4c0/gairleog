@@ -62,7 +62,7 @@ struct mapper : v::mapper, voo::memiter<v::sprite> {
   void push(v::sprite s) override { *this += s; }
 };
 hai::uptr<v::mapper> v::map() {
-  return hai::uptr<v::mapper> { new mapper {} };
+  return hai::uptr<v::mapper> { new ::mapper {} };
 }
 
 const int i = [] {
