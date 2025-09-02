@@ -11,15 +11,15 @@ import hai;
 namespace v {
   constexpr const auto max_sprites = 10240;
 
-  struct sprite {
+  export struct sprite {
     dotz::vec2 pos;
     dotz::vec2 uv;
   };
 
-  struct upc {
+  export struct upc {
     dotz::vec2 grid_pos;
     dotz::vec2 grid_size;
-  };
+  } pc;
 
   export struct mapper {
     virtual ~mapper() {}

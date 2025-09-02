@@ -42,6 +42,7 @@ static void on_frame() {
 
 const int i = [] {
   sprdef::load([](auto map) {
+    v::pc = { 16, 16 };
     g_spr_map = traits::move(map);
     v::on_frame = on_frame;
   });
