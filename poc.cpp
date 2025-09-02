@@ -31,7 +31,7 @@ static void load(auto & m, unsigned (&map)[H][W]) {
     for (auto x = 0; x < W; x++) {
       auto c = map[y][x];
       if (!c) continue;
-      m += { .pos { x, y }, .uv = uv("environment/walls/brick_clay", c) };
+      m->push({ .pos { x, y }, .uv = uv("environment/walls/brick_clay", c) });
     }
   }
 }
@@ -40,7 +40,7 @@ static void on_frame() {
   mapbuilder::build(g_map);
   wallbuilder::draw(g_map);
 
-  auto m = v::map_buffer();
+  auto m = v::map();
   load(m, g_map);
   v::on_frame = [] {};
 }
