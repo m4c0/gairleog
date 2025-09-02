@@ -1,10 +1,15 @@
 module v;
+import casein;
+import gelo;
 import jojo;
 import jute;
 import silog;
 import stubby;
+import vaselin;
 
 using namespace jute::literals;
+
+static hai::varray<v::sprite> buffer { 10240 };
 
 namespace v {
   static constexpr const float quad[] { 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0 };
@@ -156,7 +161,6 @@ void main()
   }
 }
 
-static hai::varray<v::sprite> buffer { 10240 };
 struct mapper : v::mapper {
   mapper() {
     buffer.truncate(0);
