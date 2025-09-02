@@ -6,13 +6,8 @@ import hashley;
 import mapbuilder;
 import sprdef;
 import traits;
-import wallbuilder;
-
-#ifndef LECO_TARGET_WASM
 import v;
-#else
-import w;
-#endif
+import wallbuilder;
 
 static hashley::niamh g_spr_map { 1 };
 

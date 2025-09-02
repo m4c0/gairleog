@@ -1,5 +1,5 @@
 #ifdef LECO_TARGET_WASM
-#pragma leco add_impl wasm
+#pragma leco add_impl v_wasm
 #else
 #pragma leco add_impl v_vulkan
 #endif

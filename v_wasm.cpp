@@ -1,4 +1,4 @@
-module w;
+module v;
 import jojo;
 import jute;
 import silog;
@@ -155,4 +155,32 @@ void main()
     draw_arrays_instanced(TRIANGLES, 0, 6, buffer.size());
   }
 }
+
+static hai::varray<v::sprite> buffer { 10240 };
+struct mapper : v::mapper {
+  mapper() {
+    buffer.truncate(0);
+  }
+  void push(v::sprite s) override {
+    buffer.push_back(s);
+  }
+};
+
+hai::uptr<v::mapper> v::map() {
+  return hai::uptr<v::mapper> { new mapper {} };
+}
+
+static void frame(void *) {
+  v::on_frame();
+  v::render();
+  vaselin::request_animation_frame(frame, nullptr);
+}
+
+const int i = [] {
+  using namespace casein;
+
+  handle(CREATE_WINDOW, v::create_window);
+  vaselin::request_animation_frame(frame, nullptr);
+  return 0;
+}();
 
