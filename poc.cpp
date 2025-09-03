@@ -18,7 +18,7 @@ static hashley::niamh g_spr_map { 1 };
   return uv(g_spr_map[id] + idx);
 }
 
-static unsigned g_map[12][16] {};
+static unsigned g_map[24][32] {};
 
 template<unsigned W, unsigned H>
 static void load(auto & m, unsigned (&map)[H][W]) {
