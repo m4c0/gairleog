@@ -1,6 +1,7 @@
 export module mapbuilder;
 import dotz;
 import rng;
+import roombuilder;
 
 namespace mapbuilder {
   template<unsigned W, unsigned H>
@@ -9,6 +10,7 @@ namespace mapbuilder {
   template<unsigned W, unsigned H>
   void hsplit(unsigned (&map)[H][W], dotz::ivec2 aa, dotz::ivec2 bb) {
     if (bb.x - aa.x + 1 <= 2) return;
+    if (roombuilder::supports(bb - aa)) return;
 
     auto x = aa.x + 1;
     if (bb.x - aa.x - 1 > 1) x += rng::rand(bb.x - aa.x - 1);
@@ -28,6 +30,7 @@ namespace mapbuilder {
   template<unsigned W, unsigned H>
   void vsplit(unsigned (&map)[H][W], dotz::ivec2 aa, dotz::ivec2 bb) {
     if (bb.y - aa.y + 1 <= 2) return;
+    if (roombuilder::supports(bb - aa)) return;
 
     auto y = aa.y + 1;
     if (bb.y - aa.y - 1 > 1) y += rng::rand(bb.y - aa.y - 1);
