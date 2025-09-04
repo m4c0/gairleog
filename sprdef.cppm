@@ -32,10 +32,13 @@ namespace sprdef {
     return sprites;
   }
 
-  export void load(auto && cb) {
-    auto lsp = sires::real_path_name("pixelite2.lsp");
+  export void load(jute::view lsp, auto && cb) {
     jojo::read(lsp, nullptr, [cb=traits::move(cb)](auto ptr, hai::cstr & src) {
       cb(run(src));
     });
+  }
+  export void load(auto && cb) {
+    auto lsp = sires::real_path_name("pixelite2.lsp");
+    load(lsp, cb);
   }
 }
