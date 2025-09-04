@@ -38,10 +38,11 @@ namespace roomdefs {
           if (!ctx.defs.has(c)) lispy::err(aa[i], "unknown def", idx);
 
           auto cell = lispy::eval(ctx, ctx.defs[c]);
-          if (lispy::is_atom(cell)) {
-            auto & sprdefs = static_cast<struct ctx &>(ctx).sprdefs;
-            if (!sprdefs->has(cell->atom)) lispy::err(cell, "unknown sprdef");
-          } else if (cell->next) lispy::err(aa[i], "cell must be a sprite name", idx);
+          if (!lispy::is_atom(cell)) lispy::err(aa[i], "cell must be a sprite name", idx);
+
+          auto * sprdefs = static_cast<struct ctx &>(ctx).sprdefs;
+          if (!sprdefs->has(cell->atom)) lispy::err(cell, "unknown sprdef");
+          data[i * cols + idx] = (*sprdefs)[cell->atom];
         }
       }
 
