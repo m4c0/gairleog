@@ -55,6 +55,7 @@ static void recurse(const char * dir) {
 }
 
 int main() {
+  fputln(lsp, "(sprdef empty 0)");
   recurse("PixeLike2_AssetPack");
   stbi::write_rgba_unsafe("sprites/pixelite2.png", 1024, 1024, out);
 }
