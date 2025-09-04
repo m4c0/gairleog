@@ -46,15 +46,21 @@ namespace roomdefs {
       }
 
       auto * nn = new (ctx.allocator()) node { *aa[0] };
+      nn->room = hai::sptr { new t {
+        .w = cols,
+        .h = as,
+        .data = traits::move(data),
+      }};
       return nn;
     };
     
-    lispy::run(src, cm.ctx, [](auto * n) {
+    hai::varray<hai::sptr<t>> rooms { 128 };
+    lispy::run(src, cm.ctx, [&](auto * n) {
       [[maybe_unused]]
       auto nn = static_cast<const node *>(n);
+      if (nn->room) rooms.push_back_doubling(nn->room); 
     });
-
-    return 0;
+    return rooms;
   }
 
   export void load(const hashley::niamh & sprdefs, jute::view lsp, auto && cb) {

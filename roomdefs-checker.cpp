@@ -7,7 +7,7 @@ import roomdefs;
 int main() try {
   sprdef::load("sprites/pixelite2.lsp", [](auto sprs) {
     roomdefs::load(sprs, "roomdefs.lsp", [&](auto rooms) {
-      putln("ok");
+      putln("found ", rooms.size(), " rooms");
     });
   });
 } catch (lispy::parser_error e) {
