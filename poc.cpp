@@ -2,14 +2,17 @@
 
 import dotz;
 import jute;
+import hai;
 import hashley;
 import mapbuilder;
+import roomdefs;
 import sprdef;
 import traits;
 import v;
 import wallbuilder;
 
 static hashley::niamh g_spr_map { 1 };
+static hai::varray<hai::sptr<roomdefs::t>> g_roomdefs {};
 
 [[nodiscard]] constexpr auto uv(unsigned i) {
   return dotz::ivec2 { i % 64, i / 64 };
@@ -40,11 +43,20 @@ static void on_frame() {
   v::on_frame = [] {};
 }
 
+static void start() {
+  v::pc = { 16, 16 };
+  v::on_frame = on_frame;
+}
+
 const int i = [] {
   sprdef::load([](auto map) {
-    v::pc = { 16, 16 };
     g_spr_map = traits::move(map);
-    v::on_frame = on_frame;
+
+    roomdefs::load(g_spr_map, [&](auto rooms) {
+      g_roomdefs = traits::move(rooms);
+
+      start();
+    });
   });
   return 0;
 }();
