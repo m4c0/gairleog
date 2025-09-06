@@ -22,11 +22,10 @@ static hashley::niamh g_spr_map { 1 };
 
 static map g_map {};
 
-template<unsigned W, unsigned H>
-static void load(auto & m, unsigned (&map)[H][W]) {
-  for (auto y = 0; y < H; y++) {
-    for (auto x = 0; x < W; x++) {
-      auto c = map[y][x];
+static void load(auto m) {
+  for (auto y = 0; y < g_map.h; y++) {
+    for (auto x = 0; x < g_map.w; x++) {
+      auto c = g_map.data[y][x];
       if (!c) continue;
       m->push({ .pos { x, y }, .uv = uv("environment/walls/brick_clay", c) });
     }
@@ -37,8 +36,7 @@ static void on_frame() {
   g_map.build();
   wallbuilder::draw(g_map.data);
 
-  auto m = v::map();
-  load(m, g_map.data);
+  load(v::map());
   v::on_frame = [] {};
 }
 
