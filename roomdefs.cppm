@@ -14,6 +14,7 @@ namespace roomdefs {
     unsigned h;
     hai::array<unsigned> data;
   };
+  export using list = hai::varray<hai::sptr<t>>;
 
   [[nodiscard]] auto run(const hashley::niamh & sprdefs, jute::view src) {
     struct node : lispy::node {
@@ -55,7 +56,7 @@ namespace roomdefs {
       return nn;
     };
     
-    hai::varray<hai::sptr<t>> rooms { 128 };
+    list rooms { 128 };
     lispy::run(src, cm.ctx, [&](auto * n) {
       [[maybe_unused]]
       auto nn = static_cast<const node *>(n);

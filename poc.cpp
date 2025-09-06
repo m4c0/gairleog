@@ -21,7 +21,7 @@ static hai::varray<hai::sptr<roomdefs::t>> g_roomdefs {};
   return uv(g_spr_map[id] + idx);
 }
 
-static unsigned g_map[24][32] {};
+static mapbuilder::map<24, 32> g_map {};
 
 template<unsigned W, unsigned H>
 static void load(auto & m, unsigned (&map)[H][W]) {
@@ -36,10 +36,10 @@ static void load(auto & m, unsigned (&map)[H][W]) {
 
 static void on_frame() {
   mapbuilder::build(g_map);
-  wallbuilder::draw(g_map);
+  wallbuilder::draw(g_map.data);
 
   auto m = v::map();
-  load(m, g_map);
+  load(m, g_map.data);
   v::on_frame = [] {};
 }
 
