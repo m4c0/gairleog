@@ -4,7 +4,13 @@ import rng;
 
 namespace {
   [[nodiscard]] bool furnish(map & map, dotz::ivec2 aa, dotz::ivec2 bb) {
-    return false;
+    auto ab = bb - aa;
+    auto & r = map.roomdefs.data[ab.y][ab.x];
+    if (r.size() == 0) return false;
+
+    auto & n = r[rng::rand(r.size())];
+
+    return true;
   }
 
   void vsplit(map & map, dotz::ivec2 aa, dotz::ivec2 bb);
