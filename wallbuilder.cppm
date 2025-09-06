@@ -1,4 +1,5 @@
 export module wallbuilder;
+import map;
 import rng;
 
 constexpr auto rnd_rl() {
@@ -12,17 +13,17 @@ constexpr auto rnd_rl() {
 }
 
 namespace wallbuilder {
-  export template<unsigned W, unsigned H>
-  void draw(unsigned (&map)[H][W]) {
-    for (auto y = 0; y < H; y++) {
-      for (auto x = 0; x < W; x++) {
-        if (map[y][x] == 0) continue;
+  export void draw(map & map) {
+    for (auto y = 0; y < map.h; y++) {
+      for (auto x = 0; x < map.w; x++) {
+        if (map.data[y][x] == 0) continue;
+        if (map.data[y][x] != map::init) continue;
 
-        bool l = x > 0   && map[y][x - 1];
-        bool r = x < W-1 && map[y][x + 1];
-        bool u = y > 0   && map[y - 1][x];
-        bool d = y < H-1 && map[y + 1][x];
-        map[y][x] =
+        bool l = x > 0       && map.data[y][x - 1];
+        bool r = x < map.w-1 && map.data[y][x + 1];
+        bool u = y > 0       && map.data[y - 1][x];
+        bool d = y < map.h-1 && map.data[y + 1][x];
+        map.data[y][x] =
           l && r && u && d ? 19 :
           l && r && u ? rnd_rl() :
           l && r && d ? 19 :

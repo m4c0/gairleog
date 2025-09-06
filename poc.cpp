@@ -34,7 +34,7 @@ static void load(auto m) {
 
 static void on_frame() {
   g_map.build();
-  wallbuilder::draw(g_map.data);
+  wallbuilder::draw(g_map);
 
   load(v::map());
   v::on_frame = [] {};
