@@ -4,6 +4,7 @@ import dotz;
 import jute;
 import hai;
 import hashley;
+import map;
 import mapbuilder;
 import roomdefs;
 import sprdef;
@@ -21,7 +22,7 @@ static hai::varray<hai::sptr<roomdefs::t>> g_roomdefs {};
   return uv(g_spr_map[id] + idx);
 }
 
-static mapbuilder::map<24, 32> g_map {};
+static map g_map {};
 
 template<unsigned W, unsigned H>
 static void load(auto & m, unsigned (&map)[H][W]) {

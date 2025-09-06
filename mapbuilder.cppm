@@ -1,26 +1,16 @@
 export module mapbuilder;
 import dotz;
+import map;
 import rng;
-import roomdefs;
 
 namespace mapbuilder {
-  export
-  template<unsigned W, unsigned H>
-  struct map {
-    unsigned data[H][W];
-    roomdefs::list roomdefs;
-  };
-
-  template<unsigned W, unsigned H>
-  [[nodiscard]] bool furnish(map<W, H> & map, dotz::ivec2 aa, dotz::ivec2 bb) {
+  [[nodiscard]] bool furnish(map & map, dotz::ivec2 aa, dotz::ivec2 bb) {
     return false;
   }
 
-  template<unsigned W, unsigned H>
-  void vsplit(map<W, H> & map, dotz::ivec2 aa, dotz::ivec2 bb);
+  void vsplit(map & map, dotz::ivec2 aa, dotz::ivec2 bb);
 
-  template<unsigned W, unsigned H>
-  void hsplit(map<W, H> & map, dotz::ivec2 aa, dotz::ivec2 bb) {
+  void hsplit(map & map, dotz::ivec2 aa, dotz::ivec2 bb) {
     if (bb.x - aa.x + 1 <= 2) return;
     if (furnish(map, aa, bb)) return;
 
@@ -39,8 +29,7 @@ namespace mapbuilder {
     map.data[y][x+1] = 0;
   }
 
-  template<unsigned W, unsigned H>
-  void vsplit(map<W, H> & map, dotz::ivec2 aa, dotz::ivec2 bb) {
+  void vsplit(map & map, dotz::ivec2 aa, dotz::ivec2 bb) {
     if (bb.y - aa.y + 1 <= 2) return;
     if (furnish(map, aa, bb)) return;
 
@@ -59,21 +48,15 @@ namespace mapbuilder {
     map.data[y+1][x] = 0;
   }
 
-  export
-  template<unsigned W, unsigned H>
-  void build(map<W, H> & map) {
-    for (auto y = 0; y < H; y++) {
-      for (auto x = 0; x < W; x++) {
+  export void build(map & map) {
+    for (auto y = 0; y < map.h; y++) {
+      for (auto x = 0; x < map.w; x++) {
         map.data[y][x] = 0;
       }
     }
-    for (auto y = 0; y < H; y++) map.data[y][0] = map.data[y][W - 1] = 1;
-    for (auto x = 0; x < W; x++) map.data[0][x] = map.data[H - 1][x] = 1;
+    for (auto y = 0; y < map.h; y++) map.data[y][0] = map.data[y][map.w - 1] = 1;
+    for (auto x = 0; x < map.w; x++) map.data[0][x] = map.data[map.h - 1][x] = 1;
 
-    if (W > H) {
-      vsplit(map, {1,1}, {W-2,H-2});
-    } else {
-      hsplit(map, {1,1}, {W-2,H-2});
-    }
+    (map.w > map.h ? vsplit : hsplit)(map, {1,1}, {map.w-2,map.h-2});
   }
 }
