@@ -1,3 +1,4 @@
+#pragma leco add_impl map_builder
 export module map;
 import roomdefs;
 
@@ -7,4 +8,6 @@ export struct map {
 
   unsigned data[h][w] {};
   roomdefs::list roomdefs {};
+
+  void build();
 };

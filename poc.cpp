@@ -5,7 +5,6 @@ import jute;
 import hai;
 import hashley;
 import map;
-import mapbuilder;
 import roomdefs;
 import sprdef;
 import traits;
@@ -36,7 +35,7 @@ static void load(auto & m, unsigned (&map)[H][W]) {
 }
 
 static void on_frame() {
-  mapbuilder::build(g_map);
+  g_map.build();
   wallbuilder::draw(g_map.data);
 
   auto m = v::map();

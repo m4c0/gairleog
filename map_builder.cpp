@@ -1,9 +1,8 @@
-export module mapbuilder;
+module map;
 import dotz;
-import map;
 import rng;
 
-namespace mapbuilder {
+namespace {
   [[nodiscard]] bool furnish(map & map, dotz::ivec2 aa, dotz::ivec2 bb) {
     return false;
   }
@@ -47,16 +46,16 @@ namespace mapbuilder {
     map.data[y][x] = 0;
     map.data[y+1][x] = 0;
   }
+}
 
-  export void build(map & map) {
-    for (auto y = 0; y < map.h; y++) {
-      for (auto x = 0; x < map.w; x++) {
-        map.data[y][x] = 0;
-      }
+void map::build() {
+  for (auto y = 0; y < h; y++) {
+    for (auto x = 0; x < w; x++) {
+      data[y][x] = 0;
     }
-    for (auto y = 0; y < map.h; y++) map.data[y][0] = map.data[y][map.w - 1] = 1;
-    for (auto x = 0; x < map.w; x++) map.data[0][x] = map.data[map.h - 1][x] = 1;
-
-    (map.w > map.h ? vsplit : hsplit)(map, {1,1}, {map.w-2,map.h-2});
   }
+  for (auto y = 0; y < h; y++) data[y][0] = data[y][w - 1] = 1;
+  for (auto x = 0; x < w; x++) data[0][x] = data[h - 1][x] = 1;
+
+  (w > h ? vsplit : hsplit)(*this, {1,1}, {w-2,h-2});
 }
