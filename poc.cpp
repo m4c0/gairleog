@@ -1,5 +1,6 @@
 #pragma leco app
 
+import casein;
 import dotz;
 import jute;
 import hai;
@@ -41,6 +42,8 @@ static void on_frame() {
 
   load(v::map());
   v::on_frame = [] {};
+
+  casein::handle(casein::KEY_DOWN, casein::K_SPACE, on_frame);
 }
 
 const int i = [] {
