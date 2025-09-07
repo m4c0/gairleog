@@ -9,13 +9,15 @@ import sires;
 import traits;
 
 namespace roomdefs {
+  export constexpr const auto max_size = 8;
+
   export struct t {
-    unsigned w;
-    unsigned h;
-    hai::array<unsigned> data;
+    unsigned w {};
+    unsigned h {};
+    hai::array<unsigned> data {};
   };
   export struct list {
-    hai::varray<hai::sptr<t>> data[8][8] {};
+    hai::varray<hai::sptr<t>> data[max_size][max_size] {};
   };;
 
   [[nodiscard]] auto run(const hashley::niamh & sprdefs, jute::view src) {
@@ -29,8 +31,10 @@ namespace roomdefs {
     cm.ctx.sprdefs = &sprdefs;
     cm.ctx.fns["room"] = [](auto ctx, auto n, auto aa, auto as) -> const lispy::node * {
       if (as < 2) lispy::err(n, "rooms must have at least two rows");
+      if (as > max_size) lispy::err(n, "rooms is too long");
 
       unsigned cols = aa[0]->atom.size();
+      if (cols > max_size) lispy::err(aa[0], "row is too wide");
       hai::array<unsigned> data { cols * as };
       for (auto i = 0; i < as; i++) {
         if (!lispy::is_atom(aa[i])) lispy::err(aa[i], "all rows must be atoms");
