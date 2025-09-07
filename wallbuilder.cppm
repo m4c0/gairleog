@@ -12,17 +12,20 @@ constexpr auto rnd_rl() {
   }
 }
 
+constexpr bool wall(const map & map, unsigned x, unsigned y) {
+  return map.data[y][x] == map::init;
+}
+
 namespace wallbuilder {
   export void draw(map & map) {
     for (auto y = 0; y < map.h; y++) {
       for (auto x = 0; x < map.w; x++) {
-        if (map.data[y][x] == 0) continue;
-        if (map.data[y][x] != map::init) continue;
+        if (!wall(map, x, y)) continue;
 
-        bool l = x > 0       && map.data[y][x - 1];
-        bool r = x < map.w-1 && map.data[y][x + 1];
-        bool u = y > 0       && map.data[y - 1][x];
-        bool d = y < map.h-1 && map.data[y + 1][x];
+        bool l = x > 0       && wall(map, x - 1, y);
+        bool r = x < map.w-1 && wall(map, x + 1, y);
+        bool u = y > 0       && wall(map, x, y - 1);
+        bool d = y < map.h-1 && wall(map, x, y + 1);
         map.data[y][x] =
           l && r && u && d ? 19 :
           l && r && u ? rnd_rl() :
