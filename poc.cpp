@@ -10,7 +10,6 @@ import roomdefs;
 import sprdef;
 import traits;
 import v;
-import wallbuilder;
 
 static hashley::niamh g_spr_map { 1 };
 
@@ -38,7 +37,6 @@ static void load(auto m) {
 
 static void on_frame() {
   g_map.build();
-  wallbuilder::draw(g_map);
 
   load(v::map());
   v::on_frame = [] {};

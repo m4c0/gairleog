@@ -1,4 +1,5 @@
 #pragma leco add_impl map_builder
+#pragma leco add_impl map_walls
 export module map;
 import roomdefs;
 

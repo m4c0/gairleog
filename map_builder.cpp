@@ -61,6 +61,8 @@ namespace {
   }
 }
 
+void make_walls(map & map);
+
 void map::build() {
   for (auto y = 0; y < h; y++) {
     for (auto x = 0; x < w; x++) {
@@ -71,4 +73,5 @@ void map::build() {
   for (auto x = 0; x < w; x++) data[0][x] = data[h - 1][x] = map::wall;
 
   (w > h ? vsplit : hsplit)(*this, {1,1}, {w-2,h-2});
+  make_walls(*this);
 }
