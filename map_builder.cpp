@@ -8,7 +8,12 @@ namespace {
     auto & r = map.roomdefs.data[ab.y][ab.x];
     if (r.size() == 0) return false;
 
-    //auto & n = r[rng::rand(r.size())];
+    auto & n = r[rng::rand(r.size())];
+    for (auto y = aa.y; y <= bb.y; y++) {
+      for (auto x = aa.x; x <= bb.x; x++) {
+        map.data[y][x] = n->data[(y - aa.y) * n->w + (x - aa.x)];
+      }
+    }
 
     return true;
   }
