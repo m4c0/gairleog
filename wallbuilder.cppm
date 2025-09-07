@@ -13,7 +13,7 @@ constexpr auto rnd_rl() {
 }
 
 constexpr bool wall(const map & map, unsigned x, unsigned y) {
-  return map.data[y][x] == map::init;
+  return (map.data[y][x] & map::wall) == map::wall;
 }
 
 namespace wallbuilder {
@@ -26,7 +26,7 @@ namespace wallbuilder {
         bool r = x < map.w-1 && wall(map, x + 1, y);
         bool u = y > 0       && wall(map, x, y - 1);
         bool d = y < map.h-1 && wall(map, x, y + 1);
-        map.data[y][x] =
+        unsigned n =
           l && r && u && d ? 19 :
           l && r && u ? rnd_rl() :
           l && r && d ? 19 :
@@ -43,6 +43,7 @@ namespace wallbuilder {
           u ? 25 :
           d ? 3 :
           36;
+        map.data[y][x] = map::wall | n;
       }
     }
   }

@@ -27,7 +27,10 @@ static void load(auto m) {
     for (auto x = 0; x < g_map.w; x++) {
       auto c = g_map.data[y][x];
       if (!c) continue;
-      m->push({ .pos { x, y }, .uv = uv("environment/walls/brick_clay", c) });
+      dotz::ivec2 cuv = (c & map::wall)
+        ? uv("environment/walls/brick_clay", c & 0xffff)
+        : uv(c);
+      m->push({ .pos { x, y }, .uv = cuv });
     }
   }
 }

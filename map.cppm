@@ -3,7 +3,7 @@ export module map;
 import roomdefs;
 
 export struct map {
-  static constexpr const auto init = 0x5a5a5a5a;
+  static constexpr const auto wall = 0x400'0000;
 
   static constexpr const unsigned w = 32;
   static constexpr const unsigned h = 24;
