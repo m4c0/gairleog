@@ -65,7 +65,7 @@ namespace roomdefs {
     list rooms {};
     lispy::run(src, cm.ctx, [&](auto * n) {
       auto r = static_cast<const node *>(n)->room;
-      if (r) rooms.data[r->h][r->w].push_back_doubling(r); 
+      if (r) rooms.data[r->h - 1][r->w - 1].push_back_doubling(r); 
     });
     return rooms;
   }
