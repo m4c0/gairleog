@@ -5,6 +5,8 @@ import roomdefs;
 export struct map {
   static constexpr const auto wall = 0x400'0000;
 
+  static constexpr const auto max_room_size = roomdefs::max_size;
+
   static constexpr const unsigned w = 32;
   static constexpr const unsigned h = 24;
 

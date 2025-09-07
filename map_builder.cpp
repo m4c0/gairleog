@@ -4,7 +4,9 @@ import rng;
 
 namespace {
   [[nodiscard]] bool furnish(map & map, dotz::ivec2 aa, dotz::ivec2 bb) {
-    auto ab = bb - aa;
+    auto ab = bb - aa + 1;
+    if (ab.x > map::max_room_size || ab.y > map::max_room_size) return false;
+
     auto & r = map.roomdefs.data[ab.y][ab.x];
     if (r.size() == 0) return false;
 
