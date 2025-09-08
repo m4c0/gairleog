@@ -44,7 +44,7 @@ namespace roomdefs {
           auto c = a.subview(idx, 1).middle;
           if (!ctx.defs.has(c)) lispy::err(aa[i], "unknown def", idx);
 
-          auto cell = lispy::eval(ctx, ctx.defs[c]);
+          auto cell = lispy::eval<node>(ctx, ctx.defs[c]);
           if (!lispy::is_atom(cell)) lispy::err(aa[i], "cell must be a sprite name", idx);
 
           auto * sprdefs = static_cast<struct ctx &>(ctx).sprdefs;
@@ -53,7 +53,7 @@ namespace roomdefs {
         }
       }
 
-      auto * nn = new (ctx.allocator()) node { *aa[0] };
+      auto * nn = lispy::clone<node>(&ctx, aa[0]);
       nn->room = hai::sptr { new t {
         .w = cols,
         .h = as,

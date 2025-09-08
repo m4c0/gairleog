@@ -18,8 +18,8 @@ namespace sprdef {
     cm.ctx.fns["sprdef"] = [](auto ctx, auto n, auto aa, auto as) -> const lispy::node * {
       if (as != 2) lispy::err(n, "def expects name and value");
       if (!lispy::is_atom(aa[0])) lispy::err(aa[0], "def name must be an atom");
-      auto * nn = new (ctx.allocator()) custom_node { *aa[0] };
-      nn->spr_id = lispy::to_i(eval(ctx, aa[1]));
+      auto * nn = lispy::clone<custom_node>(&ctx, aa[0]);
+      nn->spr_id = lispy::to_i(eval<custom_node>(ctx, aa[1]));
       nn->valid = true;
       return nn;
     };
