@@ -1,4 +1,4 @@
-(def . empty)
+(def . environment/floor_tiles/grass1)
 (def ! environment/props/candles)
 
 (room
