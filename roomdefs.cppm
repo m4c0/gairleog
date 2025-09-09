@@ -24,11 +24,16 @@ namespace roomdefs {
     struct node : lispy::node {
       hai::sptr<t> room {};
     };
-    struct ctx : lispy::context {
+    struct context : lispy::context {
       const hashley::niamh * sprdefs;
+      list * list;
     }; 
-    lispy::ctx_w_mem<node, ctx> cm {};
+
+    list rooms {};
+
+    lispy::ctx_w_mem<node, context> cm {};
     cm.ctx.sprdefs = &sprdefs;
+    cm.ctx.list = &rooms;
     cm.ctx.fns["room"] = [](auto ctx, auto n, auto aa, auto as) -> const lispy::node * {
       if (as < 2) lispy::err(n, "rooms must have at least two rows");
       if (as > max_size) lispy::err(n, "rooms is too long");
@@ -47,26 +52,24 @@ namespace roomdefs {
           auto cell = lispy::eval<node>(ctx, ctx.defs[c]);
           if (!lispy::is_atom(cell)) lispy::err(aa[i], "cell must be a sprite name", idx);
 
-          auto * sprdefs = static_cast<struct ctx &>(ctx).sprdefs;
+          auto * sprdefs = static_cast<context &>(ctx).sprdefs;
           if (!sprdefs->has(cell->atom)) lispy::err(cell, "unknown sprdef");
           data[i * cols + idx] = (*sprdefs)[cell->atom];
         }
       }
 
-      auto * nn = lispy::clone<node>(&ctx, aa[0]);
-      nn->room = hai::sptr { new t {
+      auto rooms = static_cast<context &>(ctx).list;
+      rooms->data[as - 1][cols - 1].push_back_doubling(hai::sptr { new t {
         .w = cols,
         .h = as,
         .data = traits::move(data),
-      }};
-      return nn;
+      }}); 
+
+      return n;
     };
     
-    list rooms {};
-    lispy::run(src, cm.ctx, [&](auto * n) {
-      auto r = static_cast<const node *>(n)->room;
-      if (r) rooms.data[r->h - 1][r->w - 1].push_back_doubling(r); 
-    });
+    lispy::run(src, cm.ctx);
+
     return rooms;
   }
 
