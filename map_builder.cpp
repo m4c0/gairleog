@@ -23,8 +23,8 @@ namespace {
   void vsplit(map & map, dotz::ivec2 aa, dotz::ivec2 bb);
 
   void hsplit(map & map, dotz::ivec2 aa, dotz::ivec2 bb) {
-    if (bb.x - aa.x + 1 <= 2) return;
     if (furnish(map, aa, bb)) return;
+    if (bb.x - aa.x + 1 <= 2) return;
 
     auto x = aa.x + 1;
     if (bb.x - aa.x - 1 > 1) x += rng::rand(bb.x - aa.x - 1);
@@ -42,8 +42,8 @@ namespace {
   }
 
   void vsplit(map & map, dotz::ivec2 aa, dotz::ivec2 bb) {
-    if (bb.y - aa.y + 1 <= 2) return;
     if (furnish(map, aa, bb)) return;
+    if (bb.y - aa.y + 1 <= 2) return;
 
     auto y = aa.y + 1;
     if (bb.y - aa.y - 1 > 1) y += rng::rand(bb.y - aa.y - 1);
