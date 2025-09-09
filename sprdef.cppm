@@ -10,24 +10,28 @@ import traits;
 
 namespace sprdef {
   [[nodiscard]] auto run(jute::view src) {
+    hashley::niamh sprites { 1023 };
+
     struct custom_node : lispy::node {
       int spr_id;
       bool valid;
     };
-    lispy::ctx_w_mem<custom_node> cm {};
+    struct context : lispy::context {
+      hashley::niamh * spr;
+    };
+
+    lispy::ctx_w_mem<custom_node, context> cm {};
+    cm.ctx.spr = &sprites;
     cm.ctx.fns["sprdef"] = [](auto ctx, auto n, auto aa, auto as) -> const lispy::node * {
       if (as != 2) lispy::err(n, "def expects name and value");
       if (!lispy::is_atom(aa[0])) lispy::err(aa[0], "def name must be an atom");
-      auto * nn = lispy::clone<custom_node>(&ctx, aa[0]);
-      nn->spr_id = lispy::to_i(eval<custom_node>(ctx, aa[1]));
-      nn->valid = true;
-      return nn;
+      
+      auto spr = static_cast<context &>(ctx).spr;
+      (*spr)[aa[0]->atom] = lispy::to_i(eval<custom_node>(ctx, aa[1]));
+
+      return n;
     };
-    hashley::niamh sprites { 1023 };
-    lispy::run(src, cm.ctx, [&](auto * node) {
-      auto nn = static_cast<const custom_node *>(node);
-      if (nn->valid) sprites[nn->atom] = nn->spr_id;
-    });
+    lispy::run(src, cm.ctx);
 
     return sprites;
   }
