@@ -18,11 +18,12 @@ namespace sprdef {
     };
     struct context : lispy::context {
       hashley::niamh * spr;
+    } ctx {
+      { .allocator = lispy::allocator<custom_node>() },
     };
 
-    lispy::ctx_w_mem<custom_node, context> cm {};
-    cm.ctx.spr = &sprites;
-    cm.ctx.fns["sprdef"] = [](auto ctx, auto n, auto aa, auto as) -> const lispy::node * {
+    ctx.spr = &sprites;
+    ctx.fns["sprdef"] = [](auto ctx, auto n, auto aa, auto as) -> const lispy::node * {
       if (as != 2) lispy::err(n, "def expects name and value");
       if (!lispy::is_atom(aa[0])) lispy::err(aa[0], "def name must be an atom");
       
@@ -31,7 +32,7 @@ namespace sprdef {
 
       return n;
     };
-    lispy::run(src, cm.ctx);
+    lispy::run(src, ctx);
 
     return sprites;
   }

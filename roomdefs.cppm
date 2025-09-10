@@ -21,20 +21,21 @@ namespace roomdefs {
   };;
 
   [[nodiscard]] auto run(const hashley::niamh & sprdefs, jute::view src) {
+    list rooms {};
+
     struct node : lispy::node {
       hai::sptr<t> room {};
     };
     struct context : lispy::context {
       const hashley::niamh * sprdefs;
       list * list;
+    } ctx {
+      { .allocator = lispy::allocator<node>() },
+      &sprdefs,
+      &rooms,
     }; 
 
-    list rooms {};
-
-    lispy::ctx_w_mem<node, context> cm {};
-    cm.ctx.sprdefs = &sprdefs;
-    cm.ctx.list = &rooms;
-    cm.ctx.fns["room"] = [](auto ctx, auto n, auto aa, auto as) -> const lispy::node * {
+    ctx.fns["room"] = [](auto ctx, auto n, auto aa, auto as) -> const lispy::node * {
       if (as < 2) lispy::err(n, "rooms must have at least two rows");
       if (as > max_size) lispy::err(n, "rooms is too long");
 
@@ -68,7 +69,7 @@ namespace roomdefs {
       return n;
     };
     
-    lispy::run(src, cm.ctx);
+    lispy::run(src, ctx);
 
     return rooms;
   }
