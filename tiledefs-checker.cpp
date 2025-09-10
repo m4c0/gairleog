@@ -4,8 +4,10 @@
 import hai;
 import hashley;
 import jojo;
+import jute;
 import lispy;
 import print;
+import sprdef;
 
 struct tiledef {
   bool block;
@@ -13,15 +15,14 @@ struct tiledef {
   hai::array<unsigned> sprite {};
 };
 
-int main() try {
-  auto src = jojo::read_cstr("tiledefs.lsp");
-
+static void run(jute::view src, const hashley::niamh & sprdefs) {
   struct node : lispy::node {
     enum { t_empty, t_block, t_light, t_spr } type {};
     tiledef tdef {};
   };
   struct context : lispy::context {
     hashley::fin<tiledef> tiledefs { 127 };
+    const hashley::niamh * sprs = &sprdefs; 
   } ctx {
     { .allocator = lispy::allocator<node>() },
   };
@@ -42,10 +43,13 @@ int main() try {
   ctx.fns["spr"] = [](auto ctx, auto n, auto aa, auto as) -> const lispy::node * {
     if (as == 0) lispy::err(n, "spr requires at least one name");
 
+    auto & sprs = *static_cast<context &>(ctx).sprs;
+
     auto nn = new (ctx.allocator()) node { *n, node::t_spr, { .sprite { as } } };
     for (auto i = 0; i < as; i++) {
-      if (!lispy::is_atom(aa[i])) lispy::err(n, "spr expects atom names");
-      // TODO: transform sprdefs
+      if (!lispy::is_atom(aa[i])) lispy::err(aa[i], "spr expects atom names");
+      if (!sprs.has(aa[i]->atom)) lispy::err(aa[i], "invalid sprite name");
+      nn->tdef.sprite[i] = sprs[aa[i]->atom];
     }
     return nn;
   };
@@ -78,6 +82,13 @@ int main() try {
     return n;
   };
   lispy::run(src, ctx);
+}
+
+int main() try {
+  sprdef::load("sprites/pixelite2.lsp", [](auto sprdefs) {
+    auto src = jojo::read_cstr("tiledefs.lsp");
+    run(src, sprdefs);
+  });
 } catch (const lispy::parser_error & e) {
   errln("tiledefs.lsp:", e.line, ":", e.col, ": ", e.msg);
   return 1;
