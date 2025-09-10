@@ -45,6 +45,7 @@ int main() try {
     auto nn = new (ctx.allocator()) node { *n, node::t_spr, { .sprite { as } } };
     for (auto i = 0; i < as; i++) {
       if (!lispy::is_atom(aa[i])) lispy::err(n, "spr expects atom names");
+      // TODO: transform sprdefs
     }
     return nn;
   };
@@ -52,8 +53,26 @@ int main() try {
     if (as < 2) lispy::err(n, "tiledef requires at least name and spr");
     if (!lispy::is_atom(aa[0])) lispy::err(n, "tiledef name should be an atom");
 
+    auto & t = static_cast<context &>(ctx).tiledefs[aa[0]->atom];
     for (auto i = 1; i < as; i++) {
-      auto _ = eval(ctx, aa[i]);
+      auto a = eval(ctx, aa[i]);
+      switch (a->type) {
+        case node::t_empty:
+          lispy::err(aa[i], "expecting spr, light or block");
+          break;
+        case node::t_block:
+          t.block = a->tdef.block;
+          break;
+        case node::t_light:
+          t.light = a->tdef.light;
+          break;
+        case node::t_spr:
+          t.sprite.set_capacity(a->tdef.sprite.size());
+          for (auto i = 0; i < t.sprite.size(); i++) {
+            t.sprite[i] = a->tdef.sprite[i];
+          }
+          break;
+      }
     }
 
     return n;
