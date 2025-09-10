@@ -1,11 +1,11 @@
 #pragma leco add_resource roomdefs.lsp
 export module roomdefs;
 import hai;
-import hashley;
 import jojo;
 import jute;
 import lispy;
 import sires;
+import tiledefs;
 import traits;
 
 namespace roomdefs {
@@ -20,18 +20,18 @@ namespace roomdefs {
     hai::varray<hai::sptr<t>> data[max_size][max_size] {};
   };;
 
-  [[nodiscard]] auto run(const hashley::niamh & sprdefs, jute::view src) {
+  [[nodiscard]] auto run(const tiledefs::map & tiledefs, jute::view src) {
     list rooms {};
 
     struct node : lispy::node {
       hai::sptr<t> room {};
     };
     struct context : lispy::context {
-      const hashley::niamh * sprdefs;
+      const tiledefs::map * tiledefs;
       list * list;
     } ctx {
       { .allocator = lispy::allocator<node>() },
-      &sprdefs,
+      &tiledefs,
       &rooms,
     }; 
 
@@ -53,9 +53,9 @@ namespace roomdefs {
           auto cell = lispy::eval<node>(ctx, ctx.defs[c]);
           if (!lispy::is_atom(cell)) lispy::err(aa[i], "cell must be a sprite name", idx);
 
-          auto * sprdefs = static_cast<context &>(ctx).sprdefs;
-          if (!sprdefs->has(cell->atom)) lispy::err(cell, "unknown sprdef");
-          data[i * cols + idx] = (*sprdefs)[cell->atom];
+          auto * tiledefs = static_cast<context &>(ctx).tiledefs;
+          if (!tiledefs->has(cell->atom)) lispy::err(cell, "unknown sprdef");
+          data[i * cols + idx] = (*tiledefs)[cell->atom].sprite[0];
         }
       }
 
@@ -74,13 +74,13 @@ namespace roomdefs {
     return rooms;
   }
 
-  export void load(const hashley::niamh & sprdefs, jute::view lsp, auto && cb) {
-    jojo::read(lsp, nullptr, [&sprdefs, cb=traits::move(cb)](auto ptr, hai::cstr & src) {
-      cb(run(sprdefs, src));
+  export void load(const tiledefs::map & tdefs, jute::view lsp, auto && cb) {
+    jojo::read(lsp, nullptr, [&tdefs, cb=traits::move(cb)](auto ptr, hai::cstr & src) {
+      cb(run(tdefs, src));
     });
   }
-  export void load(const hashley::niamh & sprdefs, auto && cb) {
+  export void load(const tiledefs::map & tdefs, auto && cb) {
     auto lsp = sires::real_path_name("roomdefs.lsp");
-    load(sprdefs, lsp, cb);
+    load(tdefs, lsp, cb);
   }
 }

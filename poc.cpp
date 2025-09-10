@@ -50,13 +50,12 @@ const int i = [] {
     g_spr_map = traits::move(map);
 
     tiledefs::load(g_spr_map, [](auto tiles) {
-    });
+      roomdefs::load(tiles, [](auto rooms) {
+        g_map.roomdefs = traits::move(rooms);
 
-    roomdefs::load(g_spr_map, [](auto rooms) {
-      g_map.roomdefs = traits::move(rooms);
-
-      v::pc = { 16, 16 };
-      v::on_frame = on_frame;
+        v::pc = { 16, 16 };
+        v::on_frame = on_frame;
+      });
     });
   });
   return 0;

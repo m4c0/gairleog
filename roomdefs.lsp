@@ -1,5 +1,5 @@
-(def . environment/floor_tiles/grass1)
-(def ! environment/props/candles)
+(def . grass)
+(def ! candles)
 
 (room
   !!

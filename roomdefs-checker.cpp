@@ -1,12 +1,15 @@
 #pragma leco test
 import lispy;
 import print;
-import sprdef;
 import roomdefs;
+import sprdef;
+import tiledefs;
 
 int main() try {
   sprdef::load("sprites/pixelite2.lsp", [](auto sprs) {
-    roomdefs::load(sprs, "roomdefs.lsp", [&](auto rooms) {
+    tiledefs::load("tiledefs.lsp", sprs, [&](auto tdefs) {
+      roomdefs::load(tdefs, "roomdefs.lsp", [&](auto rooms) {
+      });
     });
   });
 } catch (lispy::parser_error e) {

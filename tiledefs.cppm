@@ -16,6 +16,7 @@ namespace tiledefs {
     int light {};
     hai::array<unsigned> sprite {};
   };
+  export using map = hashley::fin<tiledefs::t>;
 }
 
 static auto run(jute::view src, const hashley::niamh & sprdefs) {
@@ -24,7 +25,7 @@ static auto run(jute::view src, const hashley::niamh & sprdefs) {
     tiledefs::t tdef {};
   };
   struct context : lispy::context {
-    hashley::fin<tiledefs::t> tiledefs { 127 };
+    tiledefs::map tiledefs { 127 };
     const hashley::niamh * sprs = &sprdefs; 
   } ctx {
     { .allocator = lispy::allocator<node>() },
