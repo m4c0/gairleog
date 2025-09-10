@@ -8,6 +8,7 @@ import hashley;
 import map;
 import roomdefs;
 import sprdef;
+import tiledefs;
 import traits;
 import v;
 
@@ -48,7 +49,10 @@ const int i = [] {
   sprdef::load([](auto map) {
     g_spr_map = traits::move(map);
 
-    roomdefs::load(g_spr_map, [&](auto rooms) {
+    tiledefs::load(g_spr_map, [](auto tiles) {
+    });
+
+    roomdefs::load(g_spr_map, [](auto rooms) {
       g_map.roomdefs = traits::move(rooms);
 
       v::pc = { 16, 16 };
