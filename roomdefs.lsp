@@ -1,5 +1,7 @@
-(def . grass)
+(def . (random grass empty empty))
 (def ! candles)
+(def # boulder)
+(def ^ stone)
 
 (room
   !!
