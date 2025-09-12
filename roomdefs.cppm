@@ -4,6 +4,7 @@ import hai;
 import jojo;
 import jute;
 import lispy;
+import rng;
 import sires;
 import tiledefs;
 import traits;
@@ -35,6 +36,12 @@ namespace roomdefs {
       &rooms,
     }; 
 
+    constexpr const auto eval = lispy::eval<node>;
+
+    ctx.fns["random"] = [](auto n, auto aa, auto as) -> const lispy::node * {
+      if (as == 0) err(n, "random requires at least a parameter");
+      return eval(n->ctx, aa[rng::rand(as)]);
+    };
     ctx.fns["room"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as < 2) lispy::err(n, "rooms must have at least two rows");
       if (as > max_size) lispy::err(n, "rooms is too long");
