@@ -9,15 +9,17 @@ import sires;
 import traits;
 
 namespace sprdef {
+  export using map = hashley::niamh;
+
   [[nodiscard]] auto run(jute::view src) {
-    hashley::niamh sprites { 1023 };
+    map sprites { 1023 };
 
     struct custom_node : lispy::node {
       int spr_id;
       bool valid;
     };
     struct context : lispy::context {
-      hashley::niamh * spr;
+      map * spr;
     } ctx {
       { .allocator = lispy::allocator<custom_node>() },
     };

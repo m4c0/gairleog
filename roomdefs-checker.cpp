@@ -1,18 +1,32 @@
 #pragma leco test
+import jute;
 import lispy;
 import print;
 import roomdefs;
 import sprdef;
 import tiledefs;
 
-int main() try {
-  sprdef::load("sprites/pixelite2.lsp", [](auto sprs) {
-    tiledefs::load("tiledefs.lsp", sprs, [&](auto tdefs) {
-      roomdefs::load(tdefs, "roomdefs.lsp", [&](auto rooms) {
-      });
-    });
-  });
+static void report(jute::view file, const lispy::parser_error e) {
+  errln(file, ":", e.line, ":", e.col, ": ", e.msg);
+}
+
+static void check_rooms(roomdefs::list rooms) {}
+
+static void read_rooms(tiledefs::map tdefs) try {
+  roomdefs::load(tdefs, "roomdefs.lsp", check_rooms);
 } catch (lispy::parser_error e) {
-  errln("roomdefs.lsp:", e.line, ":", e.col, ": ", e.msg);
+  report("roomdefs.lsp", e);
+}
+
+static void read_tdefs(sprdef::map sprs) try {
+  tiledefs::load("tiledefs.lsp", sprs, read_rooms);
+} catch (lispy::parser_error e) {
+  report("tiledefs.lsp", e);
+}
+
+int main() try {
+  sprdef::load("sprites/pixelite2.lsp", read_tdefs);
+} catch (lispy::parser_error e) {
+  report("sprites/pixelite2.lsp", e);
   return 3;
 }
