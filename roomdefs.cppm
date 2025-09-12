@@ -35,7 +35,7 @@ namespace roomdefs {
       &rooms,
     }; 
 
-    ctx.fns["room"] = [](auto ctx, auto n, auto aa, auto as) -> const lispy::node * {
+    ctx.fns["room"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as < 2) lispy::err(n, "rooms must have at least two rows");
       if (as > max_size) lispy::err(n, "rooms is too long");
 
@@ -48,18 +48,18 @@ namespace roomdefs {
         if (cols != a.size()) lispy::err(aa[i], "all rows must have the same length");
         for (auto idx = 0; idx < a.size(); idx++) {
           auto c = a.subview(idx, 1).middle;
-          if (!ctx.defs.has(c)) lispy::err(aa[i], "unknown def", idx);
+          if (!n->ctx->defs.has(c)) lispy::err(aa[i], "unknown def", idx);
 
-          auto cell = lispy::eval<node>(ctx, ctx.defs[c]);
+          auto cell = lispy::eval<node>(n->ctx, n->ctx->defs[c]);
           if (!lispy::is_atom(cell)) lispy::err(aa[i], "cell must be a sprite name", idx);
 
-          auto * tiledefs = static_cast<context &>(ctx).tiledefs;
+          auto * tiledefs = static_cast<context *>(n->ctx)->tiledefs;
           if (!tiledefs->has(cell->atom)) lispy::err(cell, "unknown sprdef");
           data[i * cols + idx] = (*tiledefs)[cell->atom].sprite[0];
         }
       }
 
-      auto rooms = static_cast<context &>(ctx).list;
+      auto rooms = static_cast<context *>(n->ctx)->list;
       rooms->data[as - 1][cols - 1].push_back_doubling(hai::sptr { new t {
         .w = cols,
         .h = as,
@@ -69,7 +69,7 @@ namespace roomdefs {
       return n;
     };
     
-    lispy::run(src, ctx);
+    lispy::run(src, &ctx);
 
     return rooms;
   }

@@ -23,16 +23,16 @@ namespace sprdef {
     };
 
     ctx.spr = &sprites;
-    ctx.fns["sprdef"] = [](auto ctx, auto n, auto aa, auto as) -> const lispy::node * {
+    ctx.fns["sprdef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as != 2) lispy::err(n, "def expects name and value");
       if (!lispy::is_atom(aa[0])) lispy::err(aa[0], "def name must be an atom");
       
-      auto spr = static_cast<context &>(ctx).spr;
-      (*spr)[aa[0]->atom] = lispy::to_i(eval<custom_node>(ctx, aa[1]));
+      auto spr = static_cast<context *>(n->ctx)->spr;
+      (*spr)[aa[0]->atom] = lispy::to_i(eval<custom_node>(n->ctx, aa[1]));
 
       return n;
     };
-    lispy::run(src, ctx);
+    lispy::run(src, &ctx);
 
     return sprites;
   }

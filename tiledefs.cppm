@@ -34,22 +34,22 @@ static auto run(jute::view src, const hashley::niamh & sprdefs) {
   // static constexpr const auto clone = lispy::clone<node>;
   static constexpr const auto eval = lispy::eval<node>;
 
-  ctx.fns["block"] = [](auto ctx, auto n, auto aa, auto as) -> const lispy::node * {
+  ctx.fns["block"] = [](auto n, auto aa, auto as) -> const lispy::node * {
     if (as != 0) lispy::err(n, "block does not accept parameters");
-    return new (ctx.allocator()) node { *n, node::t_block, { .block = true } };
+    return new (n->ctx->allocator()) node { *n, node::t_block, { .block = true } };
   };
-  ctx.fns["light"] = [](auto ctx, auto n, auto aa, auto as) -> const lispy::node * {
+  ctx.fns["light"] = [](auto n, auto aa, auto as) -> const lispy::node * {
     if (as != 1) lispy::err(n, "light requires intensity as parameter");
-    auto i = lispy::to_i(eval(ctx, aa[0]));
+    auto i = lispy::to_i(eval(n->ctx, aa[0]));
     if (i < 0 || i > 15) lispy::err(n, "light intensity should be between 0 and 15");
-    return new (ctx.allocator()) node { *n, node::t_light, { .light = i } };
+    return new (n->ctx->allocator()) node { *n, node::t_light, { .light = i } };
   };
-  ctx.fns["spr"] = [](auto ctx, auto n, auto aa, auto as) -> const lispy::node * {
+  ctx.fns["spr"] = [](auto n, auto aa, auto as) -> const lispy::node * {
     if (as == 0) lispy::err(n, "spr requires at least one name");
 
-    auto & sprs = *static_cast<context &>(ctx).sprs;
+    auto & sprs = *static_cast<context *>(n->ctx)->sprs;
 
-    auto nn = new (ctx.allocator()) node { *n, node::t_spr, { .sprite { as } } };
+    auto nn = new (n->ctx->allocator()) node { *n, node::t_spr, { .sprite { as } } };
     for (auto i = 0; i < as; i++) {
       if (!lispy::is_atom(aa[i])) lispy::err(aa[i], "spr expects atom names");
       if (!sprs.has(aa[i]->atom)) lispy::err(aa[i], "invalid sprite name");
@@ -57,13 +57,13 @@ static auto run(jute::view src, const hashley::niamh & sprdefs) {
     }
     return nn;
   };
-  ctx.fns["tiledef"] = [](auto ctx, auto n, auto aa, auto as) -> const lispy::node * {
+  ctx.fns["tiledef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
     if (as < 2) lispy::err(n, "tiledef requires at least name and spr");
     if (!lispy::is_atom(aa[0])) lispy::err(n, "tiledef name should be an atom");
 
-    auto & t = static_cast<context &>(ctx).tiledefs[aa[0]->atom];
+    auto & t = static_cast<context *>(n->ctx)->tiledefs[aa[0]->atom];
     for (auto i = 1; i < as; i++) {
-      auto a = eval(ctx, aa[i]);
+      auto a = eval(n->ctx, aa[i]);
       switch (a->type) {
         case node::t_empty:
           lispy::err(aa[i], "expecting spr, light or block");
@@ -85,7 +85,7 @@ static auto run(jute::view src, const hashley::niamh & sprdefs) {
 
     return n;
   };
-  lispy::run(src, ctx);
+  lispy::run(src, &ctx);
 
   return traits::move(ctx.tiledefs);
 }
