@@ -7,6 +7,7 @@ import dotz;
 import jojo;
 import jute;
 import hay;
+import mtime;
 import pprent;
 import print;
 import sysstd;
@@ -55,6 +56,8 @@ static void recurse(const char * dir) {
 }
 
 int main() {
+  if (mtime::of("sprites/pixelite2.lsp") && mtime::of("sprites/pixelite2.png")) return 0;
+
   hay<FILE *, sysstd::fopen, fclose> lsp { "sprites/pixelite2.lsp", "wb" };
   fputln(lsp, "(sprdef empty 0)");
 
