@@ -15,7 +15,7 @@ import stubby;
 static stbi::pixel out[1024 * 1024];
 
 static unsigned next_id = 1;
-static hay<FILE *, sysstd::fopen, fclose> lsp { "sprites/pixelite2.lsp", "wb" };
+static FILE * lsp;
 
 static void process(jute::view file) {
   auto fid = file.split('/').after.rsplit('.').before;
@@ -55,7 +55,11 @@ static void recurse(const char * dir) {
 }
 
 int main() {
+  hay<FILE *, sysstd::fopen, fclose> lsp { "sprites/pixelite2.lsp", "wb" };
   fputln(lsp, "(sprdef empty 0)");
+
+  ::lsp = lsp;
   recurse("PixeLike2_AssetPack");
+
   stbi::write_rgba_unsafe("sprites/pixelite2.png", 1024, 1024, out);
 }
