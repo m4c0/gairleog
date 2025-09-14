@@ -44,7 +44,6 @@ namespace sprdef {
     });
   }
   export void load(auto && cb) {
-    auto lsp = sires::real_path_name("pixelite2.lsp");
-    load(lsp, cb);
+    load("pixelite2.lsp", cb);
   }
 }
