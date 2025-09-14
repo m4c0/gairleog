@@ -15,6 +15,7 @@ import traits;
 import v;
 
 static hashley::niamh g_spr_map { 1 };
+static tiledefs::map g_tdef_map { 1 };
 
 [[nodiscard]] constexpr auto uv(unsigned i) {
   return dotz::ivec2 { i % 64, i / 64 };
@@ -48,12 +49,14 @@ static void on_frame() {
 }
 
 const int i = [] {
-  sires::on_error([](auto ptr, auto msg) { silog::die("%s", msg.cstr().begin()); });
+  sires::on_error([](auto ptr, auto msg) { silog::die("Failure loading resource: %s", msg.cstr().begin()); });
   sprdef::load([](auto map) {
     g_spr_map = traits::move(map);
 
     tiledefs::load(g_spr_map, [](auto tiles) {
-      roomdefs::load(tiles, [](auto rooms) {
+      g_tdef_map = traits::move(tiles);
+
+      roomdefs::load(g_tdef_map, [](auto rooms) {
         g_map.roomdefs = traits::move(rooms);
 
         v::pc = { 16, 16 };

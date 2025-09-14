@@ -4,6 +4,7 @@ import gelo;
 import jojo;
 import jute;
 import silog;
+import sires;
 import stubby;
 import vaselin;
 
@@ -124,11 +125,12 @@ void main()
     bind_texture(TEXTURE_2D, t);
     tex_image_2d(TEXTURE_2D, 0, RGBA, 1, 1, 0, RGBA, UNSIGNED_BYTE, &pix, sizeof(pix));
 
-    stbi::load(name, nullptr, [name](auto, auto & img) {
+    sires::read(name, nullptr, [name](auto, hai::cstr & bits) {
       using namespace gelo;
 
       silog::log(silog::info, "[%*s] loaded", static_cast<int>(name.size()), name.begin());
 
+      auto img = stbi::load(bits);
       auto & [ w, h, ch, data ] = img;
       bind_texture(TEXTURE_2D, g_texture);
       tex_image_2d(TEXTURE_2D, 0, RGBA, w, h, 0, RGBA, UNSIGNED_BYTE, *data, w * h * 4);
