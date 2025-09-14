@@ -61,7 +61,8 @@ namespace roomdefs {
 
           auto * tiledefs = static_cast<context *>(n->ctx)->tiledefs;
           if (!tiledefs->has(cell->atom)) lispy::err(cell, "unknown sprdef");
-          data[i * cols + idx] = (*tiledefs)[cell->atom].sprite[0];
+          auto & spr = (*tiledefs)[cell->atom].sprite;
+          data[i * cols + idx] = spr[rng::rand(spr.size())];
         }
       }
 
