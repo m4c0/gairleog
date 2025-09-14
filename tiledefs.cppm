@@ -3,7 +3,6 @@ export module tiledefs;
 
 import hai;
 import hashley;
-import jojo;
 import jute;
 import lispy;
 import print;
@@ -91,13 +90,9 @@ static auto run(jute::view src, const hashley::niamh & sprdefs) {
 }
 
 namespace tiledefs {
-  export void load(jute::view lsp, const hashley::niamh & spr, auto && cb) {
-    jojo::read(lsp, nullptr, [cb=traits::move(cb),&spr](auto ptr, hai::cstr & src) {
+  export void load(const hashley::niamh & spr, auto && cb) {
+    sires::read("tiledefs.lsp", nullptr, [cb=traits::move(cb),&spr](auto ptr, hai::cstr & src) {
       cb(run(src, spr));
     });
-  }
-  export void load(const hashley::niamh & spr, auto && cb) {
-    auto lsp = sires::real_path_name("tiledefs.lsp");
-    load(lsp, spr, cb);
   }
 }

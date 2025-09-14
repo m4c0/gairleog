@@ -2,7 +2,6 @@
 export module sprdef;
 import hai;
 import hashley;
-import jojo;
 import jute;
 import lispy;
 import sires;
@@ -40,7 +39,7 @@ namespace sprdef {
   }
 
   export void load(jute::view lsp, auto && cb) {
-    jojo::read(lsp, nullptr, [cb=traits::move(cb)](auto ptr, hai::cstr & src) {
+    sires::read(lsp, nullptr, [cb=traits::move(cb)](auto ptr, hai::cstr & src) {
       cb(run(src));
     });
   }

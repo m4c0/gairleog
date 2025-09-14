@@ -1,7 +1,6 @@
 #pragma leco add_resource roomdefs.lsp
 export module roomdefs;
 import hai;
-import jojo;
 import jute;
 import lispy;
 import rng;
@@ -81,13 +80,9 @@ namespace roomdefs {
     return rooms;
   }
 
-  export void load(const tiledefs::map & tdefs, jute::view lsp, auto && cb) {
-    jojo::read(lsp, nullptr, [&tdefs, cb=traits::move(cb)](auto ptr, hai::cstr & src) {
+  export void load(const tiledefs::map & tdefs, auto && cb) {
+    sires::read("roomdefs.lsp", nullptr, [&tdefs, cb=traits::move(cb)](auto ptr, hai::cstr & src) {
       cb(run(tdefs, src));
     });
-  }
-  export void load(const tiledefs::map & tdefs, auto && cb) {
-    auto lsp = sires::real_path_name("roomdefs.lsp");
-    load(tdefs, lsp, cb);
   }
 }

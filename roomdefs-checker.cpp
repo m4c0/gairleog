@@ -13,13 +13,13 @@ static void report(jute::view file, const lispy::parser_error e) {
 static void check_rooms(roomdefs::list rooms) {}
 
 static void read_rooms(tiledefs::map tdefs) try {
-  roomdefs::load(tdefs, "roomdefs.lsp", check_rooms);
+  roomdefs::load(tdefs, check_rooms);
 } catch (lispy::parser_error e) {
   report("roomdefs.lsp", e);
 }
 
 static void read_tdefs(sprdef::map sprs) try {
-  tiledefs::load("tiledefs.lsp", sprs, read_rooms);
+  tiledefs::load(sprs, read_rooms);
 } catch (lispy::parser_error e) {
   report("tiledefs.lsp", e);
 }

@@ -7,6 +7,8 @@ import hai;
 import hashley;
 import map;
 import roomdefs;
+import silog;
+import sires;
 import sprdef;
 import tiledefs;
 import traits;
@@ -46,6 +48,7 @@ static void on_frame() {
 }
 
 const int i = [] {
+  sires::on_error([](auto ptr, auto msg) { silog::die("%s", msg.cstr().begin()); });
   sprdef::load([](auto map) {
     g_spr_map = traits::move(map);
 
