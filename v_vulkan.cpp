@@ -70,8 +70,7 @@ const int i = [] {
   on(START,  [] {
     g_as = new app_stuff {};
 
-    auto img = sires::real_path_name("pixelite2.png");
-    voo::load_image(img, g_as->dq.physical_device(), g_as->dq.queue(), &g_as->img, [] {
+    voo::load_image("pixelite2.png", g_as->dq.physical_device(), g_as->dq.queue(), &g_as->img, [] {
       vee::update_descriptor_set(g_as->dset.descriptor_set(), 0, i, *g_as->img.iv, *g_as->smp);
     });
   });
