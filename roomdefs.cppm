@@ -37,6 +37,14 @@ namespace roomdefs {
 
     constexpr const auto eval = lispy::eval<node>;
 
+    ctx.fns["do"] = [](auto n, auto aa, auto as) -> const lispy::node * {
+      if (as == 0) err(n, "'do' requires at least a parameter");
+      const node * res;
+      for (auto i = 0; i < as; i++) {
+        res = eval(n->ctx, aa[i]);
+      }
+      return res;
+    };
     ctx.fns["random"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as == 0) err(n, "random requires at least a parameter");
       return eval(n->ctx, aa[rng::rand(as)]);
