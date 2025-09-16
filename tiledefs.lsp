@@ -33,6 +33,13 @@
        environment/props/tree3
        environment/props/tree4))
 
+(tiledef tree_swamp
+  (block)
+  (spr environment/props/tree1_swamp
+       environment/props/tree2_swamp
+       environment/props/tree3_swamp
+       environment/props/tree4_swamp))
+
 (tiledef tree_withered
   (block)
   (spr environment/props/tree1_withered
