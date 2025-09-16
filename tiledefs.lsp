@@ -20,6 +20,12 @@
        environment/floor_tiles/grass3
        environment/floor_tiles/grass4))
 
+(tiledef grass_swamp
+  (spr environment/floor_tiles/grass_swamp1
+       environment/floor_tiles/grass_swamp2
+       environment/floor_tiles/grass_swamp3
+       environment/floor_tiles/grass_swamp4))
+
 (tiledef stone
   (spr environment/floor_tiles/stone1
        environment/floor_tiles/stone2
