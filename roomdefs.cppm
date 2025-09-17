@@ -39,7 +39,7 @@ namespace roomdefs {
     //constexpr const auto eval = lispy::eval<node>;
 
     ctx.fns["themedef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      if (as != 1) err(n, "themedef requires at exactly one parameter");
+      if (as != 1) lispy::err(n, "themedef requires at exactly one parameter");
       static_cast<context *>(n->ctx)->theme = static_cast<const node *>(aa[0]);
       return aa[0];
     };
