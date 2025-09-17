@@ -11,6 +11,8 @@ export struct map {
 
   unsigned data[h][w] {};
 
+  auto & at(dotz::ivec2 p) { return data[p.y][p.x]; }
+
   void build();
 
   void load(auto && m) {
