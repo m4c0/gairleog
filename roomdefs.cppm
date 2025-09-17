@@ -34,13 +34,12 @@ namespace roomdefs {
     };
 
     struct node : lispy::node {
-      enum { t_empty, t_block, t_light, t_spr } type {};
+      enum { t_empty, t_block, t_light, t_spr, t_tdef } type {};
       tiledef tdef {};
       hai::sptr<t> room {};
     };
     struct context : lispy::context {
       const node * theme;
-      hashley::fin<tiledef> tdefs { 127 };
     } ctx {
       { .allocator = lispy::allocator<node>() },
     }; 
@@ -68,15 +67,15 @@ namespace roomdefs {
       }
       return nn;
     };
-    ctx.fns["tiledef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      if (as < 2) lispy::err(n, "tiledef requires at least name and spr");
-      if (!lispy::is_atom(aa[0])) lispy::err(n, "tiledef name should be an atom");
+    ctx.fns["tile"] = [](auto n, auto aa, auto as) -> const lispy::node * {
+      if (as < 1) lispy::err(n, "tile requires at least name and spr");
 
-      auto & t = static_cast<context *>(n->ctx)->tdefs[aa[0]->atom];
-      for (auto i = 1; i < as; i++) {
+      tiledef t {};
+      for (auto i = 0; i < as; i++) {
         auto a = eval(n->ctx, aa[i]);
         switch (a->type) {
           case node::t_empty:
+          case node::t_tdef:
             lispy::err(aa[i], "expecting spr, light or block inside a tdef");
             break;
           case node::t_block:
@@ -86,6 +85,7 @@ namespace roomdefs {
             t.light = a->tdef.light;
             break;
           case node::t_spr:
+            if (a->tdef.sprite.size() == 0) lispy::err(a, "tile without sprites");
             t.sprite.set_capacity(a->tdef.sprite.size());
             for (auto i = 0; i < t.sprite.size(); i++) {
               t.sprite[i] = a->tdef.sprite[i];
@@ -94,7 +94,7 @@ namespace roomdefs {
         }
       }
 
-      return n;
+      return new (n->ctx->allocator()) node { *n, node::t_tdef, { traits::move(t) } };
     };
 
     ctx.fns["themedef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
@@ -124,8 +124,13 @@ namespace roomdefs {
           auto cell = lispy::eval<node>(n->ctx, n->ctx->defs[c]);
           if (!lispy::is_atom(cell)) lispy::err(aa[i], "cell must be a sprite name", idx);
 
-          if (!ctx->tdefs.has(cell->atom)) lispy::err(cell, "unknown sprdef");
-          auto & spr = ctx->tdefs[cell->atom].sprite;
+          if (!ctx->defs.has(cell->atom)) lispy::err(cell, "unknown tiledef");
+          auto tdn = lispy::eval<node>(ctx, ctx->defs[cell->atom]);
+          if (tdn->type != node::t_tdef) lispy::err(tdn, "expecting a tiledef");
+
+          auto & spr = tdn->tdef.sprite;
+          if (spr.size() == 0) lispy::err(tdn, "tiledef without sprites");
+
           data[i * cols + idx] = spr[rng::rand(spr.size())];
         }
       }
