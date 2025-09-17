@@ -18,8 +18,8 @@ static void read_rooms(tiledefs::map tdefs) try {
   report("roomdefs.lsp", e);
 }
 
-static void read_tdefs(sprdef::map sprs) try {
-  tiledefs::load(sprs, read_rooms);
+static void read_tdefs() try {
+  tiledefs::load(read_rooms);
 } catch (lispy::parser_error e) {
   report("tiledefs.lsp", e);
 }

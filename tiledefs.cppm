@@ -18,14 +18,13 @@ namespace tiledefs {
   export using map = hashley::fin<tiledefs::t>;
 }
 
-static auto run(jute::view src, const hashley::niamh & sprdefs) {
+static auto run(jute::view src) {
   struct node : lispy::node {
     enum { t_empty, t_block, t_light, t_spr } type {};
     tiledefs::t tdef {};
   };
   struct context : lispy::context {
     tiledefs::map tiledefs { 127 };
-    const hashley::niamh * sprs = &sprdefs; 
   } ctx {
     { .allocator = lispy::allocator<node>() },
   };
@@ -46,13 +45,11 @@ static auto run(jute::view src, const hashley::niamh & sprdefs) {
   ctx.fns["spr"] = [](auto n, auto aa, auto as) -> const lispy::node * {
     if (as == 0) lispy::err(n, "spr requires at least one name");
 
-    auto & sprs = *static_cast<context *>(n->ctx)->sprs;
-
     auto nn = new (n->ctx->allocator()) node { *n, node::t_spr, { .sprite { as } } };
     for (auto i = 0; i < as; i++) {
       if (!lispy::is_atom(aa[i])) lispy::err(aa[i], "spr expects atom names");
-      if (!sprs.has(aa[i]->atom)) lispy::err(aa[i], "invalid sprite name");
-      nn->tdef.sprite[i] = sprs[aa[i]->atom];
+      if (!sprdef::has(aa[i]->atom)) lispy::err(aa[i], "invalid sprite name");
+      nn->tdef.sprite[i] = sprdef::get(aa[i]->atom);
     }
     return nn;
   };
@@ -90,9 +87,9 @@ static auto run(jute::view src, const hashley::niamh & sprdefs) {
 }
 
 namespace tiledefs {
-  export void load(const hashley::niamh & spr, auto && cb) {
-    sires::read("tiledefs.lsp", nullptr, [cb=traits::move(cb),&spr](auto ptr, hai::cstr & src) {
-      cb(run(src, spr));
+  export void load(auto && cb) {
+    sires::read("tiledefs.lsp", nullptr, [cb=traits::move(cb)](auto ptr, hai::cstr & src) {
+      cb(run(src));
     });
   }
 }

@@ -14,14 +14,13 @@ import tiledefs;
 import traits;
 import v;
 
-static hashley::niamh g_spr_map { 1 };
 static tiledefs::map g_tdef_map { 1 };
 
 [[nodiscard]] constexpr auto uv(unsigned i) {
   return dotz::ivec2 { i % 64, i / 64 };
 }
 [[nodiscard]] auto uv(jute::view id, unsigned idx = 0) {
-  return uv(g_spr_map[id] + idx);
+  return uv(sprdef::get(id) + idx);
 }
 
 static map g_map {};
@@ -50,10 +49,8 @@ static void on_frame() {
 
 const int i = [] {
   sires::on_error([](auto ptr, auto msg) { silog::die("Failure loading resource: %s", msg.cstr().begin()); });
-  sprdef::load([](auto map) {
-    g_spr_map = traits::move(map);
-
-    tiledefs::load(g_spr_map, [](auto tiles) {
+  sprdef::load([] {
+    tiledefs::load([](auto tiles) {
       g_tdef_map = traits::move(tiles);
 
       roomdefs::load(g_tdef_map, [](auto rooms) {
