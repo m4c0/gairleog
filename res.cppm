@@ -23,6 +23,7 @@ namespace res {
     });
   }
 
+#ifndef LECO_TARGET_WASM
   static void report(jute::view file, const lispy::parser_error & e) {
     char msg[128] {};
     auto len = snprintf(msg, sizeof(msg), "%.*s:%d:%d: %.*s",
@@ -32,14 +33,20 @@ namespace res {
     if (len > 0) err_cb(jute::view { msg, static_cast<unsigned>(len) });
     else err_cb(e.msg);
   }
+#endif
 
   static void safe_load(jute::view file, hai::fn<void, jute::view> cb) {
     sires::read(file, nullptr, [=](auto ptr, hai::cstr & src) mutable {
+#ifdef LECO_TARGET_WASM
+      // No exceptions ATM
+      cb(src);
+#else
       try {
         cb(src);
       } catch (const lispy::parser_error & e) {
         report(file, e);
       }
+#endif
     });
   }
 

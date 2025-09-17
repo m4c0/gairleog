@@ -1,6 +1,3 @@
-#pragma leco add_shader gairleog.frag
-#pragma leco add_shader gairleog.vert
-
 module v;
 import casein;
 import dotz;

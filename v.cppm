@@ -1,3 +1,6 @@
+#pragma leco add_shader gairleog.frag
+#pragma leco add_shader gairleog.vert
+
 #ifdef LECO_TARGET_WASM
 #pragma leco add_impl v_wasm
 #else
