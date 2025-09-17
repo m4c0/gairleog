@@ -1,12 +1,8 @@
-#pragma leco add_resource "tiledefs.lsp"
 export module tiledefs;
-
 import hai;
 import hashley;
 import jute;
 import lispy;
-import print;
-import sires;
 import sprdef;
 
 namespace tiledefs {
@@ -21,9 +17,11 @@ namespace tiledefs {
   }
   export bool has(jute::view key) { return map().has(key); }
   export const auto & get(jute::view key) { return map()[key]; }
+
+  export void run(jute::view src);
 }
 
-static void run(jute::view src) {
+void tiledefs::run(jute::view src) {
   struct node : lispy::node {
     enum { t_empty, t_block, t_light, t_spr } type {};
     tiledefs::t tdef {};
@@ -85,13 +83,4 @@ static void run(jute::view src) {
     return n;
   };
   lispy::run(src, &ctx);
-}
-
-namespace tiledefs {
-  export void load(hai::fn<void> cb) {
-    sires::read("tiledefs.lsp", nullptr, [cb](auto ptr, hai::cstr & src) mutable {
-      run(src);
-      cb();
-    });
-  }
 }

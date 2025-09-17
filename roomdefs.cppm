@@ -1,10 +1,8 @@
-#pragma leco add_resource roomdefs.lsp
 export module roomdefs;
 import hai;
 import jute;
 import lispy;
 import rng;
-import sires;
 import tiledefs;
 import traits;
 
@@ -27,7 +25,7 @@ namespace roomdefs {
     return r[rng::rand(r.size())];
   }
 
-  void run(jute::view src) {
+  export void run(jute::view src) {
     struct node : lispy::node {
       hai::sptr<t> room {};
     };
@@ -82,12 +80,5 @@ namespace roomdefs {
     };
     
     lispy::run(src, &ctx);
-  }
-
-  export void load(hai::fn<void> cb) {
-    sires::read("roomdefs.lsp", nullptr, [cb](auto ptr, hai::cstr & src) mutable {
-      run(src);
-      cb();
-    });
   }
 }

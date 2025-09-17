@@ -1,4 +1,6 @@
 #pragma leco add_resource_dir "sprites"
+#pragma leco add_resource "roomdefs.lsp"
+#pragma leco add_resource "tiledefs.lsp"
 module;
 #include <stdio.h>
 
@@ -30,16 +32,29 @@ namespace res {
     else err_cb(e.msg);
   }
 
-  static void load(jute::view sprdef_file, hai::fn<void> cb) {
-    sires::read(sprdef_file, nullptr, [=](auto ptr, hai::cstr & src) mutable {
+  static void safe_load(jute::view file, hai::fn<void, jute::view> cb) {
+    sires::read(file, nullptr, [=](auto ptr, hai::cstr & src) mutable {
       try {
-        sprdef::run(src);
-        tiledefs::load([cb] {
-          roomdefs::load(cb);
-        });
+        cb(src);
       } catch (const lispy::parser_error & e) {
-        report(sprdef_file, e);
+        report(file, e);
       }
+    });
+  }
+
+  static void load(jute::view sprdef_file, hai::fn<void> cb) {
+    safe_load(sprdef_file, [=](auto src) mutable {
+      sprdef::run(src);
+
+      safe_load("tiledefs.lsp", [=](auto src) mutable {
+        tiledefs::run(src);
+
+        safe_load("roomdefs.lsp", [=](auto src) mutable {
+          roomdefs::run(src);
+
+          cb();
+        });
+      });
     });
   }
   export void load_all(void (*cb)()) {
