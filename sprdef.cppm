@@ -15,7 +15,7 @@ namespace sprdef {
   export bool has(jute::view key) { return map().has(key); }
   export const auto & get(jute::view key) { return map()[key]; }
 
-  void run(jute::view src) {
+  static void run(jute::view src) {
     struct custom_node : lispy::node {
       int spr_id;
       bool valid;
@@ -35,13 +35,13 @@ namespace sprdef {
     lispy::run(src, &ctx);
   }
 
-  export void load(jute::view lsp, auto && cb) {
-    sires::read(lsp, nullptr, [cb=traits::move(cb)](auto ptr, hai::cstr & src) {
+  export void load(jute::view lsp, void (*cb)()) {
+    sires::read(lsp, nullptr, [cb](auto ptr, hai::cstr & src) {
       run(src);
       cb();
     });
   }
-  export void load(auto && cb) {
+  export void load(void (*cb)()) {
     load("pixelite2.lsp", cb);
   }
 }
