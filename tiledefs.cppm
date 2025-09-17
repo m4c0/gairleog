@@ -88,8 +88,8 @@ static void run(jute::view src) {
 }
 
 namespace tiledefs {
-  export void load(void (*cb)()) {
-    sires::read("tiledefs.lsp", nullptr, [cb](auto ptr, hai::cstr & src) {
+  export void load(hai::fn<void> cb) {
+    sires::read("tiledefs.lsp", nullptr, [cb](auto ptr, hai::cstr & src) mutable {
       run(src);
       cb();
     });

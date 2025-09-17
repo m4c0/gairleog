@@ -2,6 +2,7 @@
 import jute;
 import lispy;
 import print;
+import res;
 import roomdefs;
 import sprdef;
 import tiledefs;
@@ -25,6 +26,8 @@ static void read_tdefs() try {
 }
 
 int main() try {
+  res::on_error([](auto msg) { errln(msg); });
+
   sprdef::load("sprites/pixelite2.lsp", read_tdefs);
 } catch (lispy::parser_error e) {
   report("sprites/pixelite2.lsp", e);

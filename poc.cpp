@@ -6,11 +6,9 @@ import jute;
 import hai;
 import hashley;
 import map;
-import roomdefs;
+import res;
 import silog;
 import sires;
-import sprdef;
-import tiledefs;
 import traits;
 import v;
 
@@ -39,14 +37,10 @@ static void on_frame() {
 }
 
 const int i = [] {
-  sires::on_error([](auto ptr, auto msg) { silog::die("Failure loading resource: %s", msg.cstr().begin()); });
-  sprdef::load([] {
-    tiledefs::load([] {
-      roomdefs::load([] {
-        v::pc = { 16, 16 };
-        v::on_frame = on_frame;
-      });
-    });
+  res::on_error([](auto msg) { silog::die("Failure loading resource: %s", msg.cstr().begin()); });
+  res::load_all([] {
+    v::pc = { 16, 16 };
+    v::on_frame = on_frame;
   });
   return 0;
 }();

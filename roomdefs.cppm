@@ -84,8 +84,8 @@ namespace roomdefs {
     lispy::run(src, &ctx);
   }
 
-  export void load(void (*cb)()) {
-    sires::read("roomdefs.lsp", nullptr, [cb](auto ptr, hai::cstr & src) {
+  export void load(hai::fn<void> cb) {
+    sires::read("roomdefs.lsp", nullptr, [cb](auto ptr, hai::cstr & src) mutable {
       run(src);
       cb();
     });

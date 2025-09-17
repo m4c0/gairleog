@@ -35,13 +35,10 @@ namespace sprdef {
     lispy::run(src, &ctx);
   }
 
-  export void load(jute::view lsp, void (*cb)()) {
-    sires::read(lsp, nullptr, [cb](auto ptr, hai::cstr & src) {
+  export void load(jute::view lsp, hai::fn<void> cb) {
+    sires::read(lsp, nullptr, [cb](auto ptr, hai::cstr & src) mutable {
       run(src);
       cb();
     });
-  }
-  export void load(void (*cb)()) {
-    load("pixelite2.lsp", cb);
   }
 }
