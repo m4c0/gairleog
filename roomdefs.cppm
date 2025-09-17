@@ -28,9 +28,9 @@ namespace roomdefs {
 
   export void run(jute::view src) {
     struct tiledef {
-      bool block;
+      bool block {};
       int light {};
-      hai::array<unsigned> sprite {};
+      unsigned sprite {};
     };
 
     struct node : lispy::node {
@@ -57,19 +57,15 @@ namespace roomdefs {
       return new (n->ctx->allocator()) node { *n, node::t_light, { .light = i } };
     };
     ctx.fns["spr"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      if (as == 0) lispy::err(n, "spr requires at least one name");
+      if (as != 1) lispy::err(n, "spr requires only the sprite name");
 
-      auto nn = new (n->ctx->allocator()) node { *n, node::t_spr, { .sprite { as } } };
-      for (auto i = 0; i < as; i++) {
-        if (!lispy::is_atom(aa[i])) lispy::err(aa[i], "spr expects atom names");
-        if (!sprdef::has(aa[i]->atom)) lispy::err(aa[i], "invalid sprite name");
-        nn->tdef.sprite[i] = sprdef::get(aa[i]->atom);
-      }
-      return nn;
+      if (!lispy::is_atom(aa[0])) lispy::err(aa[0], "spr expects atom as name");
+      if (!sprdef::has(aa[0]->atom)) lispy::err(aa[0], "invalid sprite name");
+
+      auto id = sprdef::get(aa[0]->atom);
+      return new (n->ctx->allocator()) node { *n, node::t_spr, { .sprite = id } };
     };
     ctx.fns["tile"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      if (as < 1) lispy::err(n, "tile requires at least name and spr");
-
       tiledef t {};
       for (auto i = 0; i < as; i++) {
         auto a = eval(n->ctx, aa[i]);
@@ -85,16 +81,11 @@ namespace roomdefs {
             t.light = a->tdef.light;
             break;
           case node::t_spr:
-            if (a->tdef.sprite.size() == 0) lispy::err(a, "tile without sprites");
-            t.sprite.set_capacity(a->tdef.sprite.size());
-            for (auto i = 0; i < t.sprite.size(); i++) {
-              t.sprite[i] = a->tdef.sprite[i];
-            }
+            t.sprite = a->tdef.sprite;
             break;
         }
       }
-
-      return new (n->ctx->allocator()) node { *n, node::t_tdef, { traits::move(t) } };
+      return new (n->ctx->allocator()) node { *n, node::t_tdef, { t } };
     };
 
     ctx.fns["themedef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
@@ -128,10 +119,7 @@ namespace roomdefs {
           auto tdn = lispy::eval<node>(ctx, ctx->defs[cell->atom]);
           if (tdn->type != node::t_tdef) lispy::err(tdn, "expecting a tiledef");
 
-          auto & spr = tdn->tdef.sprite;
-          if (spr.size() == 0) lispy::err(tdn, "tiledef without sprites");
-
-          data[i * cols + idx] = spr[rng::rand(spr.size())];
+          data[i * cols + idx] = tdn->tdef.sprite;
         }
       }
 
