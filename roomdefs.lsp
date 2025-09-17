@@ -2,10 +2,12 @@
 
 (def boulder (tile
   (block)
-  (spr environment/props/boulder1
-       environment/props/boulder2
-       environment/props/boulder3
-       environment/props/boulder4)))
+  (random
+    (spr environment/props/boulder1)
+    (spr environment/props/boulder2)
+    (spr environment/props/boulder3)
+    (spr environment/props/boulder4)
+  )))
 
 (def candles (tile
   (light 5)
@@ -15,46 +17,61 @@
   (spr environment/props/pot_red)))
 
 (def grass (tile
-  (spr environment/floor_tiles/grass1
-       environment/floor_tiles/grass2
-       environment/floor_tiles/grass3
-       environment/floor_tiles/grass4)))
-
+  (random
+    (spr environment/floor_tiles/grass1)
+    (spr environment/floor_tiles/grass2)
+    (spr environment/floor_tiles/grass3)
+    (spr environment/floor_tiles/grass4)
+  )))
+  
 (def grass_swamp (tile
-  (spr environment/floor_tiles/grass_swamp1
-       environment/floor_tiles/grass_swamp2
-       environment/floor_tiles/grass_swamp3
-       environment/floor_tiles/grass_swamp4)))
+  (random
+    (spr environment/floor_tiles/grass_swamp1)
+    (spr environment/floor_tiles/grass_swamp2)
+    (spr environment/floor_tiles/grass_swamp3)
+    (spr environment/floor_tiles/grass_swamp4)
+  )))
 
 (def stone (tile
-  (spr environment/floor_tiles/stone1
-       environment/floor_tiles/stone2
-       environment/floor_tiles/stone3
-       environment/floor_tiles/stone4)))
+  (random
+    (spr environment/floor_tiles/stone1)
+    (spr environment/floor_tiles/stone2)
+    (spr environment/floor_tiles/stone3)
+    (spr environment/floor_tiles/stone4)
+  )))
 
 (def tree (tile
   (block)
-  (spr environment/props/tree1
-       environment/props/tree2
-       environment/props/tree3
-       environment/props/tree4)))
+  (random
+    (spr environment/props/tree1)
+    (spr environment/props/tree2)
+    (spr environment/props/tree3)
+    (spr environment/props/tree4)
+  )))
 
 (def tree_swamp (tile
   (block)
-  (spr environment/props/tree1_swamp
-       environment/props/tree2_swamp
-       environment/props/tree3_swamp
-       environment/props/tree4_swamp)))
+  (random
+    (spr environment/props/tree1_swamp)
+    (spr environment/props/tree2_swamp)
+    (spr environment/props/tree3_swamp)
+    (spr environment/props/tree4_swamp)
+  )))
 
 (def tree_withered (tile
   (block)
-  (spr environment/props/tree1_withered
-       environment/props/tree2_withered
-       environment/props/tree3_withered
-       environment/props/tree4_withered)))
+  (random
+    (spr environment/props/tree1_withered)
+    (spr environment/props/tree2_withered)
+    (spr environment/props/tree3_withered)
+    (spr environment/props/tree4_withered)
+  )))
 
 (themedef
   (random
+    (do
+      (def . (random grass empty empty))
+      (def ! (random boulder boulder)))
     (do
       (def . (random grass empty empty))
       (def ! (random tree tree tree_withered)))
