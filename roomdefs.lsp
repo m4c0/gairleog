@@ -1,4 +1,4 @@
-(themes
+(themedef
   (random
     (do
       (def . (random grass empty empty))

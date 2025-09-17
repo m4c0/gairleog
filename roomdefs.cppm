@@ -29,25 +29,27 @@ namespace roomdefs {
     struct context : lispy::context {
       const tiledefs::map * tiledefs;
       list * list;
-      hai::array<const node *> themes {};
+      const node * theme;
     } ctx {
       { .allocator = lispy::allocator<node>() },
       &tiledefs,
       &rooms,
     }; 
 
-    constexpr const auto eval = lispy::eval<node>;
+    //constexpr const auto eval = lispy::eval<node>;
 
-    ctx.fns["themes"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      if (as == 0) err(n, "themes requires at least a parameter");
-      auto ctx = static_cast<context *>(n->ctx);
-      ctx->themes.set_capacity(as);
-      for (auto i = 0; i < as; i++) ctx->themes[i] = static_cast<const node *>(aa[i]);
-      return n;
+    ctx.fns["themedef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
+      if (as != 1) err(n, "themedef requires at exactly one parameter");
+      static_cast<context *>(n->ctx)->theme = static_cast<const node *>(aa[0]);
+      return aa[0];
     };
     ctx.fns["room"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as < 2) lispy::err(n, "rooms must have at least two rows");
       if (as > max_size) lispy::err(n, "rooms is too long");
+
+      auto ctx = static_cast<context *>(n->ctx);
+      if (!ctx->theme) lispy::err(n, "must define theme beforehand");
+      auto _ = eval<node>(ctx, ctx->theme);
 
       unsigned cols = aa[0]->atom.size();
       if (cols > max_size) lispy::err(aa[0], "row is too wide");
@@ -63,14 +65,14 @@ namespace roomdefs {
           auto cell = lispy::eval<node>(n->ctx, n->ctx->defs[c]);
           if (!lispy::is_atom(cell)) lispy::err(aa[i], "cell must be a sprite name", idx);
 
-          auto * tiledefs = static_cast<context *>(n->ctx)->tiledefs;
+          auto * tiledefs = ctx->tiledefs;
           if (!tiledefs->has(cell->atom)) lispy::err(cell, "unknown sprdef");
           auto & spr = (*tiledefs)[cell->atom].sprite;
           data[i * cols + idx] = spr[rng::rand(spr.size())];
         }
       }
 
-      auto rooms = static_cast<context *>(n->ctx)->list;
+      auto rooms = ctx->list;
       rooms->data[as - 1][cols - 1].push_back_doubling(hai::sptr { new t {
         .w = cols,
         .h = as,
