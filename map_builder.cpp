@@ -36,9 +36,9 @@ namespace {
     vsplit(map, {x+1, aa.y}, bb);
  
     auto y = rng::rand_i(aa.y, bb.y);
-    map.data[y][x-1] = 0;
-    map.data[y][x] = 0;
-    map.data[y][x+1] = 0;
+    map.data[y][x-1] = {};
+    map.data[y][x] = {};
+    map.data[y][x+1] = {};
   }
 
   void vsplit(map & map, dotz::ivec2 aa, dotz::ivec2 bb) {
@@ -53,9 +53,9 @@ namespace {
     hsplit(map, {aa.x, y+1}, bb);
  
     auto x = rng::rand_i(aa.x, bb.x);
-    map.data[y-1][x] = 0;
-    map.data[y][x] = 0;
-    map.data[y+1][x] = 0;
+    map.data[y-1][x] = {};
+    map.data[y][x] = {};
+    map.data[y+1][x] = {};
   }
 }
 
@@ -64,7 +64,7 @@ void make_walls(map & map);
 void map::build() {
   for (auto y = 0; y < h; y++) {
     for (auto x = 0; x < w; x++) {
-      data[y][x] = 0;
+      data[y][x] = {};
     }
   }
   for (auto y = 0; y < h; y++) data[y][0] = data[y][w - 1] = map::wall;
@@ -76,8 +76,8 @@ void map::build() {
   auto base = sprdef::get("environment/walls/brick_clay");
   for (auto y = 0; y < h; y++) {
     for (auto x = 0; x < w; x++) {
-      auto & c = data[y][x];
-      if (c & wall) c = base + (c & 0xFFFF);
+      auto & c = data[y][x].sprite;
+      if (c & wall_id) c = base + (c & 0xFFFF);
     }
   }
 }

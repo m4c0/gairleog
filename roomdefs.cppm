@@ -10,10 +10,15 @@ import traits;
 namespace roomdefs {
   export constexpr const auto max_size = 8;
 
+  export struct tiledef {
+    bool block {};
+    int light {};
+    unsigned sprite {};
+  };
   export struct t {
     unsigned w {};
     unsigned h {};
-    hai::array<unsigned> data {};
+    hai::array<tiledef> data {};
   };
   auto & list() {
     static hai::varray<hai::sptr<t>> i[max_size][max_size] {};
@@ -27,12 +32,6 @@ namespace roomdefs {
   }
 
   export void run(jute::view src) {
-    struct tiledef {
-      bool block {};
-      int light {};
-      unsigned sprite {};
-    };
-
     struct node : lispy::node {
       enum { t_empty, t_block, t_light, t_spr, t_tdef } type {};
       tiledef tdef {};
@@ -103,7 +102,7 @@ namespace roomdefs {
 
       unsigned cols = aa[0]->atom.size();
       if (cols > max_size) lispy::err(aa[0], "row is too wide");
-      hai::array<unsigned> data { cols * as };
+      hai::array<tiledef> data { cols * as };
       for (auto i = 0; i < as; i++) {
         if (!lispy::is_atom(aa[i])) lispy::err(aa[i], "all rows must be atoms");
         auto a = aa[i]->atom;
@@ -119,7 +118,7 @@ namespace roomdefs {
           auto tdn = lispy::eval<node>(ctx, ctx->defs[cell->atom]);
           if (tdn->type != node::t_tdef) lispy::err(tdn, "expecting a tiledef");
 
-          data[i * cols + idx] = tdn->tdef.sprite;
+          data[i * cols + idx] = tdn->tdef;
         }
       }
 

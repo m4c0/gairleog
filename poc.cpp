@@ -23,7 +23,7 @@ static void on_frame() {
 static constexpr const auto move(int dx, int dy) {
   return [=] {
     auto p = g_pos + dotz::ivec2 { dx, dy };
-    if (g_map.at(p)) return;
+    if (g_map.at(p).block) return;
 
     g_pos = p;
     v::on_frame = on_frame;
@@ -36,7 +36,7 @@ const int i = [] {
     v::pc = { 16, 16 };
     v::on_frame = on_frame;
     g_map.build();
-    g_map.at(g_pos) = 0;
+    g_map.at(g_pos) = {};
   });
 
   using namespace casein;
