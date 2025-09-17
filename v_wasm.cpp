@@ -31,7 +31,7 @@ layout(location = 2) in uint id;
 void main()
 {
     vec2 p = ((v_pos + pos) - _18.grid_pos) / _18.grid_size;
-    gl_Position = vec4(p, 0.0, 1.0);
+    gl_Position = vec4(p.x, -p.y, 0.0, 1.0);
     f_uv = v_pos + vec2(ivec2(int(id % 64u), int(id / 64u)));
 }
   )"_s;
@@ -101,7 +101,7 @@ void main()
     enable_vertex_attrib_array(0);
     vertex_attrib_pointer(0, 2, FLOAT, false, 0, 0);
 
-    static constexpr const auto stride = 16;
+    static constexpr const auto stride = sizeof(sprite);
 
     b = g_inst_buffer = gelo::create_buffer();
     bind_buffer(ARRAY_BUFFER, b);
@@ -111,7 +111,7 @@ void main()
     vertex_attrib_divisor(1, 1);
 
     enable_vertex_attrib_array(2);
-    vertex_attrib_pointer(2, 2, FLOAT, false, stride, 8);
+    vertex_attrib_i_pointer(2, 1, UNSIGNED_INT, stride, 8);
     vertex_attrib_divisor(2, 1);
   }
 
