@@ -29,6 +29,7 @@ namespace roomdefs {
     struct context : lispy::context {
       const tiledefs::map * tiledefs;
       list * list;
+      hai::array<const node *> themes {};
     } ctx {
       { .allocator = lispy::allocator<node>() },
       &tiledefs,
@@ -37,17 +38,12 @@ namespace roomdefs {
 
     constexpr const auto eval = lispy::eval<node>;
 
-    ctx.fns["do"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      if (as == 0) err(n, "'do' requires at least a parameter");
-      const node * res;
-      for (auto i = 0; i < as; i++) {
-        res = eval(n->ctx, aa[i]);
-      }
-      return res;
-    };
-    ctx.fns["random"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      if (as == 0) err(n, "random requires at least a parameter");
-      return eval(n->ctx, aa[rng::rand(as)]);
+    ctx.fns["themes"] = [](auto n, auto aa, auto as) -> const lispy::node * {
+      if (as == 0) err(n, "themes requires at least a parameter");
+      auto ctx = static_cast<context *>(n->ctx);
+      ctx->themes.set_capacity(as);
+      for (auto i = 0; i < as; i++) ctx->themes[i] = static_cast<const node *>(aa[i]);
+      return n;
     };
     ctx.fns["room"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as < 2) lispy::err(n, "rooms must have at least two rows");
