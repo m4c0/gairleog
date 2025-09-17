@@ -13,7 +13,7 @@ export struct map {
 
   void build();
 
-  void load(auto m) {
+  void load(auto && m) {
     for (auto y = 0; y < h; y++) {
       for (auto x = 0; x < w; x++) {
         auto c = data[y][x];
