@@ -17,6 +17,7 @@ namespace res {
   hai::fn<void, jute::view> err_cb {};
 
   export void on_error(hai::fn<void, jute::view> cb) {
+    err_cb = cb;
     sires::on_error([cb](auto ptr, auto msg) mutable {
       cb(msg);
     });
