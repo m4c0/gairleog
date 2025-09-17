@@ -13,7 +13,7 @@ namespace v {
 
   export struct sprite {
     dotz::vec2 pos;
-    dotz::vec2 uv;
+    unsigned id;
   };
 
   export struct upc {

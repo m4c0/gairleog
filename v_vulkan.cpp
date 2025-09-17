@@ -33,7 +33,7 @@ struct app_stuff {
     .attributes {
       voo::one_quad::vertex_attribute(0),
       vee::vertex_attribute_vec2(1, traits::offset_of(&v::sprite::pos)),
-      vee::vertex_attribute_vec2(1, traits::offset_of(&v::sprite::uv)),
+      vee::vertex_attribute_uint(1, traits::offset_of(&v::sprite::id)),
     },
   });
   vee::sampler smp = [] {

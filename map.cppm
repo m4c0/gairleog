@@ -16,9 +16,7 @@ export struct map {
   void load(auto && m) {
     for (auto y = 0; y < h; y++) {
       for (auto x = 0; x < w; x++) {
-        auto c = data[y][x];
-        dotz::ivec2 uv { c % 64, c / 64 };
-        m->push({ .pos { x, y }, .uv = uv });
+        m->push({ .pos { x, y }, .id = data[y][x] });
       }
     }
   }

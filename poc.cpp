@@ -4,17 +4,19 @@ import casein;
 import map;
 import res;
 import silog;
-import sires;
+import sprdef;
 import v;
 
 static map g_map {};
 
 static void on_frame() {
-  g_map.build();
-  g_map.load(v::map());
   v::on_frame = [] {};
 
-  casein::handle(casein::KEY_DOWN, casein::K_SPACE, on_frame);
+  g_map.build();
+
+  auto m = v::map();
+  g_map.load(m);
+  m->push({ .pos {}, .id = sprdef::get("characters/human_knight") });
 }
 
 const int i = [] {

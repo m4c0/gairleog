@@ -26,13 +26,13 @@ uniform upc _18;
 layout(location = 0) in vec2 v_pos;
 layout(location = 1) in vec2 pos;
 out vec2 f_uv;
-layout(location = 2) in vec2 uv;
+layout(location = 2) in uint uv;
 
 void main()
 {
     vec2 p = ((v_pos + pos) - _18.grid_pos) / _18.grid_size;
     gl_Position = vec4(p.x, -p.y, 0.0, 1.0);
-    f_uv = uv + v_pos;
+    f_uv = v_pos + ivec2(id % 64, id / 64);
 }
   )"_s;
   static constexpr const auto frag_shader = R"(#version 300 es
