@@ -20,19 +20,17 @@ namespace roomdefs {
     hai::varray<hai::sptr<t>> data[max_size][max_size] {};
   };;
 
-  [[nodiscard]] auto run(const tiledefs::map & tiledefs, jute::view src) {
+  [[nodiscard]] auto run(jute::view src) {
     list rooms {};
 
     struct node : lispy::node {
       hai::sptr<t> room {};
     };
     struct context : lispy::context {
-      const tiledefs::map * tiledefs;
       list * list;
       const node * theme;
     } ctx {
       { .allocator = lispy::allocator<node>() },
-      &tiledefs,
       &rooms,
     }; 
 
@@ -65,9 +63,8 @@ namespace roomdefs {
           auto cell = lispy::eval<node>(n->ctx, n->ctx->defs[c]);
           if (!lispy::is_atom(cell)) lispy::err(aa[i], "cell must be a sprite name", idx);
 
-          auto * tiledefs = ctx->tiledefs;
-          if (!tiledefs->has(cell->atom)) lispy::err(cell, "unknown sprdef");
-          auto & spr = (*tiledefs)[cell->atom].sprite;
+          if (!tiledefs::has(cell->atom)) lispy::err(cell, "unknown sprdef");
+          auto & spr = tiledefs::get(cell->atom).sprite;
           data[i * cols + idx] = spr[rng::rand(spr.size())];
         }
       }
@@ -87,9 +84,9 @@ namespace roomdefs {
     return rooms;
   }
 
-  export void load(const tiledefs::map & tdefs, auto && cb) {
-    sires::read("roomdefs.lsp", nullptr, [&tdefs, cb=traits::move(cb)](auto ptr, hai::cstr & src) {
-      cb(run(tdefs, src));
+  export void load(auto && cb) {
+    sires::read("roomdefs.lsp", nullptr, [cb=traits::move(cb)](auto ptr, hai::cstr & src) {
+      cb(run(src));
     });
   }
 }

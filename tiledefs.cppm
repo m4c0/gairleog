@@ -15,18 +15,21 @@ namespace tiledefs {
     int light {};
     hai::array<unsigned> sprite {};
   };
-  export using map = hashley::fin<tiledefs::t>;
+  auto & map() {
+    static hashley::fin<tiledefs::t> i { 127 };
+    return i;
+  }
+  export bool has(jute::view key) { return map().has(key); }
+  export const auto & get(jute::view key) { return map()[key]; }
 }
 
-static auto run(jute::view src) {
+static void run(jute::view src) {
   struct node : lispy::node {
     enum { t_empty, t_block, t_light, t_spr } type {};
     tiledefs::t tdef {};
   };
-  struct context : lispy::context {
-    tiledefs::map tiledefs { 127 };
-  } ctx {
-    { .allocator = lispy::allocator<node>() },
+  lispy::context ctx {
+    .allocator = lispy::allocator<node>(),
   };
 
   // static constexpr const auto clone = lispy::clone<node>;
@@ -57,7 +60,7 @@ static auto run(jute::view src) {
     if (as < 2) lispy::err(n, "tiledef requires at least name and spr");
     if (!lispy::is_atom(aa[0])) lispy::err(n, "tiledef name should be an atom");
 
-    auto & t = static_cast<context *>(n->ctx)->tiledefs[aa[0]->atom];
+    auto & t = tiledefs::map()[aa[0]->atom];
     for (auto i = 1; i < as; i++) {
       auto a = eval(n->ctx, aa[i]);
       switch (a->type) {
@@ -82,14 +85,13 @@ static auto run(jute::view src) {
     return n;
   };
   lispy::run(src, &ctx);
-
-  return traits::move(ctx.tiledefs);
 }
 
 namespace tiledefs {
-  export void load(auto && cb) {
-    sires::read("tiledefs.lsp", nullptr, [cb=traits::move(cb)](auto ptr, hai::cstr & src) {
-      cb(run(src));
+  export void load(void (*cb)()) {
+    sires::read("tiledefs.lsp", nullptr, [cb](auto ptr, hai::cstr & src) {
+      run(src);
+      cb();
     });
   }
 }

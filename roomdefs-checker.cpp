@@ -12,8 +12,8 @@ static void report(jute::view file, const lispy::parser_error e) {
 
 static void check_rooms(roomdefs::list rooms) {}
 
-static void read_rooms(tiledefs::map tdefs) try {
-  roomdefs::load(tdefs, check_rooms);
+static void read_rooms() try {
+  roomdefs::load(check_rooms);
 } catch (lispy::parser_error e) {
   report("roomdefs.lsp", e);
 }

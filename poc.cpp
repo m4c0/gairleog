@@ -14,8 +14,6 @@ import tiledefs;
 import traits;
 import v;
 
-static tiledefs::map g_tdef_map { 1 };
-
 [[nodiscard]] constexpr auto uv(unsigned i) {
   return dotz::ivec2 { i % 64, i / 64 };
 }
@@ -50,10 +48,8 @@ static void on_frame() {
 const int i = [] {
   sires::on_error([](auto ptr, auto msg) { silog::die("Failure loading resource: %s", msg.cstr().begin()); });
   sprdef::load([] {
-    tiledefs::load([](auto tiles) {
-      g_tdef_map = traits::move(tiles);
-
-      roomdefs::load(g_tdef_map, [](auto rooms) {
+    tiledefs::load([] {
+      roomdefs::load([](auto rooms) {
         g_map.roomdefs = traits::move(rooms);
 
         v::pc = { 16, 16 };
