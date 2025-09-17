@@ -16,22 +16,25 @@ namespace roomdefs {
     unsigned h {};
     hai::array<unsigned> data {};
   };
-  export struct list {
-    hai::varray<hai::sptr<t>> data[max_size][max_size] {};
-  };;
+  auto & list() {
+    static hai::varray<hai::sptr<t>> i[max_size][max_size] {};
+    return i;
+  }
 
-  [[nodiscard]] auto run(jute::view src) {
-    list rooms {};
+  export hai::sptr<t> for_size(unsigned w, unsigned h) {
+    auto & r = list()[h][w];
+    if (r.size() == 0) return {};
+    return r[rng::rand(r.size())];
+  }
 
+  void run(jute::view src) {
     struct node : lispy::node {
       hai::sptr<t> room {};
     };
     struct context : lispy::context {
-      list * list;
       const node * theme;
     } ctx {
       { .allocator = lispy::allocator<node>() },
-      &rooms,
     }; 
 
     //constexpr const auto eval = lispy::eval<node>;
@@ -69,8 +72,7 @@ namespace roomdefs {
         }
       }
 
-      auto rooms = ctx->list;
-      rooms->data[as - 1][cols - 1].push_back_doubling(hai::sptr { new t {
+      list()[as - 1][cols - 1].push_back_doubling(hai::sptr { new t {
         .w = cols,
         .h = as,
         .data = traits::move(data),
@@ -80,13 +82,12 @@ namespace roomdefs {
     };
     
     lispy::run(src, &ctx);
-
-    return rooms;
   }
 
-  export void load(auto && cb) {
-    sires::read("roomdefs.lsp", nullptr, [cb=traits::move(cb)](auto ptr, hai::cstr & src) {
-      cb(run(src));
+  export void load(void (*cb)()) {
+    sires::read("roomdefs.lsp", nullptr, [cb](auto ptr, hai::cstr & src) {
+      run(src);
+      cb();
     });
   }
 }

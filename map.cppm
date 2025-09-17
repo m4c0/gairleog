@@ -12,7 +12,6 @@ export struct map {
   static constexpr const unsigned h = 24;
 
   unsigned data[h][w] {};
-  roomdefs::list roomdefs {};
 
   void build();
 };

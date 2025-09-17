@@ -1,16 +1,15 @@
 module map;
 import dotz;
 import rng;
+import roomdefs;
 
 namespace {
   [[nodiscard]] bool furnish(map & map, dotz::ivec2 aa, dotz::ivec2 bb) {
     auto ab = bb - aa + 1;
     if (ab.x > map::max_room_size || ab.y > map::max_room_size) return false;
 
-    auto & r = map.roomdefs.data[ab.y - 1][ab.x - 1];
-    if (r.size() == 0) return false;
-
-    auto & n = r[rng::rand(r.size())];
+    auto n = roomdefs::for_size(ab.x - 1, ab.y - 1);
+    if (!n) return false;
     for (auto y = aa.y; y <= bb.y; y++) {
       for (auto x = aa.x; x <= bb.x; x++) {
         map.data[y][x] = n->data[(y - aa.y) * n->w + (x - aa.x)];

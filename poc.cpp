@@ -49,9 +49,7 @@ const int i = [] {
   sires::on_error([](auto ptr, auto msg) { silog::die("Failure loading resource: %s", msg.cstr().begin()); });
   sprdef::load([] {
     tiledefs::load([] {
-      roomdefs::load([](auto rooms) {
-        g_map.roomdefs = traits::move(rooms);
-
+      roomdefs::load([] {
         v::pc = { 16, 16 };
         v::on_frame = on_frame;
       });
