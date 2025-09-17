@@ -2,6 +2,7 @@ module map;
 import dotz;
 import rng;
 import roomdefs;
+import sprdef;
 
 namespace {
   [[nodiscard]] bool furnish(map & map, dotz::ivec2 aa, dotz::ivec2 bb) {
@@ -69,4 +70,12 @@ void map::build() {
 
   (w > h ? vsplit : hsplit)(*this, {1,1}, {w-2,h-2});
   make_walls(*this);
+
+  auto base = sprdef::get("environment/walls/brick_clay");
+  for (auto y = 0; y < h; y++) {
+    for (auto x = 0; x < w; x++) {
+      auto & c = data[y][x];
+      if (c & wall) c = base + (c & 0xFFFF);
+    }
+  }
 }
