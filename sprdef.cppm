@@ -1,4 +1,3 @@
-#pragma leco add_resource_dir sprites
 export module sprdef;
 import hai;
 import hashley;
@@ -15,7 +14,7 @@ namespace sprdef {
   export bool has(jute::view key) { return map().has(key); }
   export const auto & get(jute::view key) { return map()[key]; }
 
-  static void run(jute::view src) {
+  export void run(jute::view src) {
     struct custom_node : lispy::node {
       int spr_id;
       bool valid;
@@ -33,12 +32,5 @@ namespace sprdef {
       return n;
     };
     lispy::run(src, &ctx);
-  }
-
-  export void load(jute::view lsp, hai::fn<void> cb) {
-    sires::read(lsp, nullptr, [cb](auto ptr, hai::cstr & src) mutable {
-      run(src);
-      cb();
-    });
   }
 }
