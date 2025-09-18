@@ -80,9 +80,10 @@
       (def ! (random tree_swamp tree_withered)))
   ))
 
-(room
-  !!
-  !!)
+(room !. ..)
+(room .! ..)
+(room .. !.)
+(room .. .!)
 
 (room
   !!
