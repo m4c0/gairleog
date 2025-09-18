@@ -134,7 +134,23 @@ namespace roomdefs {
       auto nn = eval(n->ctx, aa[0]);
       if (nn->type != node::t_room) lispy::err(aa[0], "vstretch can only take rooms as parameter");
 
-      for (auto y = nn->room->h + 2; y < max_size; y += 2) {
+      auto w = nn->room->w;
+      int d = nn->room->h - 2;
+      for (auto h = nn->room->h + d; h <= max_size; h += d) {
+        hai::sptr r { new t {
+          .w = w,
+          .h = h,
+          .data { w * h },
+        }};
+        for (auto x = 0; x < w; x++) {
+          r->data[x] = nn->room->data[x];
+          for (auto y = 1; y < h - 1; y++) {
+            auto yy = ((y - 1) % d) + 1;
+            r->data[y * w + x] = nn->room->data[yy * w + x];
+          }
+          r->data[(h - 1) * w + x] = nn->room->data[(nn->room->h - 1) * w + x];
+        }
+        list()[h - 1][w - 1].push_back_doubling(r);
       }
 
       return n;
