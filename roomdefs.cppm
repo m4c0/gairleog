@@ -33,7 +33,7 @@ namespace roomdefs {
 
   export void run(jute::view src) {
     struct node : lispy::node {
-      enum { t_empty, t_block, t_light, t_spr, t_tdef } type {};
+      enum { t_empty, t_block, t_light, t_spr, t_tdef, t_room } type {};
       tiledef tdef {};
       hai::sptr<t> room {};
     };
@@ -69,8 +69,7 @@ namespace roomdefs {
       for (auto i = 0; i < as; i++) {
         auto a = eval(n->ctx, aa[i]);
         switch (a->type) {
-          case node::t_empty:
-          case node::t_tdef:
+          default:
             lispy::err(aa[i], "expecting spr, light or block inside a tdef");
             break;
           case node::t_block:
@@ -122,11 +121,21 @@ namespace roomdefs {
         }
       }
 
-      list()[as - 1][cols - 1].push_back_doubling(hai::sptr { new t {
+      hai::sptr r { new t {
         .w = cols,
         .h = as,
         .data = traits::move(data),
-      }}); 
+      }}; 
+      list()[as - 1][cols - 1].push_back_doubling(hai::sptr<t>{r});
+      return new (n->ctx->allocator()) node { *n, node::t_room, {}, r };
+    };
+    ctx.fns["vstretch"] = [](auto n, auto aa, auto as) -> const lispy::node * {
+      if (as != 1) lispy::err(n, "vstretch requires a room");
+      auto nn = eval(n->ctx, aa[0]);
+      if (nn->type != node::t_room) lispy::err(aa[0], "vstretch can only take rooms as parameter");
+
+      for (auto y = nn->room->h + 2; y < max_size; y += 2) {
+      }
 
       return n;
     };

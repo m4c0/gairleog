@@ -85,55 +85,27 @@
 (room .. !.)
 (room .. .!)
 
-(room
+(vstretch (room 
   !!
   ..
-  !!)
+  !!))
 
-(room
-  !!
+(vstretch (room 
   ..
+  !.
   ..
-  !!)
+  ..))
 
-(room
-  !!
+(vstretch (room 
   ..
   ..
-  ..
-  !!)
+  .!
+  ..))
 
-(room
-  !!
-  ..
-  ..
-  ..
-  ..
-  !!)
-
-(room
-  !!
-  ..
-  ..
-  ..
-  ..
-  ..
-  !!)
-
-(room
-  !!
-  ..
-  ..
-  ..
-  ..
-  ..
-  ..
-  !!)
-
-(room
+(vstretch (room 
   !.!
   ...
-  !.!)
+  !.!))
 
 (room
   !..!
