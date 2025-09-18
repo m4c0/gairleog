@@ -36,6 +36,16 @@ namespace {
     vsplit(map, {x+1, aa.y}, bb);
  
     auto y = rng::rand_i(aa.y, bb.y);
+    for (auto i = 0; i < bb.y - aa.y; i++) {
+      if (!map.data[y][x - 1].block &&
+          !map.data[y][x + 1].block) {
+        map.data[y][x] = {};
+        break;
+      }
+
+      y++;
+      if (y > bb.y) y = aa.y;
+    }
     map.data[y][x-1] = {};
     map.data[y][x] = {};
     map.data[y][x+1] = {};
@@ -53,6 +63,16 @@ namespace {
     hsplit(map, {aa.x, y+1}, bb);
  
     auto x = rng::rand_i(aa.x, bb.x);
+    for (auto i = 0; i < bb.x - aa.x; i++) {
+      if (!map.data[y - 1][x].block &&
+          !map.data[y + 1][x].block) {
+        map.data[y][x] = {};
+        break;
+      }
+
+      x++;
+      if (x > bb.x) x = aa.x;
+    }
     map.data[y-1][x] = {};
     map.data[y][x] = {};
     map.data[y+1][x] = {};
