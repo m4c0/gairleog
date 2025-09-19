@@ -11,7 +11,7 @@ namespace {
     if (!n) return false;
     for (auto y = aa.y; y <= bb.y; y++) {
       for (auto x = aa.x; x <= bb.x; x++) {
-        map.data[y][x] = n->data[(y - aa.y) * n->w + (x - aa.x)];
+        map.data[y][x] = n->fn(*n, x - aa.x, y - aa.y);
       }
     }
 

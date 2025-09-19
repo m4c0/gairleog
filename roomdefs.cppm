@@ -16,7 +16,8 @@ namespace roomdefs {
   export struct t {
     unsigned w {};
     unsigned h {};
-    hai::array<tiledef> data {};
+    hai::array<tiledef> d {};
+    tiledef (*fn)(const t & t, unsigned x, unsigned y) {};
   };
 
   hai::cstr g_src {};
@@ -89,10 +90,11 @@ namespace roomdefs {
       if (as < 2) lispy::err(n, "rooms must have at least two rows");
 
       auto ctx = static_cast<context *>(n->ctx);
-      if (as != ctx->h) return {};
 
       unsigned cols = aa[0]->atom.size();
-      if (cols != ctx->w) return {};
+
+      if (!(as == ctx->h && cols == ctx->w) &&
+          !(as == ctx->w && cols == ctx->h)) return {};
 
       if (!ctx->theme) lispy::err(n, "must define theme before rooms");
       auto _ = lispy::eval<node>(ctx, ctx->theme);
@@ -120,8 +122,17 @@ namespace roomdefs {
       hai::sptr r { new t {
         .w = cols,
         .h = as,
-        .data = traits::move(data),
+        .d = traits::move(data),
       }}; 
+      if (ctx->w == r->w) {
+        r->fn = [](auto t, auto x, auto y) {
+          return t.d[y * t.w + x];
+        };
+      } else {
+        r->fn = [](auto t, auto x, auto y) {
+          return t.d[x * t.w + y];
+        };
+      }
       return new (n->ctx->allocator()) node { *n, node::t_room, {}, r };
     };
     ctx.fns["roomdefs"] = [](auto n, auto aa, auto as) -> const lispy::node * {
@@ -137,6 +148,8 @@ namespace roomdefs {
     };
     
     auto n = lispy::run<node>(g_src, &ctx);
+    if (!n || n->type != node::t_room) return {};
+    
     return n && n->type == node::t_room ? n->room : hai::sptr<t> {};
   }
 }
