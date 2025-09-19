@@ -11,7 +11,7 @@ namespace {
     auto ab = bb - aa + 1;
     if (ab.x > max_room_size || ab.y > max_room_size) return false;
 
-    auto n = roomdefs::for_size(ab.x - 1, ab.y - 1);
+    auto n = roomdefs::for_size(ab.x, ab.y);
     if (!n) return false;
     for (auto y = aa.y; y <= bb.y; y++) {
       for (auto x = aa.x; x <= bb.x; x++) {
