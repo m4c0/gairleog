@@ -125,13 +125,51 @@ namespace roomdefs {
         .d = traits::move(data),
       }}; 
       if (ctx->w == r->w) {
-        r->fn = [](auto t, auto x, auto y) {
-          return t.d[y * t.w + x];
-        };
+        switch (rng::rand(3)) {
+          case 0:
+            r->fn = [](auto t, auto x, auto y) {
+              return t.d[y * t.w + x];
+            };
+            break;
+          case 1:
+            r->fn = [](auto t, auto x, auto y) {
+              return t.d[y * t.w + (t.w - x - 1)];
+            };
+            break;
+          case 2:
+            r->fn = [](auto t, auto x, auto y) {
+              return t.d[(t.h - y - 1) * t.w + x];
+            };
+            break;
+          case 3:
+            r->fn = [](auto t, auto x, auto y) {
+              return t.d[(t.h - y - 1) * t.w + (t.w - x - 1)];
+            };
+            break;
+        }
       } else {
-        r->fn = [](auto t, auto x, auto y) {
-          return t.d[x * t.w + y];
-        };
+        switch (rng::rand(3)) {
+          case 0:
+            r->fn = [](auto t, auto y, auto x) {
+              return t.d[y * t.w + x];
+            };
+            break;
+          case 1:
+            r->fn = [](auto t, auto y, auto x) {
+              return t.d[y * t.w + (t.w - x - 1)];
+            };
+            break;
+          case 2:
+            r->fn = [](auto t, auto y, auto x) {
+              return t.d[(t.h - y - 1) * t.w + x];
+            };
+            break;
+          case 3:
+            r->fn = [](auto t, auto y, auto x) {
+              return t.d[(t.h - y - 1) * t.w + (t.w - x - 1)];
+            };
+            break;
+        }
       }
       return new (n->ctx->allocator()) node { *n, node::t_room, {}, r };
     };
