@@ -20,27 +20,23 @@ namespace roomdefs {
     unsigned h {};
     hai::array<tiledef> data {};
   };
-  auto & list() {
-    static hai::varray<hai::sptr<t>> i[max_size][max_size] {};
-    return i;
-  }
 
-  export hai::sptr<t> for_size(unsigned w, unsigned h) {
-    auto & r = list()[h][w];
-    if (r.size() == 0) return {};
-    return r[rng::rand(r.size())];
-  }
+  hai::cstr g_src {};
+  export void run(jute::view src) { g_src = src.cstr(); }
 
-  export void run(jute::view src) {
+  export hai::sptr<t> for_size(unsigned ew, unsigned eh) {
     struct node : lispy::node {
       enum { t_empty, t_block, t_light, t_spr, t_tdef, t_room } type {};
       tiledef tdef {};
       hai::sptr<t> room {};
     };
     struct context : lispy::context {
-      const node * theme;
+      unsigned w {};
+      unsigned h {};
+      const node * theme {};
     } ctx {
       { .allocator = lispy::allocator<node>() },
+      ew, eh,
     }; 
 
     constexpr const auto eval = lispy::eval<node>;
@@ -126,36 +122,30 @@ namespace roomdefs {
         .h = as,
         .data = traits::move(data),
       }}; 
-      list()[as - 1][cols - 1].push_back_doubling(hai::sptr<t>{r});
       return new (n->ctx->allocator()) node { *n, node::t_room, {}, r };
     };
-    ctx.fns["vstretch"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      if (as != 1) lispy::err(n, "vstretch requires a room");
-      auto nn = eval(n->ctx, aa[0]);
-      if (nn->type != node::t_room) lispy::err(aa[0], "vstretch can only take rooms as parameter");
+    ctx.fns["roomdef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
+      if (as != 3) lispy::err(n, "roomdef requires width, height and room");
 
-      auto w = nn->room->w;
-      int d = nn->room->h - 2;
-      for (auto h = nn->room->h + d; h <= max_size; h += d) {
-        hai::sptr r { new t {
-          .w = w,
-          .h = h,
-          .data { w * h },
-        }};
-        for (auto x = 0; x < w; x++) {
-          r->data[x] = nn->room->data[x];
-          for (auto y = 1; y < h - 1; y++) {
-            auto yy = ((y - 1) % d) + 1;
-            r->data[y * w + x] = nn->room->data[yy * w + x];
-          }
-          r->data[(h - 1) * w + x] = nn->room->data[(nn->room->h - 1) * w + x];
-        }
-        list()[h - 1][w - 1].push_back_doubling(r);
+      auto ctx = static_cast<context *>(n->ctx);
+      if (ctx->w != lispy::to_i(aa[0])) return n;
+      if (ctx->h != lispy::to_i(aa[1])) return n;
+
+      auto nn = eval(n->ctx, aa[2]);
+      if (nn->type != node::t_room) lispy::err(aa[2], "expecting a room");
+      return nn;
+    };
+    ctx.fns["roomdefs"] = [](auto n, auto aa, auto as) -> const lispy::node * {
+      if (as == 0) lispy::err(n, "roomdefs requires at least one roomdef");
+      const lispy::node * res = n;
+      for (auto i = 0; i < as; i++) {
+        auto a = eval(n->ctx, aa[i]);
+        if (a->type == node::t_room) res = a;
       }
-
-      return n;
+      return res;
     };
     
-    lispy::run(src, &ctx);
+    auto n = lispy::run<node>(g_src, &ctx);
+    return n->type == node::t_room ? n->room : hai::sptr<t> {};
   }
 }

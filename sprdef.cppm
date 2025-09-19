@@ -31,6 +31,6 @@ namespace sprdef {
 
       return n;
     };
-    lispy::run(src, &ctx);
+    lispy::run<custom_node>(src, &ctx);
   }
 }
