@@ -127,13 +127,18 @@ namespace roomdefs {
     ctx.fns["roomdef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as != 3) lispy::err(n, "roomdef requires width, height and room");
 
+      auto mw = lispy::to_i(aa[0]);
+      auto mh = lispy::to_i(aa[1]);
+
       auto ctx = static_cast<context *>(n->ctx);
-      if (ctx->w != lispy::to_i(aa[0])) return n;
-      if (ctx->h != lispy::to_i(aa[1])) return n;
+      if (ctx->w != mw) return n;
+      if (ctx->h != mh) return n;
 
       auto nn = eval(n->ctx, aa[2]);
       if (nn->type != node::t_room) lispy::err(aa[2], "expecting a room");
-      return nn;
+      if (ctx->w == nn->room->w && ctx->h == nn->room->h) return nn;
+
+      return n;
     };
     ctx.fns["roomdefs"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as == 0) lispy::err(n, "roomdefs requires at least one roomdef");
