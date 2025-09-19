@@ -13,7 +13,7 @@ export struct map {
   };
 
   static constexpr const unsigned w = 32;
-  static constexpr const unsigned h = 24;
+  static constexpr const unsigned h = 32;
 
   roomdefs::tiledef data[h][w] {};
 
