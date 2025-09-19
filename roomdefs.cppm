@@ -124,8 +124,8 @@ namespace roomdefs {
       }
 
       hai::sptr r { new t {
-        .w = cols,
-        .h = as,
+        .w = ctx->w,
+        .h = ctx->h,
         .data = traits::move(data),
       }}; 
       return new (n->ctx->allocator()) node { *n, node::t_room, {}, r };
@@ -142,9 +142,7 @@ namespace roomdefs {
 
       auto nn = eval(n->ctx, aa[2]);
       if (nn->type != node::t_room) lispy::err(aa[2], "expecting a room");
-      if (ctx->w == nn->room->w && ctx->h == nn->room->h) return nn;
-
-      return n;
+      return nn;
     };
     ctx.fns["roomdefs"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as == 0) lispy::err(n, "roomdefs requires at least one roomdef");
