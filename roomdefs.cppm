@@ -93,12 +93,22 @@ namespace roomdefs {
       auto _ = lispy::eval<node>(ctx, ctx->theme);
 
       unsigned cols = aa[0]->atom.size();
-      hai::array<tiledef> data { cols * as };
-      for (auto i = 0; i < as; i++) {
+      hai::array<tiledef> data { ctx->w * ctx->h};
+      for (auto y = 0; y < ctx->h; y++) {
+        auto i = y == ctx->h - 1
+          ? as - 1 
+          : y == 0
+          ? 0
+          : (y - 1) % (as - 2) + 1;
         if (!lispy::is_atom(aa[i])) lispy::err(aa[i], "all rows must be atoms");
         auto a = aa[i]->atom;
         if (cols != a.size()) lispy::err(aa[i], "all rows must have the same length");
-        for (auto idx = 0; idx < a.size(); idx++) {
+        for (auto x = 0; x < ctx->w; x++) {
+          auto idx = x == ctx->w - 1
+            ? ctx->w - 1
+            : x == 0
+            ? 0
+            : (x - 1) % (a.size() - 2) + 1;
           auto c = a.subview(idx, 1).middle;
           if (!n->ctx->defs.has(c)) lispy::err(aa[i], "unknown def", idx);
 
@@ -109,7 +119,7 @@ namespace roomdefs {
           auto tdn = lispy::eval<node>(ctx, ctx->defs[cell->atom]);
           if (tdn->type != node::t_tdef) lispy::err(tdn, "expecting a tiledef");
 
-          data[i * cols + idx] = tdn->tdef;
+          data[y * ctx->w + x] = tdn->tdef;
         }
       }
 
