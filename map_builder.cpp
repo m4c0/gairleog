@@ -5,12 +5,8 @@ import roomdefs;
 import sprdef;
 
 namespace {
-  static constexpr const auto max_room_size = roomdefs::max_size;
-
   [[nodiscard]] bool furnish(map & map, dotz::ivec2 aa, dotz::ivec2 bb) {
     auto ab = bb - aa + 1;
-    if (ab.x > max_room_size || ab.y > max_room_size) return false;
-
     auto n = roomdefs::for_size(ab.x, ab.y);
     if (!n) return false;
     for (auto y = aa.y; y <= bb.y; y++) {

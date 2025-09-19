@@ -8,8 +8,6 @@ import sprdef;
 import traits;
 
 namespace roomdefs {
-  export constexpr const auto max_size = 8;
-
   export struct tiledef {
     bool block {};
     int light {};
@@ -89,14 +87,12 @@ namespace roomdefs {
     };
     ctx.fns["room"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as < 2) lispy::err(n, "rooms must have at least two rows");
-      if (as > max_size) lispy::err(n, "rooms is too long");
 
       auto ctx = static_cast<context *>(n->ctx);
       if (!ctx->theme) lispy::err(n, "must define theme beforehand");
       auto _ = lispy::eval<node>(ctx, ctx->theme);
 
       unsigned cols = aa[0]->atom.size();
-      if (cols > max_size) lispy::err(aa[0], "row is too wide");
       hai::array<tiledef> data { cols * as };
       for (auto i = 0; i < as; i++) {
         if (!lispy::is_atom(aa[i])) lispy::err(aa[i], "all rows must be atoms");
