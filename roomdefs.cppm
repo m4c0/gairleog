@@ -89,26 +89,20 @@ namespace roomdefs {
       if (as < 2) lispy::err(n, "rooms must have at least two rows");
 
       auto ctx = static_cast<context *>(n->ctx);
-      if (!ctx->theme) lispy::err(n, "must define theme beforehand");
-      auto _ = lispy::eval<node>(ctx, ctx->theme);
+      if (as != ctx->h) return {};
 
       unsigned cols = aa[0]->atom.size();
-      hai::array<tiledef> data { ctx->w * ctx->h};
-      for (auto y = 0; y < ctx->h; y++) {
-        auto i = y == ctx->h - 1
-          ? as - 1 
-          : y == 0
-          ? 0
-          : (y - 1) % (as - 2) + 1;
+      if (cols != ctx->w) return {};
+
+      if (!ctx->theme) lispy::err(n, "must define theme before rooms");
+      auto _ = lispy::eval<node>(ctx, ctx->theme);
+
+      hai::array<tiledef> data { as * cols };
+      for (auto i = 0; i < as; i++) {
         if (!lispy::is_atom(aa[i])) lispy::err(aa[i], "all rows must be atoms");
         auto a = aa[i]->atom;
         if (cols != a.size()) lispy::err(aa[i], "all rows must have the same length");
-        for (auto x = 0; x < ctx->w; x++) {
-          auto idx = x == ctx->w - 1
-            ? ctx->w - 1
-            : x == 0
-            ? 0
-            : (x - 1) % (a.size() - 2) + 1;
+        for (auto idx = 0; idx < cols; idx++) {
           auto c = a.subview(idx, 1).middle;
           if (!n->ctx->defs.has(c)) lispy::err(aa[i], "unknown def", idx);
 
@@ -119,43 +113,30 @@ namespace roomdefs {
           auto tdn = lispy::eval<node>(ctx, ctx->defs[cell->atom]);
           if (tdn->type != node::t_tdef) lispy::err(tdn, "expecting a tiledef");
 
-          data[y * ctx->w + x] = tdn->tdef;
+          data[i * cols + idx] = tdn->tdef;
         }
       }
 
       hai::sptr r { new t {
-        .w = ctx->w,
-        .h = ctx->h,
+        .w = cols,
+        .h = as,
         .data = traits::move(data),
       }}; 
       return new (n->ctx->allocator()) node { *n, node::t_room, {}, r };
     };
-    ctx.fns["roomdef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      if (as != 3) lispy::err(n, "roomdef requires width, height and room");
-
-      auto mw = lispy::to_i(aa[0]);
-      auto mh = lispy::to_i(aa[1]);
-
-      auto ctx = static_cast<context *>(n->ctx);
-      if (ctx->w != mw) return n;
-      if (ctx->h != mh) return n;
-
-      auto nn = eval(n->ctx, aa[2]);
-      if (nn->type != node::t_room) lispy::err(aa[2], "expecting a room");
-      return nn;
-    };
     ctx.fns["roomdefs"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      if (as == 0) lispy::err(n, "roomdefs requires at least one roomdef");
-      const lispy::node * res = n;
+      if (as == 0) lispy::err(n, "missing at least one room option");
+
+      hai::varray<const node *> opts { as };
       for (auto i = 0; i < as; i++) {
-        auto a = eval(n->ctx, aa[i]);
-        if (a->type == node::t_room) res = a;
+        auto a = lispy::eval<node>(n->ctx, aa[i]);
+        if (a) opts.push_back(a);
       }
-      return res;
+      if (opts.size() == 0) return {};
+      return opts[rng::rand(opts.size())];
     };
     
     auto n = lispy::run<node>(g_src, &ctx);
-    if (!n) lispy::err("file does not contain valid room definitions");
-    return n->type == node::t_room ? n->room : hai::sptr<t> {};
+    return n && n->type == node::t_room ? n->room : hai::sptr<t> {};
   }
 }

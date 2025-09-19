@@ -80,55 +80,10 @@
       (def ! (random tree_swamp tree_withered)))
   ))
 
-(def r23 (room 
-  !!
-  ..
-  !!))
-
-(def r24 
-  (random
-    (room .. !. .. !.)
-    (room .. .! .. .!)
-    (room .. !. .. .!)
-    (room .. .! .. !.)
-
-    (room .. !. .. ..)
-    (room .. .! .. ..)
-    (room .. .. !. ..)
-    (room .. .. .! ..)))
-
-(def r26 
-  (random
-    (room .. !. .. .! .. !.)
-    (room .. .! .. !. .. .!)
-    (room .. !. .. .! .. .!)
-    (room .. .! .. !. .. !.)
-                  
-    (room .. !. .. !. .. ..)
-    (room .. .! .. .! .. ..)
-    (room .. .. !. .. !. ..)
-    (room .. .. .! .. .! ..)))
-
 (roomdefs
-  (roomdef 2 2
-    (random
-      (room !. ..)
-      (room .! ..)
-      (room .. !.)
-      (room .. .!)))
-  
-  (roomdef 2 3 (r23))
-  (roomdef 2 4 (random (r23) (r24)))
-  (roomdef 2 5 (random (r23)))
-  (roomdef 2 6 (random (r23) (r24) (r26)))
-  (roomdef 2 7 (random (r23)))
-  (roomdef 2 8 (random (r23) (r24)))
-  (roomdef 2 9 (random (r23)))
-  (roomdef 2 10 (random (r23) (r24)))
-  (roomdef 2 11 (random (r23)))
-  (roomdef 2 12 (random (r23) (r24) (r26)))
-  (roomdef 2 13 (random (r23)))
-  (roomdef 2 14 (random (r23) (r24)))
-  (roomdef 2 15 (random (r23)))
-  (roomdef 2 16 (random (r23) (r24)))
+  (room .. ..)
+  (room !. .!)
+  (room !. ..)
+  (room !! ..)
+  (room !! !!)
 )
