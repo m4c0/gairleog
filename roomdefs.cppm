@@ -146,6 +146,7 @@ namespace roomdefs {
     };
     
     auto n = lispy::run<node>(g_src, &ctx);
+    if (!n) lispy::err("file does not contain valid room definitions");
     return n->type == node::t_room ? n->room : hai::sptr<t> {};
   }
 }
