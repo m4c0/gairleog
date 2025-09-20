@@ -16,6 +16,7 @@ namespace v {
 
   export struct sprite {
     dotz::vec2 pos;
+    float mult = 1;
     unsigned id;
   };
 

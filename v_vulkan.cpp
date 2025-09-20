@@ -31,6 +31,7 @@ struct app_stuff {
       voo::one_quad::vertex_attribute(0),
       vee::vertex_attribute_vec2(1, traits::offset_of(&v::sprite::pos)),
       vee::vertex_attribute_uint(1, traits::offset_of(&v::sprite::id)),
+      vee::vertex_attribute_float(1, traits::offset_of(&v::sprite::mult)),
     },
   });
   vee::sampler smp = [] {
