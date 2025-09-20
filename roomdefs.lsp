@@ -9,12 +9,7 @@
     (spr environment/props/boulder4)
   )))
 
-(def candles (tile
-  (light 5)
-  (spr environment/props/candles)))
-
-(def pot (tile
-  (spr environment/props/pot_red)))
+(def pot (tile (spr environment/props/pot_red)))
 
 (def grass (tile
   (random

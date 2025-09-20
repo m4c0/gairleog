@@ -44,12 +44,12 @@ namespace roomdefs {
       if (as != 0) lispy::err(n, "block does not accept parameters");
       return new (n->ctx->allocator()) node { *n, node::t_block, { .block = true } };
     };
-    ctx.fns["light"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      if (as != 1) lispy::err(n, "light requires intensity as parameter");
-      auto i = lispy::to_i(eval(n->ctx, aa[0]));
-      if (i < 0 || i > 15) lispy::err(n, "light intensity should be between 0 and 15");
-      return new (n->ctx->allocator()) node { *n, node::t_light, { .light = i } };
-    };
+    // ctx.fns["light"] = [](auto n, auto aa, auto as) -> const lispy::node * {
+    //   if (as != 1) lispy::err(n, "light requires intensity as parameter");
+    //   auto i = lispy::to_f(eval(n->ctx, aa[0]));
+    //   if (i < 0 || i > 1) lispy::err(n, "light intensity should be between 0 and 15");
+    //   return new (n->ctx->allocator()) node { *n, node::t_light, { .light = i } };
+    // };
     ctx.fns["spr"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as != 1) lispy::err(n, "spr requires only the sprite name");
 
