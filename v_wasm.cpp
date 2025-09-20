@@ -1,7 +1,6 @@
 module v;
 import casein;
 import gelo;
-import jojo;
 import jute;
 import silog;
 import sires;
@@ -14,41 +13,9 @@ static hai::varray<v::sprite> buffer { 10240 };
 
 namespace v {
   static constexpr const float quad[] { 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0 };
-  static constexpr const auto vert_shader = R"(#version 300 es
-struct upc
-{
-    vec2 grid_pos;
-    vec2 grid_size;
-};
 
-uniform upc _18;
-
-layout(location = 0) in vec2 v_pos;
-layout(location = 1) in vec2 pos;
-out vec2 f_uv;
-layout(location = 2) in uint id;
-
-void main()
-{
-    vec2 p = ((v_pos + pos) - _18.grid_pos) / _18.grid_size;
-    gl_Position = vec4(p.x, -p.y, 0.0, 1.0);
-    f_uv = v_pos + vec2(ivec2(int(id % 64u), int(id / 64u)));
-}
-  )"_s;
-  static constexpr const auto frag_shader = R"(#version 300 es
-precision mediump float;
-precision highp int;
-
-uniform highp sampler2D tex;
-
-layout(location = 0) out highp vec4 colour;
-in highp vec2 f_uv;
-
-void main()
-{
-    colour = texelFetch(tex, ivec2(f_uv * 16.0), 0);
-}
-  )"_s;
+  static hai::cstr vert_shader {};
+  static hai::cstr frag_shader {};
 
   static void shader(int prog, int type, jute::view src) {
     using namespace gelo;
@@ -70,6 +37,8 @@ void main()
   static int g_texture;
   static int g_u_grid_pos;
   static int g_u_grid_size;
+
+  void frame(void *);
 
   void setup() {
     using namespace gelo;
@@ -138,12 +107,26 @@ void main()
       tex_parameter_i(TEXTURE_2D, TEXTURE_WRAP_T, CLAMP_TO_EDGE);
       tex_parameter_i(TEXTURE_2D, TEXTURE_MIN_FILTER, NEAREST);
       tex_parameter_i(TEXTURE_2D, TEXTURE_MAG_FILTER, NEAREST);
+
+      // Last resource loaded, let's start
+      vaselin::request_animation_frame(frame, nullptr);
     });
   }
 
   void create_window() {
-    setup();
-    load_texture("pixelite2.png");
+    sires::read("gairleog.vert.gles", nullptr, [](auto, hai::cstr & gles) {
+      vert_shader = traits::move(gles);
+      silog::trace(vert_shader.begin());
+
+      // TODO: load in parallel
+      sires::read("gairleog.frag.gles", nullptr, [](auto, hai::cstr & gles) {
+        frag_shader = traits::move(gles);
+      silog::trace(frag_shader.begin());
+
+        setup();
+        load_texture("pixelite2.png");
+      });
+    });
   }
 
   void render() {
@@ -176,7 +159,7 @@ hai::uptr<v::mapper> v::map() {
   return hai::uptr<v::mapper> { new ::mapper {} };
 }
 
-static void frame(void *) {
+void v::frame(void *) {
   v::on_frame();
   v::render();
   vaselin::request_animation_frame(frame, nullptr);
@@ -186,7 +169,6 @@ const int i = [] {
   using namespace casein;
 
   handle(CREATE_WINDOW, v::create_window);
-  vaselin::request_animation_frame(frame, nullptr);
   return 0;
 }();
 
