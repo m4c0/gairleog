@@ -140,7 +140,7 @@ namespace v {
     clear_color(0, 0, 0, 1);
     clear(COLOR_BUFFER_BIT);
     uniform2f(g_u_grid_pos, v::pc.grid_pos.x, v::pc.grid_pos.y);
-    uniform2f(g_u_grid_size, v::pc.grid_size.x * aspect, v::pc.grid_size.y);
+    uniform2f(g_u_grid_size, v::pc.grid_size.x * aspect, -v::pc.grid_size.y);
     viewport(0, 0, casein::window_size.x, casein::window_size.y);
 
     bind_buffer(ARRAY_BUFFER, g_inst_buffer);
