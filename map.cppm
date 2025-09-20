@@ -1,4 +1,5 @@
 #pragma leco add_impl map_builder
+#pragma leco add_impl map_lights
 #pragma leco add_impl map_walls
 export module map;
 import dotz;
@@ -32,4 +33,6 @@ export struct map {
       }
     }
   }
+
+  void tick_lights(dotz::ivec2 p, float l);
 };
