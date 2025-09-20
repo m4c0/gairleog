@@ -5,6 +5,7 @@ import jute;
 import silog;
 import sires;
 import stubby;
+import traits;
 import vaselin;
 
 using namespace jute::literals;
@@ -76,12 +77,16 @@ namespace v {
     bind_buffer(ARRAY_BUFFER, b);
 
     enable_vertex_attrib_array(1);
-    vertex_attrib_pointer(1, 2, FLOAT, false, stride, 0);
+    vertex_attrib_pointer(1, 2, FLOAT, false, stride, traits::offset_of(&v::sprite::pos));
     vertex_attrib_divisor(1, 1);
 
     enable_vertex_attrib_array(2);
-    vertex_attrib_i_pointer(2, 1, UNSIGNED_INT, stride, 8);
+    vertex_attrib_i_pointer(2, 1, UNSIGNED_INT, stride, traits::offset_of(&v::sprite::id));
     vertex_attrib_divisor(2, 1);
+
+    enable_vertex_attrib_array(3);
+    vertex_attrib_pointer(3, 1, FLOAT, false, stride, traits::offset_of(&v::sprite::mult));
+    vertex_attrib_divisor(3, 1);
   }
 
   void load_texture(jute::view name) {
