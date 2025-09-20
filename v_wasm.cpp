@@ -121,12 +121,10 @@ namespace v {
   void create_window() {
     sires::read("gairleog.vert.gles", nullptr, [](auto, hai::cstr & gles) {
       vert_shader = traits::move(gles);
-      silog::trace(vert_shader.begin());
 
       // TODO: load in parallel
       sires::read("gairleog.frag.gles", nullptr, [](auto, hai::cstr & gles) {
         frag_shader = traits::move(gles);
-      silog::trace(frag_shader.begin());
 
         setup();
         load_texture("pixelite2.png");
