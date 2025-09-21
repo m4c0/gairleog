@@ -5,6 +5,7 @@ import dotz;
 import map;
 import res;
 import silog;
+import sitime;
 import sprdef;
 import v;
 
@@ -13,7 +14,9 @@ static map g_map {};
 static dotz::ivec2 g_pos { 1 };
 
 static void on_frame() {
-  v::on_frame = [] {};
+  static sitime::stopwatch ms {};
+  g_map.tick_lights(g_pos, 0.1, ms.millis());
+  ms = {};
 
   auto m = v::map();
   g_map.load(m);
@@ -26,7 +29,6 @@ static constexpr const auto move(int dx, int dy) {
     if (g_map.at(p).block) return;
 
     g_pos = p;
-    v::on_frame = on_frame;
   };
 }
 

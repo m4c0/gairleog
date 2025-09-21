@@ -34,5 +34,5 @@ export struct map {
     }
   }
 
-  void tick_lights(dotz::ivec2 p, float l);
+  void tick_lights(dotz::ivec2 p, float l, float ms);
 };
