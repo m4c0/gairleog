@@ -15,7 +15,7 @@ static dotz::ivec2 g_pos { 1 };
 
 static void on_frame() {
   static sitime::stopwatch ms {};
-  g_map.tick_lights(g_pos, 0.1, ms.millis());
+  g_map.tick_lights(g_pos, 1, ms.millis());
   ms = {};
 
   auto m = v::map();
