@@ -21,13 +21,13 @@ static float neighbour(map & m, dotz::ivec2 center) {
 }
 
 void map::tick_lights(dotz::ivec2 p, float l, float ms) {
-  at(p).light = l;
+  at(p).light = l * 2.0;
 
   map bb {};
   for (dotz::ivec2 p {}; p.y < h; p.y++) {
     for (p.x = 0; p.x < h; p.x++) {
       bb.at(p) = at(p);
-      bb.at(p).light = neighbour(*this, p);
+      bb.at(p).light = dotz::clamp(neighbour(*this, p), 0.0f, 1.0f);
     }
   }
   *this = traits::move(bb);
