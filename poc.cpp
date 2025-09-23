@@ -18,6 +18,8 @@ static void on_frame() {
   g_map.tick_lights(g_pos, 1, ms.millis());
   ms = {};
 
+  v::pc = { g_pos, 4 };
+
   auto m = v::map();
   g_map.load(m);
   m->push({ .pos = g_pos, .id = sprdef::get("characters/human_knight") });
@@ -35,7 +37,6 @@ static constexpr const auto move(int dx, int dy) {
 const int i = [] {
   res::on_error([](auto msg) { silog::die("Failure loading resource: %s", msg.cstr().begin()); });
   res::load_all([] {
-    v::pc = { 16, 16 };
     v::on_frame = on_frame;
     g_map.build();
     g_map.at(g_pos) = {};
