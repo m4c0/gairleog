@@ -18,7 +18,7 @@ static void on_frame() {
   g_map.tick_lights(g_pos, 1, ms.millis());
   ms = {};
 
-  v::pc = { g_pos, 4 };
+  v::pc = { g_pos + 0.5f, 6 };
 
   auto m = v::map();
   g_map.load(m);
