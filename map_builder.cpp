@@ -96,4 +96,10 @@ void map::build() {
       if (c & wall_id) c = base + (c & 0xFFFF);
     }
   }
+
+  data[h - 2][w - 2] = {
+    .exit = true,
+    .light = 2,
+    .sprite = sprdef::get("environment/props/door_closed"),
+  };
 }

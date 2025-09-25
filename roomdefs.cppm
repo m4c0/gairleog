@@ -10,6 +10,7 @@ import traits;
 namespace roomdefs {
   export struct tiledef {
     bool block {};
+    bool exit {};
     float light {};
     unsigned sprite {};
   };
