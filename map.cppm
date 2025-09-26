@@ -7,6 +7,7 @@ import roomdefs;
 
 struct tile {
   roomdefs::tiledef def {};
+  float light {};
   bool exit {};
 };
 
@@ -34,7 +35,7 @@ export struct map {
       for (auto x = 0; x < w; x++) {
         m->push({
           .pos { x, y },
-          .mult = data[y][x].def.light,
+          .mult = data[y][x].light,
           .id = data[y][x].def.sprite,
         });
       }
