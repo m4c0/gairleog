@@ -11,7 +11,7 @@ static float neighbour(map & m, dotz::ivec2 center) {
       float den = (p.x == 0 && p.y == 0) 
         ? 1.0
         : (1.0 + 0.25 * dotz::length(dotz::vec2 { p - center }));
-      res += m.at(p).light / den;
+      res += m.at(p).def.light / den;
     }
   }
 
@@ -19,13 +19,13 @@ static float neighbour(map & m, dotz::ivec2 center) {
 }
 
 void map::tick_lights(dotz::ivec2 p, float l, float ms) {
-  at(p).light = l * 3.0;
+  at(p).def.light = l * 3.0;
 
   map bb {};
   for (dotz::ivec2 p {}; p.y < h; p.y++) {
     for (p.x = 0; p.x < h; p.x++) {
       bb.at(p) = at(p);
-      bb.at(p).light = dotz::clamp(neighbour(*this, p), 0.0f, 1.0f);
+      bb.at(p).def.light = dotz::clamp(neighbour(*this, p), 0.0f, 1.0f);
     }
   }
   *this = traits::move(bb);

@@ -5,18 +5,25 @@ export module map;
 import dotz;
 import roomdefs;
 
+struct tile {
+  roomdefs::tiledef def {};
+  bool exit {};
+};
+
 export struct map {
   static constexpr const auto wall_id = 0x400'0000;
 
-  static constexpr const roomdefs::tiledef wall {
-    .block = true,
-    .sprite = wall_id,
+  static constexpr const tile wall {
+    .def {
+      .block = true,
+      .sprite = wall_id,
+    },
   };
 
   static constexpr const unsigned w = 32;
   static constexpr const unsigned h = 32;
 
-  roomdefs::tiledef data[h][w] {};
+  tile data[h][w] {};
 
   auto & at(dotz::ivec2 p) { return data[p.y][p.x]; }
 
@@ -27,8 +34,8 @@ export struct map {
       for (auto x = 0; x < w; x++) {
         m->push({
           .pos { x, y },
-          .mult = data[y][x].light,
-          .id = data[y][x].sprite,
+          .mult = data[y][x].def.light,
+          .id = data[y][x].def.sprite,
         });
       }
     }

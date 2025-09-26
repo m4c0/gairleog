@@ -11,7 +11,9 @@ namespace {
     if (!n) return false;
     for (auto y = aa.y; y <= bb.y; y++) {
       for (auto x = aa.x; x <= bb.x; x++) {
-        map.data[y][x] = n->fn(*n, x - aa.x, y - aa.y);
+        map.data[y][x] = {
+          .def = n->fn(*n, x - aa.x, y - aa.y),
+        };
       }
     }
 
@@ -33,8 +35,8 @@ namespace {
  
     auto y = rng::rand_i(aa.y, bb.y);
     for (auto i = 0; i < bb.y - aa.y; i++) {
-      if (!map.data[y][x - 1].block &&
-          !map.data[y][x + 1].block) {
+      if (!map.data[y][x - 1].def.block &&
+          !map.data[y][x + 1].def.block) {
         map.data[y][x] = {};
         break;
       }
@@ -60,8 +62,8 @@ namespace {
  
     auto x = rng::rand_i(aa.x, bb.x);
     for (auto i = 0; i < bb.x - aa.x; i++) {
-      if (!map.data[y - 1][x].block &&
-          !map.data[y + 1][x].block) {
+      if (!map.data[y - 1][x].def.block &&
+          !map.data[y + 1][x].def.block) {
         map.data[y][x] = {};
         break;
       }
@@ -92,14 +94,16 @@ void map::build() {
   auto base = sprdef::get("environment/walls/brick_clay");
   for (auto y = 0; y < h; y++) {
     for (auto x = 0; x < w; x++) {
-      auto & c = data[y][x].sprite;
+      auto & c = data[y][x].def.sprite;
       if (c & wall_id) c = base + (c & 0xFFFF);
     }
   }
 
   data[h - 2][w - 2] = {
+    .def {
+      .light = 2,
+      .sprite = sprdef::get("environment/props/door_closed"),
+    },
     .exit = true,
-    .light = 2,
-    .sprite = sprdef::get("environment/props/door_closed"),
   };
 }

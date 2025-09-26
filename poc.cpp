@@ -28,7 +28,7 @@ static void on_frame() {
 static constexpr const auto move(int dx, int dy) {
   return [=] {
     auto p = g_pos + dotz::ivec2 { dx, dy };
-    if (g_map.at(p).block) return;
+    if (g_map.at(p).def.block) return;
 
     g_pos = p;
   };
