@@ -1,6 +1,8 @@
 module map;
 import traits;
 
+static constexpr const auto min_light = 0.3f;
+
 static float neighbour(map & m, dotz::ivec2 center) {
   float res = 0;
 
@@ -26,6 +28,13 @@ void map::tick_lights(dotz::ivec2 p, float l, float ms) {
   for (dotz::ivec2 p {}; p.y < h; p.y++) {
     for (p.x = 0; p.x < h; p.x++) {
       at(p).light = dotz::clamp(neighbour(*this, p), 0.0f, 1.0f);
+    }
+  }
+  for (dotz::ivec2 p {}; p.y < h; p.y++) {
+    for (p.x = 0; p.x < h; p.x++) {
+      auto & pp = at(p);
+      if (!pp.wall) continue;
+      if (pp.light > pp.def.light || pp.light > min_light) pp.def.light = pp.light;
     }
   }
 
