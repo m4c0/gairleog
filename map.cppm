@@ -8,19 +8,11 @@ import roomdefs;
 struct tile {
   roomdefs::tiledef def {};
   float light {};
-  bool exit {};
+  bool exit :1 {};
+  bool wall :1 {};
 };
 
 export struct map {
-  static constexpr const auto wall_id = 0x400'0000;
-
-  static constexpr const tile wall {
-    .def {
-      .block = true,
-      .sprite = wall_id,
-    },
-  };
-
   static constexpr const unsigned w = 32;
   static constexpr const unsigned h = 32;
 

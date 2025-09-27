@@ -12,7 +12,7 @@ static constexpr auto rnd_rl() {
 }
 
 static constexpr bool wall(const map & map, unsigned x, unsigned y) {
-  return (map.data[y][x].def.sprite & map::wall_id) == map::wall_id;
+  return map.data[y][x].wall;
 }
 
 void make_walls(map & map) {
@@ -41,7 +41,7 @@ void make_walls(map & map) {
         u ? 25 :
         d ? 3 :
         36;
-      map.data[y][x].def.sprite = map::wall_id | n;
+      map.data[y][x].def.sprite = n;
     }
   }
 }
