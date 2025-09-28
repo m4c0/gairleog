@@ -9,6 +9,10 @@
     (spr environment/props/boulder4)
   )))
 
+(def candle (tile
+  (light 1)
+  (spr environment/props/candles)))
+
 (def pot (tile (spr environment/props/pot_red)))
 
 (def grass (tile
@@ -62,6 +66,7 @@
     (spr environment/props/tree4_withered)
   )))
 
+(def X (random candle grass empty empty))
 (themedef
   (random
     (do
@@ -91,21 +96,21 @@
   (room !.. !..)
   (room !.! !.!)
 
-  (room .... ....)
-  (room ..... .....)
-  (room ...... ......)
-  (room ....... .......)
-  (room ........ ........)
-  (room ......... .........)
-  (room .......... ..........)
+  (room .X.. ....)
+  (room ..X.. .....)
+  (room ..X... ......)
+  (room ...X... .......)
+  (room ...X.... ........)
+  (room ....X.... .........)
+  (room ....X..... ..........)
 
-  (room .... .... ....)
-  (room ..... ..... .....)
-  (room ...... ...... ......)
-  (room ....... ....... .......)
-  (room ........ ........ ........)
-  (room ......... ......... .........)
-  (room .......... .......... ..........)
+  (room .... ..X. ....)
+  (room ..... ..X.. .....)
+  (room ...... ..X... ......)
+  (room ....... ...X... .......)
+  (room ........ ...X.... ........)
+  (room ......... ....X.... .........)
+  (room .......... ....X..... ..........)
 
   (room ..!. .... .... ....)
   (room ..!. .... ...! !...)
