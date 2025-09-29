@@ -1,5 +1,6 @@
 module map;
 import dotz;
+import perlin;
 import rng;
 import roomdefs;
 import sprdef;
@@ -96,12 +97,19 @@ void map::build() {
   (w > h ? vsplit : hsplit)(*this, {1,1}, {w-2,h-2});
   make_walls(*this);
 
-  const auto base = sprdef::get("environment/walls/brick_clay");
+  const unsigned bases[] {
+    sprdef::get("environment/walls/brick_clay"),
+    sprdef::get("environment/walls/walls_cave_brown"),
+    sprdef::get("environment/walls/walls_cave_gray"),
+    sprdef::get("environment/walls/walls_dungeon_gray"),
+    sprdef::get("environment/walls/walls_dungeon_yellow"),
+  };
+  perlin pln {};
   for (auto y = 0; y < h; y++) {
     for (auto x = 0; x < w; x++) {
       if (!data[y][x].wall) continue;
-      auto & c = data[y][x].def.sprite;
-      c = base + (c & 0xFFFF);
+      dotz::vec2 p { static_cast<float>(x) / w, static_cast<float>(y) / h };
+      data[y][x].def.sprite += bases[static_cast<unsigned>(pln(p) * 2.5 + 2.5)];
     }
   }
 
