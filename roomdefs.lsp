@@ -66,7 +66,7 @@
     (spr environment/props/tree4_withered)
   )))
 
-(def X (random candle grass empty empty))
+(def X (random pot candle grass empty empty))
 (themedef
   (random
     (do
