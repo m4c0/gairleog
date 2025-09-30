@@ -15,7 +15,18 @@
 
 (def pot (tile
   (block)
-  (spr environment/props/pot_red)))
+  (random
+    (spr environment/props/pot_yellow)
+    (spr environment/props/pot_black)
+    (spr environment/props/pot_blue)
+    (spr environment/props/pot_green)
+    (spr environment/props/pot_purple)
+    (spr environment/props/pot_orange)
+    (spr environment/props/pot_red)
+    (spr environment/props/pot_indigo)
+    (spr environment/props/pot_brown)
+    (spr environment/props/pot_gray)
+  )))
 
 (def grass (tile
   (random
