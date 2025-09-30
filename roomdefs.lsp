@@ -13,7 +13,9 @@
   (light 1)
   (spr environment/props/candles)))
 
-(def pot (tile (spr environment/props/pot_red)))
+(def pot (tile
+  (block)
+  (spr environment/props/pot_red)))
 
 (def grass (tile
   (random
