@@ -23,42 +23,41 @@ namespace roomdefs {
   hai::cstr g_src {};
   export void run(jute::view src) { g_src = src.cstr(); }
 
+  struct node : lispy::node {
+    enum { t_empty, t_block, t_light, t_spr, t_tdef, t_room } type {};
+    tiledef tdef {};
+    hai::sptr<t> room {};
+  };
+  struct context : lispy::context {
+    unsigned w {};
+    unsigned h {};
+    const node * theme {};
+  };
+  static const lispy::node * block(const lispy::node * n) {
+    return new (n->ctx->allocator()) node { *n, node::t_block, { .block = true } };
+  }
+  static const lispy::node * light(const lispy::node * n, const node * l) {
+    auto i = lispy::to_f(l);
+    if (i < 0 || i > 1) lispy::err(n, "light intensity should be between 0 and 15");
+    return new (n->ctx->allocator()) node { *n, node::t_light, { .light = i } };
+  }
+  static const lispy::node * spr(const lispy::node * n, const node * name) {
+    if (!lispy::is_atom(name)) lispy::err(name, "spr expects atom as name");
+    if (!sprdef::has(name->atom)) lispy::err(name, "invalid sprite name");
+    auto id = sprdef::get(name->atom);
+    return new (n->ctx->allocator()) node { *n, node::t_spr, { .sprite = id } };
+  }
   export hai::sptr<t> for_size(unsigned ew, unsigned eh) {
-    struct node : lispy::node {
-      enum { t_empty, t_block, t_light, t_spr, t_tdef, t_room } type {};
-      tiledef tdef {};
-      hai::sptr<t> room {};
-    };
-    struct context : lispy::context {
-      unsigned w {};
-      unsigned h {};
-      const node * theme {};
-    } ctx {
+    context ctx {
       { .allocator = lispy::allocator<node>() },
       ew, eh,
     }; 
+    ctx.fns["block"] = lispy::wrap<node, block>;
+    ctx.fns["light"] = lispy::wrap<node, light>;
+    ctx.fns["spr"] = lispy::wrap<node, spr>;
 
     constexpr const auto eval = lispy::eval<node>;
 
-    ctx.fns["block"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      if (as != 0) lispy::err(n, "block does not accept parameters");
-      return new (n->ctx->allocator()) node { *n, node::t_block, { .block = true } };
-    };
-    ctx.fns["light"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      if (as != 1) lispy::err(n, "light requires intensity as parameter");
-      auto i = lispy::to_f(eval(n->ctx, aa[0]));
-      if (i < 0 || i > 1) lispy::err(n, "light intensity should be between 0 and 15");
-      return new (n->ctx->allocator()) node { *n, node::t_light, { .light = i } };
-    };
-    ctx.fns["spr"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      if (as != 1) lispy::err(n, "spr requires only the sprite name");
-
-      if (!lispy::is_atom(aa[0])) lispy::err(aa[0], "spr expects atom as name");
-      if (!sprdef::has(aa[0]->atom)) lispy::err(aa[0], "invalid sprite name");
-
-      auto id = sprdef::get(aa[0]->atom);
-      return new (n->ctx->allocator()) node { *n, node::t_spr, { .sprite = id } };
-    };
     ctx.fns["tile"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       tiledef t {};
       for (auto i = 0; i < as; i++) {
