@@ -1,6 +1,8 @@
 (entdef apple)
 (entdef player (life 3))
-(entdef pot (life 1))
+(entdef pot
+  (life 1)
+  (loot apple))
 (entdef toad
   (life 2)
   (loot))
