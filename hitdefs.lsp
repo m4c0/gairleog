@@ -1,12 +1,3 @@
-(entdef apple)
-(entdef player (life 3))
-(entdef pot
-  (life 1)
-  (loot apple))
-(entdef toad
-  (life 2)
-  (loot))
-
 (hitdef
   (from player)
   (to pot)
@@ -14,12 +5,12 @@
 
 (hitdef
   (from player)
-  (to apple)
+  (to food)
   (pick))
 
 (hitdef
   (from player)
-  (to pot)
+  (to enemy)
   (damage 1))
 
 (hitdef
