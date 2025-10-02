@@ -27,7 +27,7 @@ namespace sprdef {
     lispy::context ctx {
       .allocator = lispy::allocator<custom_node>(),
     };
-    ctx.fns["sprdef"] = lispy::wrap<custom_node, sprdef>;
+    ctx.fns["sprdef"] = lispy::experimental::wrap<custom_node, sprdef>;
     lispy::run<custom_node>(src, &ctx);
   }
 }

@@ -23,63 +23,49 @@ namespace roomdefs {
   hai::cstr g_src {};
   export void run(jute::view src) { g_src = src.cstr(); }
 
-  struct node : lispy::node {
-    enum { t_empty, t_block, t_light, t_spr, t_tdef, t_room } type {};
-    tiledef tdef {};
+  static float to_light(const lispy::node * n) {
+    auto i = lispy::to_f(n);
+    if (i < 0 || i > 1) lispy::err(n, "light intensity should be between 0 and 1");
+    return i;
+  }
+  static unsigned to_spr(const lispy::node * name) {
+    if (!lispy::is_atom(name)) lispy::err(name, "spr expects atom as name");
+    if (!sprdef::has(name->atom)) lispy::err(name, "invalid sprite name");
+    return sprdef::get(name->atom);
+  }
+
+  struct node : lispy::node, tiledef {
+    void (*attr)(node *, const node *);
     hai::sptr<t> room {};
+    bool has_tdef;
   };
   struct context : lispy::context {
     unsigned w {};
     unsigned h {};
     const node * theme {};
   };
-  static const lispy::node * block(const lispy::node * n) {
-    return new (n->ctx->allocator()) node { *n, node::t_block, { .block = true } };
-  }
-  static const lispy::node * light(const lispy::node * n, const node * l) {
-    auto i = lispy::to_f(l);
-    if (i < 0 || i > 1) lispy::err(n, "light intensity should be between 0 and 15");
-    return new (n->ctx->allocator()) node { *n, node::t_light, { .light = i } };
-  }
-  static const lispy::node * spr(const lispy::node * n, const node * name) {
-    if (!lispy::is_atom(name)) lispy::err(name, "spr expects atom as name");
-    if (!sprdef::has(name->atom)) lispy::err(name, "invalid sprite name");
-    auto id = sprdef::get(name->atom);
-    return new (n->ctx->allocator()) node { *n, node::t_spr, { .sprite = id } };
-  }
+
   export hai::sptr<t> for_size(unsigned ew, unsigned eh) {
+    using namespace lispy::experimental;
+
     context ctx {
       { .allocator = lispy::allocator<node>() },
       ew, eh,
     }; 
-    ctx.fns["block"] = lispy::wrap<node, block>;
-    ctx.fns["light"] = lispy::wrap<node, light>;
-    ctx.fns["spr"] = lispy::wrap<node, spr>;
-
-    constexpr const auto eval = lispy::eval<node>;
-
     ctx.fns["tile"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      tiledef t {};
-      for (auto i = 0; i < as; i++) {
-        auto a = eval(n->ctx, aa[i]);
-        switch (a->type) {
-          default:
-            lispy::err(aa[i], "expecting spr, light or block inside a tdef");
-            break;
-          case node::t_block:
-            t.block = a->tdef.block;
-            break;
-          case node::t_light:
-            t.light = a->tdef.light;
-            break;
-          case node::t_spr:
-            t.sprite = a->tdef.sprite;
-            break;
-        }
-      }
-      return new (n->ctx->allocator()) node { *n, node::t_tdef, { t } };
+      basic_context<node> ctx { n->ctx->allocator };
+      ctx.fns["block"] = [](auto n, auto aa, auto as) -> const lispy::node * {
+        if (as != 0) lispy::err(n, "not expecting a parameter");
+        auto * nn = clone<node>(n);
+        nn->block = true;
+        return nn;
+      };
+      ctx.fns["light"] = mem_fn<&node::attr, &node::light,  to_light>;
+      ctx.fns["spr"]   = mem_fn<&node::attr, &node::sprite, to_spr>;
+      auto * nn = fill_clone<node>(&ctx, n, aa, as);
+      nn->has_tdef = true;
+      return nn;
     };
-
     ctx.fns["themedef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as != 1) lispy::err(n, "themedef requires at exactly one parameter");
       static_cast<context *>(n->ctx)->theme = static_cast<const node *>(aa[0]);
@@ -112,9 +98,9 @@ namespace roomdefs {
 
           if (!ctx->defs.has(cell->atom)) lispy::err(cell, "unknown tiledef");
           auto tdn = lispy::eval<node>(ctx, ctx->defs[cell->atom]);
-          if (tdn->type != node::t_tdef) lispy::err(tdn, "expecting a tiledef");
+          if (!tdn->has_tdef) lispy::err(tdn, "expecting a tiledef");
 
-          data[i * cols + idx] = tdn->tdef;
+          data[i * cols + idx] = *tdn;
         }
       }
 
@@ -170,7 +156,9 @@ namespace roomdefs {
             break;
         }
       }
-      return new (n->ctx->allocator()) node { *n, node::t_room, {}, r };
+      auto nn = clone<node>(n);
+      nn->room = r;
+      return nn;
     };
     ctx.fns["roomdefs"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as == 0) lispy::err(n, "missing at least one room option");
@@ -185,8 +173,6 @@ namespace roomdefs {
     };
     
     auto n = lispy::run<node>(g_src, &ctx);
-    if (!n || n->type != node::t_room) return {};
-    
-    return n && n->type == node::t_room ? n->room : hai::sptr<t> {};
+    return (n && n->room) ? n->room : hai::sptr<t> {};
   }
 }
