@@ -5,6 +5,7 @@ module;
 
 export module res;
 import hai;
+import hitdefs;
 import jute;
 import lispy;
 import roomdefs;
@@ -55,7 +56,11 @@ namespace res {
       safe_load("roomdefs.lsp", [=](auto src) mutable {
         roomdefs::run(src);
 
-        cb();
+        safe_load("hitdefs.lsp", [=](auto src) mutable {
+          hitdefs::run(src);
+
+          cb();
+        });
       });
     });
   }
