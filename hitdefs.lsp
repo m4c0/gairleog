@@ -1,21 +1,13 @@
-(hitdef
-  (from player)
-  (to pot)
+(hitdef player pot
   (damage 1))
 
-(hitdef
-  (from player)
-  (to food)
+(hitdef player food
   (pick))
 
-(hitdef
-  (from player)
-  (to enemy)
+(hitdef player enemy
   (damage 1))
 
-(hitdef
-  (from toad)
-  (to player)
+(hitdef toad player
   (random
     (miss)
     (miss)
