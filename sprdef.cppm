@@ -7,6 +7,8 @@ import sires;
 import traits;
 
 namespace sprdef {
+  export struct error : lispy::parser_error {};
+
   auto & map() {
     static hashley::niamh i { 1023 };
     return i;
@@ -23,11 +25,13 @@ namespace sprdef {
     map()[def->atom] = lispy::to_i(val);
     return n;
   }
-  export void run(jute::view src) {
+  export void run(jute::view src) try {
     lispy::context ctx {
       .allocator = lispy::allocator<custom_node>(),
     };
     ctx.fns["sprdef"] = lispy::experimental::wrap<custom_node, sprdef>;
     lispy::run<custom_node>(src, &ctx);
+  } catch (const lispy::parser_error & e) {
+    throw error { e };
   }
 }

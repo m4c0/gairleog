@@ -17,6 +17,8 @@ namespace hitdefs::fns {
 }
 
 namespace hitdefs {
+  export struct error : lispy::parser_error {};
+
   export using action_t = void (*)(void);
   export using action_list_t = hai::chain<action_t>;
 
@@ -51,7 +53,7 @@ namespace hitdefs {
     list.end();
     jute::view { *(list.begin()) };
   };
-  export action_list_t check(const compo_list auto & from, const compo_list auto & to) {
+  export action_list_t check(const compo_list auto & from, const compo_list auto & to) try {
     action_list_t result { 8 };
     struct context : hitdefs::context {
       decltype(from.begin()) from_begin;
@@ -82,5 +84,7 @@ namespace hitdefs {
     };
     ctx.run(g_source);
     return result;
+  } catch (const lispy::parser_error & e) {
+    throw error { e };
   }
 }

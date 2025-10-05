@@ -14,7 +14,6 @@ import sires;
 import sprdef;
 
 namespace res {
-#ifndef LECO_TARGET_WASM
   static void report(jute::view file, const lispy::parser_error & e) {
     char msg[128] {};
     auto len = snprintf(msg, sizeof(msg), "%.*s:%d:%d: %.*s",
@@ -24,24 +23,14 @@ namespace res {
     if (len > 0) throw jute::view { msg, static_cast<unsigned>(len) }.cstr();
     else throw (*e.msg).cstr();
   }
-#endif
 
   static void safe_load(jute::view file, hai::fn<void, jute::view> cb) {
     sires::read(file, nullptr, [=](auto ptr, hai::cstr & src) mutable {
-#ifdef LECO_TARGET_WASM
-      // No exceptions ATM
       cb(src);
-#else
-      try {
-        cb(src);
-      } catch (const lispy::parser_error & e) {
-        report(file, e);
-      }
-#endif
     });
   }
 
-  static void load(jute::view sprdef_file, hai::fn<void> cb) {
+  static void load(jute::view sprdef_file, hai::fn<void> cb) try {
     sires::on_error([](auto ptr, auto msg) {
       throw msg.cstr();
     });
@@ -58,6 +47,12 @@ namespace res {
         });
       });
     });
+  } catch (const hitdefs::error & e) {
+    report("hitdefs.lsp", e);
+  } catch (const roomdefs::error & e) {
+    report("roomdefs.lsp", e);
+  } catch (const sprdef::error & e) {
+    report(sprdef_file, e);
   }
   export void load_all(void (*cb)()) {
     load("pixelite2.lsp", cb);

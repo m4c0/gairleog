@@ -8,6 +8,8 @@ import sprdef;
 import traits;
 
 namespace roomdefs {
+  export struct error : lispy::parser_error {};
+
   export struct tiledef {
     bool block {};
     float light {};
@@ -45,7 +47,7 @@ namespace roomdefs {
     const node * theme {};
   };
 
-  export hai::sptr<t> for_size(unsigned ew, unsigned eh) {
+  export hai::sptr<t> for_size(unsigned ew, unsigned eh) try {
     using namespace lispy::experimental;
 
     context ctx {
@@ -174,5 +176,7 @@ namespace roomdefs {
     
     auto n = lispy::run<node>(g_src, &ctx);
     return (n && n->room) ? n->room : hai::sptr<t> {};
+  } catch (const lispy::parser_error & e) {
+    throw error { e };
   }
 }
