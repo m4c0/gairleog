@@ -1,4 +1,5 @@
 #pragma leco test
+import hitdefs;
 import print;
 import res;
 import roomdefs;
@@ -10,6 +11,8 @@ int main() try {
     // TODO: create strategies to test each resource throughly
     roomdefs::for_size(2, 2);
     roomdefs::for_size(8, 6);
+
+    hitdefs::check("player", "pot");
   });
   return res;
 } catch (...) {
