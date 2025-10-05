@@ -9,7 +9,6 @@ struct tile {
   roomdefs::tiledef def {};
   float light {};
   bool exit :1 {};
-  bool wall :1 {};
 };
 
 export struct map {

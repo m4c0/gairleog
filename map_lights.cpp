@@ -33,7 +33,7 @@ void map::tick_lights(dotz::ivec2 p, float l, float ms) {
   for (dotz::ivec2 p {}; p.y < h; p.y++) {
     for (p.x = 0; p.x < h; p.x++) {
       auto & pp = at(p);
-      if (!pp.wall) continue;
+      if (!pp.def.solid) continue;
       if (pp.light > pp.def.light || pp.light > min_light) pp.def.light = pp.light;
     }
   }

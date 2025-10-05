@@ -8,7 +8,6 @@ import sprdef;
 namespace {
   static constexpr const tile wall {
     .def { .solid = true },
-    .wall = true,
   };
 
   [[nodiscard]] bool furnish(map & map, dotz::ivec2 aa, dotz::ivec2 bb) {
@@ -107,7 +106,7 @@ void map::build() {
   perlin pln {};
   for (auto y = 0; y < h; y++) {
     for (auto x = 0; x < w; x++) {
-      if (!data[y][x].wall) continue;
+      if (!data[y][x].def.solid) continue;
       dotz::vec2 p { static_cast<float>(x) / w, static_cast<float>(y) / h };
       data[y][x].def.sprite += bases[static_cast<unsigned>(pln(p) * 2.5 + 2.5)];
     }
