@@ -22,8 +22,6 @@ namespace hitdefs {
 
   struct context : basic_context<node> {
     action_list_t * result;
-    jute::view from;
-    jute::view to;
   };
 
   hai::cstr g_source {};
@@ -47,22 +45,40 @@ namespace hitdefs {
     return ctx.eval(n);
   }
 
-  export action_list_t check(jute::view from, jute::view to) {
+  template<typename T>
+  concept compo_list = requires (T list) {
+    list.begin();
+    list.end();
+    jute::view { *(list.begin()) };
+  };
+  export action_list_t check(const compo_list auto & from, const compo_list auto & to) {
     action_list_t result { 8 };
-    context ctx {
-      .result = &result,
-      .from = from,
-      .to = to,
+    struct context : hitdefs::context {
+      decltype(from.begin()) from_begin;
+      decltype(from.end())   from_end;
+      decltype(to.begin())   to_begin;
+      decltype(to.end())     to_end;
+    } ctx {
+      .from_begin = from.begin(),
+      .from_end   = from.end(),
+      .to_begin   = to.begin(),
+      .to_end     = to.end(),
     };
+    ctx.result = &result;
     ctx.fns["hitdef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as != 3) lispy::err(n, "hitdef requires source, target and action");
       if (!is_atom(aa[0])) lispy::err("source must be an atom");
       if (!is_atom(aa[1])) lispy::err("target must be an atom");
 
       auto ctx = static_cast<context *>(n->ctx);
-      if (ctx->from != aa[0]->atom) return n;
-      if (ctx->to   != aa[1]->atom) return n;
-      return eval(aa[2], ctx->result);
+      for (auto from = ctx->from_begin; from != ctx->from_end; ++from) {
+        for (auto to = ctx->to_begin; to != ctx->to_end; ++to) {
+          if (*from != aa[0]->atom) continue;
+          if (*to   != aa[1]->atom) continue;
+          eval(aa[2], ctx->result);
+        }
+      }
+      return n;
     };
     ctx.run(g_source);
     return result;
