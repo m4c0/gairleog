@@ -1,5 +1,5 @@
 (hitdef player pot
-  (damage 1))
+  (do (block) (damage 1)))
 
 (hitdef player food
   (pick))
@@ -14,6 +14,6 @@
     (miss)
     (miss)
     (miss)
-    (damage 1)
+    (do (poison) (damage 1))
     (damage 2)
     (poison)))
