@@ -7,17 +7,20 @@ import res;
 import rng;
 
 void run() {
-  hai::array<jute::view> src_compos { 1 };
+  // Testing with two different array types, just because
+  hai::array<jute::view> src_compos { 2 };
   src_compos[0] = "player";
+  src_compos[1] = "solid";
 
   hai::chain<jute::view> tgt_compos {};
   tgt_compos.push_back("enemy");
   tgt_compos.push_back("toad");
+  tgt_compos.push_back("solid");
   for (auto action : hitdefs::check(src_compos, tgt_compos)) {
     action();
   }
 
-  putln("flipping");
+  putln("<>");
   for (auto action : hitdefs::check(tgt_compos, src_compos)) {
     action();
   }

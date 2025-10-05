@@ -1,5 +1,6 @@
-(hitdef player pot
-  (do (block) (hit)))
+(hitdef solid solid (block))
+
+(hitdef player pot (hit))
 
 (hitdef player food
   (pick))
