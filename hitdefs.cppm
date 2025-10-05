@@ -10,14 +10,14 @@ using namespace lispy::experimental;
 
 namespace hitdefs::fns {
   void block() { putln("block"); }
-  void damage(int n) { putln("damage ", n); }
+  void hit() { putln("hit"); }
   void miss() { putln("miss"); }
   void pick() { putln("pick"); }
   void poison() { putln("poison"); }
 }
 
 namespace hitdefs {
-  export using action_t = hai::fn<void>;
+  export using action_t = void (*)(void);
   export using action_list_t = hai::chain<action_t>;
 
   struct context : basic_context<node> {
@@ -30,34 +30,20 @@ namespace hitdefs {
 
   export void run(jute::view src) { g_source = src.cstr(); }
 
+  template<action_t Fn>
+  static inline constexpr const auto ref = [](auto n, auto aa, auto as) -> const lispy::node * {
+    if (as != 0) lispy::err(n, "actions do not take arguments");
+    static_cast<context *>(n->ctx)->result->push_back(Fn);
+    return n;
+  };
+
   const node * eval(const node * n, action_list_t * result) {
     context ctx { basic_context<node> { n->ctx->allocator }, result };
-    ctx.fns["block"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      if (as != 0) lispy::err(n, "block does not take arguments");
-      static_cast<context *>(n->ctx)->result->push_back(fns::block);
-      return n;
-    };
-    ctx.fns["damage"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      if (as != 1) lispy::err(n, "damage requires a single argument");
-      auto i = to_i(aa[0]);
-      static_cast<context *>(n->ctx)->result->push_back([i] { fns::damage(i); });
-      return n;
-    };
-    ctx.fns["miss"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      if (as != 0) lispy::err(n, "miss does not take arguments");
-      static_cast<context *>(n->ctx)->result->push_back(fns::miss);
-      return n;
-    };
-    ctx.fns["pick"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      if (as != 0) lispy::err(n, "pick does not take arguments");
-      static_cast<context *>(n->ctx)->result->push_back(fns::pick);
-      return n;
-    };
-    ctx.fns["poison"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      if (as != 0) lispy::err(n, "poison does not take arguments");
-      static_cast<context *>(n->ctx)->result->push_back(fns::poison);
-      return n;
-    };
+    ctx.fns["block"]  = ref<fns::block>;
+    ctx.fns["hit"]    = ref<fns::hit>;
+    ctx.fns["miss"]   = ref<fns::miss>;
+    ctx.fns["pick"]   = ref<fns::pick>;
+    ctx.fns["poison"] = ref<fns::poison>;
     return ctx.eval(n);
   }
 

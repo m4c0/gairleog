@@ -1,11 +1,11 @@
 (hitdef player pot
-  (do (block) (damage 1)))
+  (do (block) (hit)))
 
 (hitdef player food
   (pick))
 
 (hitdef player enemy
-  (damage 1))
+  (hit))
 
 (hitdef toad player
   (random
@@ -14,6 +14,6 @@
     (miss)
     (miss)
     (miss)
-    (do (poison) (damage 1))
-    (damage 2)
+    (do (hit) (poison))
+    (do (hit) (hit))
     (poison)))
