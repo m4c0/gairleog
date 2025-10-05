@@ -3,8 +3,18 @@ import jute;
 import hai;
 import lispy;
 
+import print;
+
 using namespace lispy;
 using namespace lispy::experimental;
+
+namespace hitdefs::fns {
+  void block() { putln("block"); }
+  void damage(int n) { putln("damage ", n); }
+  void miss() { putln("miss"); }
+  void pick() { putln("pick"); }
+  void poison() { putln("poison"); }
+}
 
 namespace hitdefs {
   export using action_t = hai::fn<void>;
@@ -19,29 +29,33 @@ namespace hitdefs {
   hai::cstr g_source {};
 
   export void run(jute::view src) { g_source = src.cstr(); }
-   
+
   const node * eval(const node * n, action_list_t * result) {
     context ctx { basic_context<node> { n->ctx->allocator }, result };
     ctx.fns["block"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as != 0) lispy::err(n, "block does not take arguments");
-      static_cast<context *>(n->ctx)->result->push_back([] {});
+      static_cast<context *>(n->ctx)->result->push_back(fns::block);
       return n;
     };
     ctx.fns["damage"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as != 1) lispy::err(n, "damage requires a single argument");
-      auto _ = to_i(aa[0]);
+      auto i = to_i(aa[0]);
+      static_cast<context *>(n->ctx)->result->push_back([i] { fns::damage(i); });
       return n;
     };
     ctx.fns["miss"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as != 0) lispy::err(n, "miss does not take arguments");
+      static_cast<context *>(n->ctx)->result->push_back(fns::miss);
       return n;
     };
     ctx.fns["pick"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as != 0) lispy::err(n, "pick does not take arguments");
+      static_cast<context *>(n->ctx)->result->push_back(fns::pick);
       return n;
     };
     ctx.fns["poison"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as != 0) lispy::err(n, "poison does not take arguments");
+      static_cast<context *>(n->ctx)->result->push_back(fns::poison);
       return n;
     };
     return ctx.eval(n);

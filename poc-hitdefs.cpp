@@ -5,6 +5,7 @@ import res;
 
 void run() {
   for (auto action : hitdefs::check("player", "pot")) {
+    action();
   }
 }
 
