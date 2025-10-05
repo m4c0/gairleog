@@ -7,6 +7,9 @@ void run() {
   for (auto action : hitdefs::check("player", "pot")) {
     action();
   }
+  for (auto action : hitdefs::check("toad", "player")) {
+    action();
+  }
 }
 
 int main() try {
