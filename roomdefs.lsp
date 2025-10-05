@@ -1,7 +1,7 @@
 (def empty (tile (spr empty)))
 
 (def boulder (tile
-  (block)
+  (solid)
   (random
     (spr environment/props/boulder1)
     (spr environment/props/boulder2)
@@ -14,7 +14,8 @@
   (spr environment/props/candles)))
 
 (def pot (tile
-  (block)
+  (solid)
+  (pot)
   (random
     (spr environment/props/pot_yellow)
     (spr environment/props/pot_black)
@@ -53,7 +54,7 @@
   )))
 
 (def tree (tile
-  (block)
+  (solid)
   (random
     (spr environment/props/tree1)
     (spr environment/props/tree2)
@@ -62,7 +63,7 @@
   )))
 
 (def tree_swamp (tile
-  (block)
+  (solid)
   (random
     (spr environment/props/tree1_swamp)
     (spr environment/props/tree2_swamp)
@@ -71,7 +72,7 @@
   )))
 
 (def tree_withered (tile
-  (block)
+  (solid)
   (random
     (spr environment/props/tree1_withered)
     (spr environment/props/tree2_withered)

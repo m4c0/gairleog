@@ -11,9 +11,10 @@ namespace roomdefs {
   export struct error : lispy::parser_error {};
 
   export struct tiledef {
-    bool block {};
     float light {};
     unsigned sprite {};
+    bool pot {};
+    bool solid {};
   };
   export struct t {
     unsigned w {};
@@ -38,7 +39,7 @@ namespace roomdefs {
 
   struct node : lispy::node, tiledef {
     void (*attr)(node *, const node *);
-    hai::sptr<t> room {};
+    hai::sptr<roomdefs::t> room {};
     bool has_tdef;
   };
   struct context : lispy::context {
@@ -56,12 +57,8 @@ namespace roomdefs {
     }; 
     ctx.fns["tile"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       basic_context<node> ctx { n->ctx->allocator };
-      ctx.fns["block"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-        if (as != 0) lispy::err(n, "not expecting a parameter");
-        auto * nn = clone<node>(n);
-        nn->block = true;
-        return nn;
-      };
+      ctx.fns["pot"]   = mem_flag<&node::attr, &node::pot>;
+      ctx.fns["solid"] = mem_flag<&node::attr, &node::solid>;
       ctx.fns["light"] = mem_fn<&node::attr, &node::light,  to_light>;
       ctx.fns["spr"]   = mem_fn<&node::attr, &node::sprite, to_spr>;
       auto * nn = fill_clone<node>(&ctx, n, aa, as);
