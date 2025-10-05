@@ -7,17 +7,24 @@ using namespace lispy;
 using namespace lispy::experimental;
 
 namespace hitdefs {
+  export using action_t = hai::fn<void>;
+  export using action_list_t = hai::chain<action_t>;
+
+  struct context : basic_context<node> {
+    action_list_t * result;
+    jute::view from;
+    jute::view to;
+  };
+
   hai::cstr g_source {};
 
   export void run(jute::view src) { g_source = src.cstr(); }
    
-  const node * eval(const node * n) {
-    struct context : basic_context<node> {
-    } ctx {
-      basic_context<node> { n->ctx->allocator }
-    };
+  const node * eval(const node * n, action_list_t * result) {
+    context ctx { basic_context<node> { n->ctx->allocator }, result };
     ctx.fns["block"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as != 0) lispy::err(n, "block does not take arguments");
+      static_cast<context *>(n->ctx)->result->push_back([] {});
       return n;
     };
     ctx.fns["damage"] = [](auto n, auto aa, auto as) -> const lispy::node * {
@@ -40,11 +47,10 @@ namespace hitdefs {
     return ctx.eval(n);
   }
 
-  export void check(jute::view from, jute::view to) {
-    struct context : basic_context<node> {
-      jute::view from;
-      jute::view to;
-    } ctx {
+  export action_list_t check(jute::view from, jute::view to) {
+    action_list_t result { 8 };
+    context ctx {
+      .result = &result,
       .from = from,
       .to = to,
     };
@@ -56,8 +62,9 @@ namespace hitdefs {
       auto ctx = static_cast<context *>(n->ctx);
       if (ctx->from != aa[0]->atom) return n;
       if (ctx->to   != aa[1]->atom) return n;
-      return eval(aa[2]);
+      return eval(aa[2], ctx->result);
     };
     ctx.run(g_source);
+    return result;
   }
 }
