@@ -14,15 +14,6 @@ import sires;
 import sprdef;
 
 namespace res {
-  hai::fn<void, jute::view> err_cb {};
-
-  export void on_error(hai::fn<void, jute::view> cb) {
-    err_cb = cb;
-    sires::on_error([cb](auto ptr, auto msg) mutable {
-      cb(msg);
-    });
-  }
-
 #ifndef LECO_TARGET_WASM
   static void report(jute::view file, const lispy::parser_error & e) {
     char msg[128] {};
@@ -30,8 +21,8 @@ namespace res {
         static_cast<unsigned>(file.size()), file.begin(),
         e.line, e.col,
         static_cast<unsigned>(e.msg.size()), e.msg.begin());
-    if (len > 0) err_cb(jute::view { msg, static_cast<unsigned>(len) });
-    else err_cb(e.msg);
+    if (len > 0) throw jute::view { msg, static_cast<unsigned>(len) }.cstr();
+    else throw (*e.msg).cstr();
   }
 #endif
 
@@ -51,6 +42,9 @@ namespace res {
   }
 
   static void load(jute::view sprdef_file, hai::fn<void> cb) {
+    sires::on_error([](auto ptr, auto msg) {
+      throw msg.cstr();
+    });
     safe_load(sprdef_file, [=](auto src) mutable {
       sprdef::run(src);
 

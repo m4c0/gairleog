@@ -1,6 +1,7 @@
 #pragma leco app
 
 import casein;
+import hai;
 import map;
 import res;
 import silog;
@@ -18,10 +19,14 @@ static void on_frame() {
 }
 
 const int i = [] {
-  res::on_error([](auto msg) { silog::die("Failure loading resource: %s", msg.cstr().begin()); });
-  res::load_all([] {
-    v::pc = { 16, 16 };
-    v::on_frame = on_frame;
-  });
+  try {
+    res::load_all([] {
+      v::pc = { 16, 16 };
+      v::on_frame = on_frame;
+    });
+  } catch (const hai::cstr & e) {
+    silog::die("Failure loading resource: %s", e.begin());
+    throw;
+  }
   return 0;
 }();

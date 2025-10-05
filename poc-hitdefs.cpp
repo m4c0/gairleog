@@ -28,11 +28,10 @@ void run() {
 
 int main() try {
   rng::seed();
-
-  int res = 0;
-  res::on_error([&](auto msg) { errln(msg); res = 1; });
   res::load_locally(&run);
-  return res;
+} catch (const hai::cstr & msg) {
+  errln(msg);
+  return 1;
 } catch (...) {
   return 2;
 }

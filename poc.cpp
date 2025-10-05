@@ -2,6 +2,7 @@
 
 import casein;
 import dotz;
+import hai;
 import map;
 import res;
 import silog;
@@ -35,12 +36,15 @@ static constexpr const auto move(int dx, int dy) {
 }
 
 const int i = [] {
-  res::on_error([](auto msg) { silog::die("Failure loading resource: %s", msg.cstr().begin()); });
-  res::load_all([] {
-    v::on_frame = on_frame;
-    g_map.build();
-    g_map.at(g_pos) = {};
-  });
+  try {
+    res::load_all([] {
+      v::on_frame = on_frame;
+      g_map.build();
+      g_map.at(g_pos) = {};
+    });
+  } catch (const hai::cstr & e) {
+    silog::die("Failure loading resource: %s", e.begin());
+  }
 
   using namespace casein;
   handle(KEY_DOWN, K_UP,    move(0, -1));
