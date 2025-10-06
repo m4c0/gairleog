@@ -5,6 +5,7 @@ import dotz;
 import hai;
 import map;
 import res;
+import roomdefs;
 import silog;
 import sitime;
 import sprdef;
@@ -14,16 +15,18 @@ static map g_map {};
 
 static dotz::ivec2 g_pos { 1 };
 
+static roomdefs::tiledef player_tdef;
+
 static void on_frame() {
   static sitime::stopwatch ms {};
-  g_map.tick_lights(g_pos, 1, ms.millis());
+  g_map.tick_lights(g_pos, player_tdef.light, ms.millis());
   ms = {};
 
   v::pc = { g_pos + 0.5f, 6 };
 
   auto m = v::map();
   g_map.load(m);
-  m->push({ .pos = g_pos, .id = sprdef::get("characters/human_knight") });
+  m->push({ .pos = g_pos, .id = player_tdef.sprite });
 }
 
 static constexpr const auto move(int dx, int dy) {
@@ -38,6 +41,11 @@ static constexpr const auto move(int dx, int dy) {
 const int i = [] {
   try {
     res::load_all([] {
+      player_tdef = {
+        .light = 1,
+        .sprite = sprdef::get("characters/human_knight"),
+        .solid = true,
+      };
       v::on_frame = on_frame;
       g_map.build();
       g_map.at(g_pos) = {};
