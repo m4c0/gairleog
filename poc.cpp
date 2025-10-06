@@ -44,6 +44,7 @@ const int i = [] {
       player_tdef = {
         .light = 1,
         .sprite = sprdef::get("characters/human_knight"),
+        .player = true,
         .solid = true,
       };
       v::on_frame = on_frame;
