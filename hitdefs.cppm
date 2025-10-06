@@ -2,6 +2,7 @@ export module hitdefs;
 import jute;
 import hai;
 import lispy;
+import tiledefs;
 
 import print;
 
@@ -56,30 +57,27 @@ namespace hitdefs {
   export action_list_t check(const compo_list auto & from, const compo_list auto & to) try {
     action_list_t result { 8 };
     struct context : hitdefs::context {
-      decltype(from.begin()) from_begin;
-      decltype(from.end())   from_end;
-      decltype(to.begin())   to_begin;
-      decltype(to.end())     to_end;
-    } ctx {
-      .from_begin = from.begin(),
-      .from_end   = from.end(),
-      .to_begin   = to.begin(),
-      .to_end     = to.end(),
-    };
+      unsigned from;
+      unsigned to;
+    } ctx {};
+
+    for (auto v : from) ctx.from |= tiledefs::bit_of(v);
+    for (auto v : to)   ctx.to   |= tiledefs::bit_of(v);
+
     ctx.result = &result;
     ctx.fns["hitdef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as != 3) lispy::err(n, "hitdef requires source, target and action");
-      if (!is_atom(aa[0])) lispy::err("source must be an atom");
-      if (!is_atom(aa[1])) lispy::err("target must be an atom");
+      if (!is_atom(aa[0])) lispy::err(aa[0], "source must be an atom");
+      if (!is_atom(aa[1])) lispy::err(aa[1], "target must be an atom");
+
+      auto from = tiledefs::bit_of(aa[0]->atom);
+      auto to   = tiledefs::bit_of(aa[1]->atom);
+
+      if (!from) lispy::err(aa[0], "unknown component");
+      if (!to)   lispy::err(aa[1], "unknown component");
 
       auto ctx = static_cast<context *>(n->ctx);
-      for (auto from = ctx->from_begin; from != ctx->from_end; ++from) {
-        for (auto to = ctx->to_begin; to != ctx->to_end; ++to) {
-          if (*from != aa[0]->atom) continue;
-          if (*to   != aa[1]->atom) continue;
-          eval(aa[2], ctx->result);
-        }
-      }
+      if ((ctx->from & from) && (ctx->to & to)) eval(aa[2], ctx->result);
       return n;
     };
     ctx.run(g_source);
