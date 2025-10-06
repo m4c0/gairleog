@@ -5,17 +5,17 @@ import dotz;
 import hai;
 import map;
 import res;
-import roomdefs;
 import silog;
 import sitime;
 import sprdef;
+import tiledefs;
 import v;
 
 static map g_map {};
 
 static dotz::ivec2 g_pos { 1 };
 
-static roomdefs::tiledef player_tdef;
+static tiledefs::t player_tdef;
 
 static void on_frame() {
   static sitime::stopwatch ms {};

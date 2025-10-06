@@ -3,10 +3,10 @@
 #pragma leco add_impl map_walls
 export module map;
 import dotz;
-import roomdefs;
+import tiledefs;
 
 struct tile {
-  roomdefs::tiledef def {};
+  tiledefs::t def {};
   float light {};
   bool exit :1 {};
 };

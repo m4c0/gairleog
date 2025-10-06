@@ -5,22 +5,17 @@ import jute;
 import lispy;
 import rng;
 import sprdef;
+import tiledefs;
 import traits;
 
 namespace roomdefs {
   export struct error : lispy::parser_error {};
 
-  export struct tiledef {
-    float light {};
-    unsigned sprite {};
-    bool pot {};
-    bool solid {};
-  };
   export struct t {
     unsigned w {};
     unsigned h {};
-    hai::array<tiledef> d {};
-    tiledef (*fn)(const t & t, unsigned x, unsigned y) {};
+    hai::array<tiledefs::t> d {};
+    tiledefs::t (*fn)(const t & t, unsigned x, unsigned y) {};
   };
 
   hai::cstr g_src {};
@@ -37,7 +32,7 @@ namespace roomdefs {
     return sprdef::get(name->atom);
   }
 
-  struct node : lispy::node, tiledef {
+  struct node : lispy::node, tiledefs::t {
     void (*attr)(node *, const node *);
     hai::sptr<roomdefs::t> room {};
     bool has_tdef;
@@ -83,7 +78,7 @@ namespace roomdefs {
       if (!ctx->theme) lispy::err(n, "must define theme before rooms");
       auto _ = lispy::eval<node>(ctx, ctx->theme);
 
-      hai::array<tiledef> data { as * cols };
+      hai::array<tiledefs::t> data { as * cols };
       for (auto i = 0; i < as; i++) {
         if (!lispy::is_atom(aa[i])) lispy::err(aa[i], "all rows must be atoms");
         auto a = aa[i]->atom;
