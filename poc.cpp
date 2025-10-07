@@ -3,6 +3,7 @@
 import casein;
 import dotz;
 import hai;
+import hitdefs;
 import map;
 import res;
 import silog;
@@ -32,7 +33,17 @@ static void on_frame() {
 static constexpr const auto move(int dx, int dy) {
   return [=] {
     auto p = g_pos + dotz::ivec2 { dx, dy };
-    if (g_map.at(p).def.flags.solid) return;
+    auto tgt = g_map.at(p).def.flags;
+    for (auto act : hitdefs::check(player_tdef.flags, tgt)) {
+      switch (act) {
+        using enum hitdefs::action;
+        case block: p = g_pos; break;
+        case hit: p = g_pos; break;
+        case miss: p = g_pos; break;
+        case pick: silog::die("TODO: no picking yet");
+        case poison: silog::die("TODO: no picking yet");
+      }
+    }
 
     g_pos = p;
   };
