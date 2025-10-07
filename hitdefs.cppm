@@ -12,6 +12,7 @@ namespace hitdefs {
 
   export enum class action {
     block,
+    exit,
     hit,
     miss,
     pick,
@@ -37,6 +38,7 @@ namespace hitdefs {
   const node * eval(const node * n, action_list_t * result) {
     context ctx { basic_context<node> { n->ctx->allocator }, result };
     ctx.fns["block"]  = ref<action::block>;
+    ctx.fns["exit"]   = ref<action::exit>;
     ctx.fns["hit"]    = ref<action::hit>;
     ctx.fns["miss"]   = ref<action::miss>;
     ctx.fns["pick"]   = ref<action::pick>;

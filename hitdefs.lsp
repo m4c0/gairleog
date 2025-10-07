@@ -1,5 +1,7 @@
 (hitdef solid solid (block))
 
+(hitdef player exit (exit))
+
 (hitdef player pot (hit))
 
 (hitdef player food

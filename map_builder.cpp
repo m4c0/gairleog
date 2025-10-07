@@ -116,7 +116,9 @@ void map::build() {
     .def {
       .light = 2,
       .sprite = sprdef::get("environment/props/door_closed"),
+      .flags {
+        .exit = true,
+      },
     },
-    .exit = true,
   };
 }

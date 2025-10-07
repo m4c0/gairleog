@@ -5,12 +5,13 @@ import lispy;
 namespace tiledefs {
   export struct flags {
     bool enemy  : 1 = false;
+    bool exit   : 1 = false;
     bool food   : 1 = false;
     bool player : 1 = false;
     bool pot    : 1 = false;
     bool solid  : 1 = false;
     bool toad   : 1 = false;
-    unsigned char pad : 2 = 0;
+    unsigned char pad : 1 = 0;
   };
   static_assert(sizeof(flags) == 1);
 
@@ -32,6 +33,7 @@ namespace tiledefs {
   }
   export unsigned bit_of(jute::view atom) {
     if (atom == "enemy")  return bit_of({ .enemy  = true });
+    if (atom == "exit")   return bit_of({ .exit   = true });
     if (atom == "food")   return bit_of({ .food   = true });
     if (atom == "player") return bit_of({ .player = true });
     if (atom == "pot")    return bit_of({ .pot    = true });
@@ -50,6 +52,7 @@ namespace tiledefs {
   export template<typename Node>
   void lispy(auto & ctx) {
     ctx.fns["enemy"]  = mem_set<Node, { .enemy  = true }>;
+    ctx.fns["exit"]   = mem_set<Node, { .exit   = true }>;
     ctx.fns["food"]   = mem_set<Node, { .food   = true }>;
     ctx.fns["player"] = mem_set<Node, { .player = true }>;
     ctx.fns["pot"]    = mem_set<Node, { .pot    = true }>;

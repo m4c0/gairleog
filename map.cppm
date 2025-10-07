@@ -8,7 +8,6 @@ import tiledefs;
 struct tile {
   tiledefs::t def {};
   float light {};
-  bool exit :1 {};
 };
 
 export struct map {
