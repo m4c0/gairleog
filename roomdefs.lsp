@@ -15,7 +15,7 @@
 
 (def pot (tile
   (solid)
-  (pot)
+  (ceramic)
   (random
     (spr environment/props/pot_yellow)
     (spr environment/props/pot_black)

@@ -1,8 +1,8 @@
 (hitdef solid solid (block))
 
-(hitdef player exit (exit))
+(hitdef player ceramic (hit))
 
-(hitdef player pot (hit))
+(hitdef player exit (exit))
 
 (hitdef player food
   (pick))

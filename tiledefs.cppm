@@ -4,13 +4,13 @@ import lispy;
 
 namespace tiledefs {
   export struct flags {
-    bool enemy  : 1 = false;
-    bool exit   : 1 = false;
-    bool food   : 1 = false;
-    bool player : 1 = false;
-    bool pot    : 1 = false;
-    bool solid  : 1 = false;
-    bool toad   : 1 = false;
+    bool ceramic : 1 = false;
+    bool enemy   : 1 = false;
+    bool exit    : 1 = false;
+    bool food    : 1 = false;
+    bool player  : 1 = false;
+    bool solid   : 1 = false;
+    bool toad    : 1 = false;
     unsigned char pad : 1 = 0;
   };
   static_assert(sizeof(flags) == 1);
@@ -32,13 +32,13 @@ namespace tiledefs {
     return u.u32;
   }
   export unsigned bit_of(jute::view atom) {
-    if (atom == "enemy")  return bit_of({ .enemy  = true });
-    if (atom == "exit")   return bit_of({ .exit   = true });
-    if (atom == "food")   return bit_of({ .food   = true });
-    if (atom == "player") return bit_of({ .player = true });
-    if (atom == "pot")    return bit_of({ .pot    = true });
-    if (atom == "solid")  return bit_of({ .solid  = true });
-    if (atom == "toad")   return bit_of({ .toad   = true });
+    if (atom == "ceramic") return bit_of({ .ceramic = true });
+    if (atom == "enemy")   return bit_of({ .enemy   = true });
+    if (atom == "exit")    return bit_of({ .exit    = true });
+    if (atom == "food")    return bit_of({ .food    = true });
+    if (atom == "player")  return bit_of({ .player  = true });
+    if (atom == "solid")   return bit_of({ .solid   = true });
+    if (atom == "toad")    return bit_of({ .toad    = true });
     return 0U; // Should only happen whilst parsing
   }
 
@@ -51,12 +51,12 @@ namespace tiledefs {
 
   export template<typename Node>
   void lispy(auto & ctx) {
-    ctx.fns["enemy"]  = mem_set<Node, { .enemy  = true }>;
-    ctx.fns["exit"]   = mem_set<Node, { .exit   = true }>;
-    ctx.fns["food"]   = mem_set<Node, { .food   = true }>;
-    ctx.fns["player"] = mem_set<Node, { .player = true }>;
-    ctx.fns["pot"]    = mem_set<Node, { .pot    = true }>;
-    ctx.fns["solid"]  = mem_set<Node, { .solid  = true }>;
-    ctx.fns["toad"]   = mem_set<Node, { .toad   = true }>;
+    ctx.fns["ceramic"] = mem_set<Node, { .ceramic = true }>;
+    ctx.fns["enemy"]   = mem_set<Node, { .enemy   = true }>;
+    ctx.fns["exit"]    = mem_set<Node, { .exit    = true }>;
+    ctx.fns["food"]    = mem_set<Node, { .food    = true }>;
+    ctx.fns["player"]  = mem_set<Node, { .player  = true }>;
+    ctx.fns["solid"]   = mem_set<Node, { .solid   = true }>;
+    ctx.fns["toad"]    = mem_set<Node, { .toad    = true }>;
   }
 }
