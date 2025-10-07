@@ -18,12 +18,13 @@ void run() {
   };
 
   for (auto action : hitdefs::check(src_compos, tgt_compos)) {
-    action();
+    put(static_cast<int>(action), ' ');
   }
-  putln("<>");
+  putln();
   for (auto action : hitdefs::check(tgt_compos, src_compos)) {
-    action();
+    put(static_cast<int>(action), ' ');
   }
+  putln();
 }
 
 int main() try {

@@ -4,24 +4,20 @@ import hai;
 import lispy;
 import tiledefs;
 
-import print;
-
 using namespace lispy;
 using namespace lispy::experimental;
-
-namespace hitdefs::fns {
-  void block() { putln("block"); }
-  void hit() { putln("hit"); }
-  void miss() { putln("miss"); }
-  void pick() { putln("pick"); }
-  void poison() { putln("poison"); }
-}
 
 namespace hitdefs {
   export struct error : lispy::parser_error {};
 
-  export using action_t = void (*)(void);
-  export using action_list_t = hai::chain<action_t>;
+  export enum class action {
+    block,
+    hit,
+    miss,
+    pick,
+    poison,
+  };
+  export using action_list_t = hai::chain<action>;
 
   struct context : basic_context<node> {
     action_list_t * result;
@@ -31,7 +27,7 @@ namespace hitdefs {
 
   export void run(jute::view src) { g_source = src.cstr(); }
 
-  template<action_t Fn>
+  template<action Fn>
   static inline constexpr const auto ref = [](auto n, auto aa, auto as) -> const lispy::node * {
     if (as != 0) lispy::err(n, "actions do not take arguments");
     static_cast<context *>(n->ctx)->result->push_back(Fn);
@@ -40,11 +36,11 @@ namespace hitdefs {
 
   const node * eval(const node * n, action_list_t * result) {
     context ctx { basic_context<node> { n->ctx->allocator }, result };
-    ctx.fns["block"]  = ref<fns::block>;
-    ctx.fns["hit"]    = ref<fns::hit>;
-    ctx.fns["miss"]   = ref<fns::miss>;
-    ctx.fns["pick"]   = ref<fns::pick>;
-    ctx.fns["poison"] = ref<fns::poison>;
+    ctx.fns["block"]  = ref<action::block>;
+    ctx.fns["hit"]    = ref<action::hit>;
+    ctx.fns["miss"]   = ref<action::miss>;
+    ctx.fns["pick"]   = ref<action::pick>;
+    ctx.fns["poison"] = ref<action::poison>;
     return ctx.eval(n);
   }
 
