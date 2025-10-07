@@ -1,25 +1,25 @@
 #pragma leco test
 import hai;
 import hitdefs;
-import jute;
 import print;
 import res;
 import rng;
+import tiledefs;
 
 void run() {
-  // Testing with two different array types, just because
-  hai::array<jute::view> src_compos { 2 };
-  src_compos[0] = "player";
-  src_compos[1] = "solid";
+  tiledefs::flags src_compos {
+    .player = true,
+    .solid  = true,
+  };
+  tiledefs::flags tgt_compos {
+    .enemy = true,
+    .solid = true,
+    .toad  = true,
+  };
 
-  hai::chain<jute::view> tgt_compos {};
-  tgt_compos.push_back("enemy");
-  tgt_compos.push_back("toad");
-  tgt_compos.push_back("solid");
   for (auto action : hitdefs::check(src_compos, tgt_compos)) {
     action();
   }
-
   putln("<>");
   for (auto action : hitdefs::check(tgt_compos, src_compos)) {
     action();

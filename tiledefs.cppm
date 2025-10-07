@@ -3,7 +3,7 @@ import jute;
 import lispy;
 
 namespace tiledefs {
-  struct flags {
+  export struct flags {
     bool enemy  : 1 = false;
     bool food   : 1 = false;
     bool player : 1 = false;
@@ -22,7 +22,7 @@ namespace tiledefs {
     flags flags {};
   };
 
-  static inline unsigned bit_of(flags f) {
+  export inline unsigned bit_of(flags f) {
     u32flags u {};
     u.f = f;
     return u.u32;

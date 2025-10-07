@@ -48,22 +48,15 @@ namespace hitdefs {
     return ctx.eval(n);
   }
 
-  template<typename T>
-  concept compo_list = requires (T list) {
-    list.begin();
-    list.end();
-    jute::view { *(list.begin()) };
-  };
-  export action_list_t check(const compo_list auto & from, const compo_list auto & to) try {
+  export action_list_t check(tiledefs::flags from, tiledefs::flags to) try {
     action_list_t result { 8 };
     struct context : hitdefs::context {
       unsigned from;
       unsigned to;
     } ctx {};
 
-    for (auto v : from) ctx.from |= tiledefs::bit_of(v);
-    for (auto v : to)   ctx.to   |= tiledefs::bit_of(v);
-
+    ctx.from = tiledefs::bit_of(from);
+    ctx.to   = tiledefs::bit_of(to);
     ctx.result = &result;
     ctx.fns["hitdef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as != 3) lispy::err(n, "hitdef requires source, target and action");
