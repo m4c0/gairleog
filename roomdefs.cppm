@@ -52,8 +52,7 @@ namespace roomdefs {
     }; 
     ctx.fns["tile"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       basic_context<node> ctx { n->ctx->allocator };
-      ctx.fns["pot"]   = mem_flag<&node::attr, &node::pot>;
-      ctx.fns["solid"] = mem_flag<&node::attr, &node::solid>;
+      tiledefs::lispy<node>(ctx);
       ctx.fns["light"] = mem_fn<&node::attr, &node::light,  to_light>;
       ctx.fns["spr"]   = mem_fn<&node::attr, &node::sprite, to_spr>;
       auto * nn = fill_clone<node>(&ctx, n, aa, as);
