@@ -10,7 +10,10 @@ namespace tiledefs {
     bool pot    : 1 = false;
     bool solid  : 1 = false;
     bool toad   : 1 = false;
+    unsigned char pad : 2 = 0;
   };
+  static_assert(sizeof(flags) == 1);
+
   union u32flags {
     unsigned u32 = 0;
     flags f;
@@ -40,8 +43,7 @@ namespace tiledefs {
   template<typename Node, flags Flags>
   static constexpr const auto mem_set = lispy::experimental::mem_set<&Node::attr, [](auto * self, auto * n) {
     u32flags u {};
-    u.f = self->flags;
-    u.u32 |= bit_of(Flags);
+    u.u32 = bit_of(Flags) | bit_of(self->flags);
     self->flags = u.f;
   }>;
 
