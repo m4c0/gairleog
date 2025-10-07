@@ -38,10 +38,10 @@ static constexpr const auto move(int dx, int dy) {
       switch (act) {
         using enum hitdefs::action;
         case block: p = g_pos; break;
-        case hit: p = g_pos; break;
-        case miss: p = g_pos; break;
-        case pick: silog::die("TODO: no picking yet");
-        case poison: silog::die("TODO: no picking yet");
+        case hit: silog::die("TODO: no hit yet");
+        case miss: silog::die("TODO: no miss yet");
+        case pick: silog::die("TODO: no pickyet");
+        case poison: silog::die("TODO: no poison yet");
       }
     }
 
