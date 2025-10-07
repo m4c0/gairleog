@@ -11,7 +11,7 @@ namespace tiledefs {
     bool player  : 1 = false;
     bool solid   : 1 = false;
     bool toad    : 1 = false;
-    unsigned char pad : 1 = 0;
+    bool wall    : 1 = false;
   };
   static_assert(sizeof(flags) == 1);
 
