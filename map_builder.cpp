@@ -7,7 +7,7 @@ import sprdef;
 
 namespace {
   static constexpr const tile wall {
-    .def { .solid = true },
+    .def { .flags { .solid = true } },
   };
 
   [[nodiscard]] bool furnish(map & map, dotz::ivec2 aa, dotz::ivec2 bb) {
@@ -40,8 +40,8 @@ namespace {
  
     auto y = rng::rand_i(aa.y, bb.y);
     for (auto i = 0; i < bb.y - aa.y; i++) {
-      if (!map.data[y][x - 1].def.solid &&
-          !map.data[y][x + 1].def.solid) {
+      if (!map.data[y][x - 1].def.flags.solid &&
+          !map.data[y][x + 1].def.flags.solid) {
         map.data[y][x] = {};
         break;
       }
@@ -67,8 +67,8 @@ namespace {
  
     auto x = rng::rand_i(aa.x, bb.x);
     for (auto i = 0; i < bb.x - aa.x; i++) {
-      if (!map.data[y - 1][x].def.solid &&
-          !map.data[y + 1][x].def.solid) {
+      if (!map.data[y - 1][x].def.flags.solid &&
+          !map.data[y + 1][x].def.flags.solid) {
         map.data[y][x] = {};
         break;
       }
@@ -106,7 +106,7 @@ void map::build() {
   perlin pln {};
   for (auto y = 0; y < h; y++) {
     for (auto x = 0; x < w; x++) {
-      if (!data[y][x].def.solid) continue;
+      if (!data[y][x].def.flags.solid) continue;
       dotz::vec2 p { static_cast<float>(x) / w, static_cast<float>(y) / h };
       data[y][x].def.sprite += bases[static_cast<unsigned>(pln(p) * 2.5 + 2.5)];
     }

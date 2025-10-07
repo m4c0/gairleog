@@ -12,7 +12,7 @@ static constexpr auto rnd_rl() {
 }
 
 static constexpr bool wall(const map & map, unsigned x, unsigned y) {
-  return map.data[y][x].def.solid;
+  return map.data[y][x].def.flags.solid;
 }
 
 void make_walls(map & map) {
