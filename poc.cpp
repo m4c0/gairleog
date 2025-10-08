@@ -40,6 +40,7 @@ static void on_frame() {
 static void on_exit() {
   g_pos = { 1 };
   g_map.build();
+  g_map.foreach(ents::lift);
   g_map.at(g_pos) = {};
   v::on_frame = on_frame;
 }
@@ -82,9 +83,7 @@ const int i = [] {
           .solid = true,
         },
       };
-      g_map.build();
-      g_map.at(g_pos) = {};
-      v::on_frame = on_frame;
+      v::on_frame = on_exit;
     });
   } catch (const hai::cstr & e) {
     silog::die("Failure loading resource: %s", e.begin());
