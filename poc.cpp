@@ -54,29 +54,37 @@ static void on_exit() {
   v::on_frame = on_frame;
 }
 
+static bool player_hitcheck(tiledefs::flags tgt) {
+  bool result = true;
+  for (auto act : hitdefs::check(player_tdef.flags, tgt)) {
+    switch (act) {
+      using enum hitdefs::action;
+      case block:
+      case hit:
+      case miss:
+      case poison: {
+        // We hit something. Stop the player
+        result = false;
+        break;
+      }
+      case pick: break;
+      case exit: {
+        v::on_frame = on_exit;
+        return false;
+      }
+    }
+  }
+  return result;
+}
+
 static constexpr const auto move(int dx, int dy) {
   return [=] {
     auto p = g_pos + dotz::ivec2 { dx, dy };
-    auto tgt = g_map.at(p).flags;
-    for (auto act : hitdefs::check(player_tdef.flags, tgt)) {
-      switch (act) {
-        using enum hitdefs::action;
-        case block:
-        case hit:
-        case miss:
-        case poison: {
-          // We hit something. Stop the player
-          p = g_pos;
-          break;
-        }
-        case pick: break;
-        case exit: {
-          v::on_frame = on_exit;
-          return;
-        }
-      }
-    }
-
+    if (!player_hitcheck(g_map.at(p).flags)) p = g_pos;
+    ents::foreach([&](const auto & d) {
+      if (d.pos != p) return;
+      if (!player_hitcheck(d.flags)) p = g_pos;
+    });
     g_pos = p;
   };
 }
