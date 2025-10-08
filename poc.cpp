@@ -37,6 +37,7 @@ static void on_frame() {
   ents::foreach([&](const auto & d) {
     m->push({
       .pos = d.pos,
+      .mult = g_map.at(d.pos).clight,
       .id = d.sprite,
     });
   });

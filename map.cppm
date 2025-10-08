@@ -22,7 +22,7 @@ export struct map {
   void foreach(auto && fn) {
     for (auto y = 0; y < h; y++) {
       for (auto x = 0; x < w; x++) {
-        fn(dotz::vec2 { x, y }, data[y][x]);
+        fn(dotz::ivec2 { x, y }, data[y][x]);
       }
     }
   }

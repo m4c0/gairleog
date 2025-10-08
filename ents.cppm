@@ -5,7 +5,7 @@ import tiledefs;
 
 namespace ents {
   struct t : tiledefs::t {
-    dotz::vec2 pos;
+    dotz::ivec2 pos;
   };
   hai::varray<t> ents { 128 };
 
@@ -17,7 +17,7 @@ namespace ents {
     ents.truncate(0);
   }
 
-  export void lift(dotz::vec2 pos, tiledefs::t & tdef) {
+  export void lift(dotz::ivec2 pos, tiledefs::t & tdef) {
     const auto entities = tiledefs::bit_of({
       .ceramic = true,
       .enemy   = true,
