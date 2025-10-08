@@ -44,12 +44,16 @@ static constexpr const auto move(int dx, int dy) {
     for (auto act : hitdefs::check(player_tdef.flags, tgt)) {
       switch (act) {
         using enum hitdefs::action;
-        case block: p = g_pos; break;
-        case exit: on_exit(); return;
-        case hit: silog::die("TODO: no hit yet");
-        case miss: silog::die("TODO: no miss yet");
-        case pick: silog::die("TODO: no pickyet");
-        case poison: silog::die("TODO: no poison yet");
+        case block:
+        case hit:
+        case miss:
+        case poison: {
+          // We hit something. Stop the player
+          p = g_pos;
+          break;
+        }
+        case pick: break;
+        case exit: return on_exit();
       }
     }
 
