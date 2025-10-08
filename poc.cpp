@@ -53,7 +53,10 @@ static constexpr const auto move(int dx, int dy) {
           break;
         }
         case pick: break;
-        case exit: return on_exit();
+        case exit: {
+          v::on_frame = on_exit;
+          return;
+        }
       }
     }
 
