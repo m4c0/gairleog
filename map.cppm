@@ -20,14 +20,10 @@ export struct map {
 
   void build();
 
-  void load(auto && m) {
+  void foreach(auto && fn) {
     for (auto y = 0; y < h; y++) {
       for (auto x = 0; x < w; x++) {
-        m->push({
-          .pos { x, y },
-          .mult = data[y][x].light,
-          .id = data[y][x].def.sprite,
-        });
+        fn(dotz::vec2 { x, y }, data[y][x]);
       }
     }
   }

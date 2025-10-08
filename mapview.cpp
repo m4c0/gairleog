@@ -10,9 +10,18 @@ import v;
 
 static map g_map {};
 
+static void load() {
+  auto m = v::map();
+  g_map.foreach([&](auto pos, const auto & d) {
+    m->push({
+      .pos = pos,
+      .id = d.def.sprite,
+    });
+  });
+}
 static void on_frame() {
   g_map.build();
-  g_map.load(v::map());
+  load();
   v::on_frame = [] {};
 
   casein::handle(casein::KEY_DOWN, casein::K_SPACE, on_frame);

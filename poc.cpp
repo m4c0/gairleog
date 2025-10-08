@@ -2,6 +2,7 @@
 
 import casein;
 import dotz;
+import ents;
 import hai;
 import hitdefs;
 import map;
@@ -26,7 +27,13 @@ static void on_frame() {
   v::pc = { g_pos + 0.5f, 6 };
 
   auto m = v::map();
-  g_map.load(m);
+  g_map.foreach([&](auto pos, const auto & d) {
+    m->push({
+      .pos = pos,
+      .mult = d.light,
+      .id = d.def.sprite,
+    });
+  });
   m->push({ .pos = g_pos, .id = player_tdef.sprite });
 }
 
