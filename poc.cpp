@@ -30,6 +30,13 @@ static void on_frame() {
   m->push({ .pos = g_pos, .id = player_tdef.sprite });
 }
 
+static void on_exit() {
+  g_pos = { 1 };
+  g_map.build();
+  g_map.at(g_pos) = {};
+  v::on_frame = on_frame;
+}
+
 static constexpr const auto move(int dx, int dy) {
   return [=] {
     auto p = g_pos + dotz::ivec2 { dx, dy };
@@ -38,7 +45,7 @@ static constexpr const auto move(int dx, int dy) {
       switch (act) {
         using enum hitdefs::action;
         case block: p = g_pos; break;
-        case exit: silog::die("TODO: no exit yet");
+        case exit: on_exit(); return;
         case hit: silog::die("TODO: no hit yet");
         case miss: silog::die("TODO: no miss yet");
         case pick: silog::die("TODO: no pickyet");
@@ -61,9 +68,9 @@ const int i = [] {
           .solid = true,
         },
       };
-      v::on_frame = on_frame;
       g_map.build();
       g_map.at(g_pos) = {};
+      v::on_frame = on_frame;
     });
   } catch (const hai::cstr & e) {
     silog::die("Failure loading resource: %s", e.begin());
