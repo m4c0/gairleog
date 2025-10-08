@@ -15,7 +15,7 @@ static void load() {
   g_map.foreach([&](auto pos, const auto & d) {
     m->push({
       .pos = pos,
-      .id = d.def.sprite,
+      .id = d.sprite,
     });
   });
 }

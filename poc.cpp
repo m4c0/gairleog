@@ -30,8 +30,8 @@ static void on_frame() {
   g_map.foreach([&](auto pos, const auto & d) {
     m->push({
       .pos = pos,
-      .mult = d.light,
-      .id = d.def.sprite,
+      .mult = d.clight,
+      .id = d.sprite,
     });
   });
   m->push({ .pos = g_pos, .id = player_tdef.sprite });
@@ -47,7 +47,7 @@ static void on_exit() {
 static constexpr const auto move(int dx, int dy) {
   return [=] {
     auto p = g_pos + dotz::ivec2 { dx, dy };
-    auto tgt = g_map.at(p).def.flags;
+    auto tgt = g_map.at(p).flags;
     for (auto act : hitdefs::check(player_tdef.flags, tgt)) {
       switch (act) {
         using enum hitdefs::action;

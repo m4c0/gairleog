@@ -7,7 +7,7 @@ import sprdef;
 
 namespace {
   static constexpr const tile wall {
-    .def { .flags { .solid = true, .wall = true } },
+    { .flags { .solid = true, .wall = true } },
   };
 
   [[nodiscard]] bool furnish(map & map, dotz::ivec2 aa, dotz::ivec2 bb) {
@@ -16,9 +16,7 @@ namespace {
     if (!n) return false;
     for (auto y = aa.y; y <= bb.y; y++) {
       for (auto x = aa.x; x <= bb.x; x++) {
-        map.data[y][x] = {
-          .def = n->fn(*n, x - aa.x, y - aa.y),
-        };
+        map.data[y][x] = { n->fn(*n, x - aa.x, y - aa.y) };
       }
     }
 
@@ -40,8 +38,8 @@ namespace {
  
     auto y = rng::rand_i(aa.y, bb.y);
     for (auto i = 0; i < bb.y - aa.y; i++) {
-      if (!map.data[y][x - 1].def.flags.solid &&
-          !map.data[y][x + 1].def.flags.solid) {
+      if (!map.data[y][x - 1].flags.solid &&
+          !map.data[y][x + 1].flags.solid) {
         map.data[y][x] = {};
         break;
       }
@@ -67,8 +65,8 @@ namespace {
  
     auto x = rng::rand_i(aa.x, bb.x);
     for (auto i = 0; i < bb.x - aa.x; i++) {
-      if (!map.data[y - 1][x].def.flags.solid &&
-          !map.data[y + 1][x].def.flags.solid) {
+      if (!map.data[y - 1][x].flags.solid &&
+          !map.data[y + 1][x].flags.solid) {
         map.data[y][x] = {};
         break;
       }
@@ -106,19 +104,17 @@ void map::build() {
   perlin pln {};
   for (auto y = 0; y < h; y++) {
     for (auto x = 0; x < w; x++) {
-      if (!data[y][x].def.flags.wall) continue;
+      if (!data[y][x].flags.wall) continue;
       dotz::vec2 p { static_cast<float>(x) / w, static_cast<float>(y) / h };
-      data[y][x].def.sprite += bases[static_cast<unsigned>(pln(p) * 2.5 + 2.5)];
+      data[y][x].sprite += bases[static_cast<unsigned>(pln(p) * 2.5 + 2.5)];
     }
   }
 
-  data[h - 2][w - 2] = {
-    .def {
-      .light = 2,
-      .sprite = sprdef::get("environment/props/door_closed"),
-      .flags {
-        .exit = true,
-      },
-    },
+  data[h - 2][w - 2] = {{
+    .light = 2,
+    .sprite = sprdef::get("environment/props/door_closed"),
+    .flags {
+      .exit = true,
+    }},
   };
 }

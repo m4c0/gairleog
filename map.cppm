@@ -5,9 +5,8 @@ export module map;
 import dotz;
 import tiledefs;
 
-struct tile {
-  tiledefs::t def {};
-  float light {};
+struct tile : tiledefs::t {
+  float clight {};
 };
 
 export struct map {

@@ -10,8 +10,8 @@ static float neighbour(map & m, dotz::ivec2 center) {
     if (p.y < 0 || p.y >= map::h) continue;
     for (p.x = center.x - 1; p.x <= center.x + 1; p.x++) {
       if (p.x < 0 || p.x >= map::w) continue;
-      float le = m.at(p).def.light;
-      float lc = m.at(p).light;
+      float le = m.at(p).light;
+      float lc = m.at(p).clight;
       float den = (p.x == 0 && p.y == 0) 
         ? 1.0
         : (1.0 + 0.25 * dotz::length(dotz::vec2 { p - center }));
@@ -23,20 +23,20 @@ static float neighbour(map & m, dotz::ivec2 center) {
 }
 
 void map::tick_lights(dotz::ivec2 p, float l, float ms) {
-  at(p).def.light = l * 3.0;
+  at(p).light = l * 3.0;
 
   for (dotz::ivec2 p {}; p.y < h; p.y++) {
     for (p.x = 0; p.x < h; p.x++) {
-      at(p).light = dotz::clamp(neighbour(*this, p), 0.0f, 1.0f);
+      at(p).clight = dotz::clamp(neighbour(*this, p), 0.0f, 1.0f);
     }
   }
   for (dotz::ivec2 p {}; p.y < h; p.y++) {
     for (p.x = 0; p.x < h; p.x++) {
       auto & pp = at(p);
-      if (!pp.def.flags.solid) continue;
-      if (pp.light > pp.def.light || pp.light > min_light) pp.def.light = pp.light;
+      if (!pp.flags.solid) continue;
+      if (pp.clight > pp.light || pp.clight > min_light) pp.light = pp.clight;
     }
   }
 
-  at(p).def.light = 0;
+  at(p).light = 0;
 }
