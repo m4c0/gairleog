@@ -34,11 +34,19 @@ static void on_frame() {
       .id = d.sprite,
     });
   });
+  ents::foreach([&](const auto & d) {
+    m->push({
+      .pos = d.pos,
+      .id = d.sprite,
+    });
+  });
   m->push({ .pos = g_pos, .id = player_tdef.sprite });
 }
 
 static void on_exit() {
+  ents::reset();
   g_pos = { 1 };
+
   g_map.build();
   g_map.foreach(ents::lift);
   g_map.at(g_pos) = {};
