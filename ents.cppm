@@ -19,24 +19,11 @@ namespace ents {
     ents.truncate(0);
   }
 
-  export void lift(dotz::ivec2 pos, tiledefs::t & tdef) {
-    const auto entities = tiledefs::bit_of({
-      .ceramic = true,
-      .enemy   = true,
-      .exit    = true,
-      .food    = true,
-      .toad    = true,
-      .wall    = true,
-    });
-    const auto tbits = tiledefs::bit_of(tdef.flags);
-    if ((entities & tbits) == 0) return;
-
+  export void add(dotz::ivec2 pos, tiledefs::t tdef) {
     t ent = { tdef };
     ent.pos = pos;
     ent.alive = true;
     ents.push_back_doubling(ent);
-
-    tdef = {};
   }
 
   export void take_hit(t * ent, hitdefs::action act) {

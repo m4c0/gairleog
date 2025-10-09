@@ -27,13 +27,6 @@ static void on_frame() {
   v::pc = { g_pos + 0.5f, 6 };
 
   auto m = v::map();
-  g_map.foreach([&](auto pos, const auto & d) {
-    m->push({
-      .pos = pos,
-      .mult = d.clight,
-      .id = d.sprite,
-    });
-  });
   ents::foreach([&](const auto & d) {
     m->push({
       .pos = d.pos,
@@ -49,7 +42,7 @@ static void on_exit() {
   g_pos = { 1 };
 
   g_map.build();
-  g_map.foreach(ents::lift);
+  g_map.foreach(ents::add);
   g_map.at(g_pos) = {};
   v::on_frame = on_frame;
 }
