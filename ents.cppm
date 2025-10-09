@@ -9,7 +9,7 @@ namespace ents {
     dotz::ivec2 pos {};
     bool alive = false;
   };
-  hai::varray<t> ents { 128 };
+  hai::varray<t> ents { 1024 };
 
   export void foreach(auto && fn) {
     for (auto & e : ents) if (e.alive) fn(e);
@@ -23,8 +23,10 @@ namespace ents {
     const auto entities = tiledefs::bit_of({
       .ceramic = true,
       .enemy   = true,
+      .exit    = true,
       .food    = true,
       .toad    = true,
+      .wall    = true,
     });
     const auto tbits = tiledefs::bit_of(tdef.flags);
     if ((entities & tbits) == 0) return;
