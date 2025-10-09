@@ -38,6 +38,17 @@ namespace ents {
   }
 
   export void take_hit(t * ent, hitdefs::action act) {
-    *ent = {}; 
+    switch (act) {
+      using enum hitdefs::action;
+      case block:
+      case exit:
+      case miss:
+      case poison:
+      case pick:
+        break;
+      case hit:
+        *ent = {}; 
+        break;
+    }
   }
 }
