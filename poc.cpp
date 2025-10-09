@@ -54,9 +54,12 @@ static void on_exit() {
   v::on_frame = on_frame;
 }
 
-static bool player_hitcheck(tiledefs::flags tgt) {
+static bool player_hitcheck(auto & tgt) {
   bool result = true;
-  for (auto act : hitdefs::check(player_tdef.flags, tgt)) {
+  for (auto act : hitdefs::check(player_tdef.flags, tgt.flags)) {
+    if constexpr (traits::is_assignable_from<ents::t, decltype(tgt)>) {
+      ents::take_hit(&tgt, act);
+    }
     switch (act) {
       using enum hitdefs::action;
       case block:
@@ -80,10 +83,10 @@ static bool player_hitcheck(tiledefs::flags tgt) {
 static constexpr const auto move(int dx, int dy) {
   return [=] {
     auto p = g_pos + dotz::ivec2 { dx, dy };
-    if (!player_hitcheck(g_map.at(p).flags)) p = g_pos;
-    ents::foreach([&](const auto & d) {
+    if (!player_hitcheck(g_map.at(p))) p = g_pos;
+    ents::foreach([&](auto & d) {
       if (d.pos != p) return;
-      if (!player_hitcheck(d.flags)) p = g_pos;
+      if (!player_hitcheck(d)) p = g_pos;
     });
     g_pos = p;
   };
