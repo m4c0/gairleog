@@ -15,25 +15,15 @@ import v;
 
 static map g_map {};
 
-static tiledefs::t player_tdef;
+static void on_frame() {
+  static sitime::stopwatch ms {};
 
-static auto player_pos() {
-  dotz::ivec2 p { 1 };
   ents::foreach([&](const auto & e) {
     if (!e.flags.player) return;
-    p = e.pos;
+    g_map.tick_lights(e.pos, e.light, ms.millis());
+    v::pc = { e.pos + 0.5f, 6 };
   });
-  return p;
-}
-
-static void on_frame() {
-  auto ppos = player_pos();
-
-  static sitime::stopwatch ms {};
-  g_map.tick_lights(ppos, player_tdef.light, ms.millis());
   ms = {};
-
-  v::pc = { ppos + 0.5f, 6 };
 
   auto m = v::map();
   ents::foreach([&](const auto & d) {
@@ -68,14 +58,6 @@ static constexpr const auto move(int dx, int dy) {
 const int i = [] {
   try {
     res::load_all([] {
-      player_tdef = {
-        .light = 1,
-        .sprite = sprdef::get("characters/human_knight"),
-        .flags = {
-          .player = true,
-          .solid = true,
-        },
-      };
       v::on_frame = on_exit;
     });
   } catch (const hai::cstr & e) {
