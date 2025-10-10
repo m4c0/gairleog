@@ -7,12 +7,12 @@ import tiledefs;
 namespace ents {
   export struct t : tiledefs::t {
     dotz::ivec2 pos {};
-    bool alive = false;
+    unsigned life {};
   };
   hai::varray<t> ents { 1024 };
 
   export void foreach(auto && fn) {
-    for (auto & e : ents) if (e.alive) fn(e);
+    for (auto & e : ents) if (e.life) fn(e);
   }
 
   export void reset() {
@@ -22,7 +22,7 @@ namespace ents {
   export void add(dotz::ivec2 pos, tiledefs::t tdef) {
     t ent = { tdef };
     ent.pos = pos;
-    ent.alive = true;
+    ent.life = 2;
     ents.push_back_doubling(ent);
   }
 
@@ -46,7 +46,8 @@ namespace ents {
             break;
           case hit:
             p_pos = ent->pos;
-            d = {}; 
+            d.life--;
+            if (!d.life) d = {};
             break;
           case miss:
             p_pos = ent->pos;
