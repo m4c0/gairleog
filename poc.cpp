@@ -15,16 +15,25 @@ import v;
 
 static map g_map {};
 
-static dotz::ivec2 g_pos { 1 };
-
 static tiledefs::t player_tdef;
 
+static auto player_pos() {
+  dotz::ivec2 p { 1 };
+  ents::foreach([&](const auto & e) {
+    if (!e.flags.player) return;
+    p = e.pos;
+  });
+  return p;
+}
+
 static void on_frame() {
+  auto ppos = player_pos();
+
   static sitime::stopwatch ms {};
-  g_map.tick_lights(g_pos, player_tdef.light, ms.millis());
+  g_map.tick_lights(ppos, player_tdef.light, ms.millis());
   ms = {};
 
-  v::pc = { g_pos + 0.5f, 6 };
+  v::pc = { ppos + 0.5f, 6 };
 
   auto m = v::map();
   ents::foreach([&](const auto & d) {
@@ -34,16 +43,12 @@ static void on_frame() {
       .id = d.sprite,
     });
   });
-  m->push({ .pos = g_pos, .id = player_tdef.sprite });
 }
 
 static void on_exit() {
   ents::reset();
-  g_pos = { 1 };
-
   g_map.build();
   g_map.foreach(ents::add);
-  g_map.at(g_pos) = {};
   v::on_frame = on_frame;
 }
 
@@ -73,12 +78,16 @@ static bool player_hitcheck(ents::t & tgt) {
 
 static constexpr const auto move(int dx, int dy) {
   return [=] {
-    auto p = g_pos + dotz::ivec2 { dx, dy };
-    ents::foreach([&](auto & d) {
-      if (d.pos != p) return;
-      if (!player_hitcheck(d)) p = g_pos;
+    ents::foreach([&](auto & p) {
+      if (!p.flags.player) return;
+
+      auto p_pos = p.pos + dotz::ivec2 { dx, dy };
+      ents::foreach([&](auto & d) {
+        if (d.pos != p_pos) return;
+        if (!player_hitcheck(d)) p_pos = p.pos;
+      });
+      p.pos = p_pos;
     });
-    g_pos = p;
   };
 }
 

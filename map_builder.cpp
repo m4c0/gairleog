@@ -110,6 +110,14 @@ void map::build() {
     }
   }
 
+  data[1][1] = {{
+    .light = 1,
+    .sprite = sprdef::get("characters/human_knight"),
+    .flags = {
+      .player = true,
+      .solid = true,
+    },
+  }};
   data[h - 2][w - 2] = {{
     .light = 2,
     .sprite = sprdef::get("environment/props/door_closed"),
