@@ -52,41 +52,15 @@ static void on_exit() {
   v::on_frame = on_frame;
 }
 
-static bool player_hitcheck(ents::t & tgt) {
-  bool result = true;
-  for (auto act : hitdefs::check(player_tdef.flags, tgt.flags)) {
-    ents::take_hit(&tgt, act);
-    switch (act) {
-      using enum hitdefs::action;
-      case block:
-      case hit:
-      case miss:
-      case poison: {
-        // We hit something. Stop the player
-        result = false;
-        break;
-      }
-      case pick: break;
-      case exit: {
-        v::on_frame = on_exit;
-        return false;
-      }
-    }
-  }
-  return result;
-}
-
 static constexpr const auto move(int dx, int dy) {
   return [=] {
     ents::foreach([&](auto & p) {
       if (!p.flags.player) return;
-
-      auto p_pos = p.pos + dotz::ivec2 { dx, dy };
-      ents::foreach([&](auto & d) {
-        if (d.pos != p_pos) return;
-        if (!player_hitcheck(d)) p_pos = p.pos;
-      });
-      p.pos = p_pos;
+      switch (ents::move(&p, { dx, dy })) {
+        using enum ents::move_outcome;
+        case none: break;
+        case exit: v::on_frame = on_exit; break;
+      }
     });
   };
 }
