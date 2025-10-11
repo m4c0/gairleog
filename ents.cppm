@@ -8,6 +8,7 @@ namespace ents {
   export struct t : tiledefs::t {
     dotz::ivec2 pos {};
     unsigned life {};
+    unsigned poison {};
   };
   hai::varray<t> ents { 1024 };
 
@@ -57,6 +58,7 @@ namespace ents {
             break;
           case poison:
             p_pos = ent->pos;
+            d.poison++;
             break;
         }
       }
