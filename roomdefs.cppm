@@ -26,6 +26,11 @@ namespace roomdefs {
     if (i < 0 || i > 1) lispy::err(n, "light intensity should be between 0 and 1");
     return i;
   }
+  static float to_life(const lispy::node * n) {
+    auto i = lispy::to_i(n);
+    if (i < 1) lispy::err(n, "life should be greater than 0");
+    return i;
+  }
   static unsigned to_spr(const lispy::node * name) {
     if (!lispy::is_atom(name)) lispy::err(name, "spr expects atom as name");
     if (!sprdef::has(name->atom)) lispy::err(name, "invalid sprite name");
@@ -54,6 +59,7 @@ namespace roomdefs {
       basic_context<node> ctx { n->ctx->allocator };
       tiledefs::lispy<node>(ctx);
       ctx.fns["light"] = mem_fn<&node::attr, &node::light,  to_light>;
+      ctx.fns["life"]  = mem_fn<&node::attr, &node::life,   to_life>;
       ctx.fns["spr"]   = mem_fn<&node::attr, &node::sprite, to_spr>;
       auto * nn = fill_clone<node>(&ctx, n, aa, as);
       nn->has_tdef = true;

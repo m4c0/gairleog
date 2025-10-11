@@ -22,7 +22,7 @@ namespace ents {
   export void add(dotz::ivec2 pos, tiledefs::t tdef) {
     t ent = { tdef };
     ent.pos = pos;
-    ent.life = 2;
+    ent.life = tdef.life ? tdef.life : 1;
     ents.push_back_doubling(ent);
   }
 

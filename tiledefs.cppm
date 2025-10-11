@@ -21,9 +21,11 @@ namespace tiledefs {
   };
 
   export struct t {
-    float light {};
+    float    light  {};
+    unsigned life   {};
     unsigned sprite {};
-    flags flags {};
+
+    flags    flags  {};
   };
 
   export inline unsigned bit_of(flags f) {
