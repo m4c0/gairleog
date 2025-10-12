@@ -10,6 +10,15 @@
 (hitdef player enemy
   (hit))
 
+(hitdef enemy player
+  (random
+    (miss)
+    (miss)
+    (miss)
+    (miss)
+    (miss)
+    (hit)))
+
 (hitdef toad player
   (random
     (miss)
@@ -17,6 +26,4 @@
     (miss)
     (miss)
     (miss)
-    (do (hit) (poison))
-    (do (hit) (hit))
     (poison)))
