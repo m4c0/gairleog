@@ -1,10 +1,12 @@
 #pragma leco add_resource_dir "sprites"
+#pragma leco add_resource "entdefs.lsp"
 #pragma leco add_resource "hitdefs.lsp"
 #pragma leco add_resource "roomdefs.lsp"
 module;
 #include <stdio.h>
 
 export module res;
+import entdefs;
 import hai;
 import hitdefs;
 import jute;
