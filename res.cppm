@@ -42,13 +42,19 @@ namespace res {
       safe_load("roomdefs.lsp", [=](auto src) mutable {
         roomdefs::run(src);
 
-        safe_load("hitdefs.lsp", [=](auto src) mutable {
-          hitdefs::run(src);
+        safe_load("entdefs.lsp", [=](auto src) mutable {
+          entdefs::run(src);
 
-          cb();
+          safe_load("hitdefs.lsp", [=](auto src) mutable {
+            hitdefs::run(src);
+
+            cb();
+          });
         });
       });
     });
+  } catch (const entdefs::error & e) {
+    report("entdefs.lsp", e);
   } catch (const hitdefs::error & e) {
     report("hitdefs.lsp", e);
   } catch (const roomdefs::error & e) {
