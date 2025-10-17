@@ -28,20 +28,24 @@ namespace entdefs {
 
   struct cnode : node, tiledefs::t {
     void (*attr)(cnode *, const cnode *);
-    int sprite;
   };
   struct context : basic_context<cnode> {
   };
-  export void run(jute::view src) {
+  export void run(jute::view src) try {
     context ctx {};
     ctx.fns["entdef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
+      if (as < 1) lispy::err(n, "entdef expects a name and attributes");
+      if (!is_atom(aa[0])) lispy::err(aa[0], "expecting an atom as the entdef name");
+
       context ctx { basic_context<cnode>{ n->ctx->allocator } };
       ctx.fns["light"] = mem_fn<&cnode::attr, &cnode::light,  to_light>;
       ctx.fns["life"]  = mem_fn<&cnode::attr, &cnode::life,   to_life>;
       ctx.fns["spr"]   = mem_fn<&cnode::attr, &cnode::sprite, to_spr>;
       tiledefs::lispy<cnode>(ctx);
-      return n;
+      return fill_clone<cnode>(&ctx, n, aa + 1, as - 1);
     };
     ctx.run(src);
+  } catch (const lispy::parser_error & e) {
+    throw error { e };
   }
 }

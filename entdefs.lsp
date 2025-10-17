@@ -1,6 +1,6 @@
-(entdef (spr empty))
+(entdef empty)
 
-(entdef
+(entdef boulder
   (solid)
   (random
     (spr environment/props/boulder1)
@@ -9,11 +9,11 @@
     (spr environment/props/boulder4)
   ))
 
-(entdef
+(entdef candles
   (light 1)
   (spr environment/props/candles))
 
-(entdef
+(entdef pot
   (solid)
   (ceramic)
   (random
@@ -29,7 +29,7 @@
     (spr environment/props/pot_gray)
   ))
 
-(entdef
+(entdef grass
   (random
     (spr environment/floor_tiles/grass1)
     (spr environment/floor_tiles/grass2)
@@ -37,7 +37,7 @@
     (spr environment/floor_tiles/grass4)
   ))
   
-(entdef
+(entdef grass_swamp
   (random
     (spr environment/floor_tiles/grass_swamp1)
     (spr environment/floor_tiles/grass_swamp2)
@@ -45,7 +45,7 @@
     (spr environment/floor_tiles/grass_swamp4)
   ))
 
-(entdef
+(entdef stone
   (random
     (spr environment/floor_tiles/stone1)
     (spr environment/floor_tiles/stone2)
@@ -53,7 +53,7 @@
     (spr environment/floor_tiles/stone4)
   ))
 
-(entdef
+(entdef tree
   (solid)
   (random
     (spr environment/props/tree1)
@@ -62,7 +62,7 @@
     (spr environment/props/tree4)
   ))
 
-(entdef
+(entdef tree_swap
   (solid)
   (random
     (spr environment/props/tree1_swamp)
@@ -71,7 +71,7 @@
     (spr environment/props/tree4_swamp)
   ))
 
-(entdef
+(entdef tree_withered
   (solid)
   (random
     (spr environment/props/tree1_withered)
