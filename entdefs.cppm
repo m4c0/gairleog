@@ -9,8 +9,6 @@ using namespace lispy;
 using namespace lispy::experimental;
 
 namespace entdefs {
-  export struct error : lispy::parser_error {};
-
   hashley::fin<tiledefs::t> defs { 127 };
 
   export bool has(jute::view name) {
@@ -58,6 +56,6 @@ namespace entdefs {
     };
     ctx.run(src);
   } catch (const lispy::parser_error & e) {
-    throw error { e };
+    throw lispy::to_file_err("entdefs.lsp", e);
   }
 }

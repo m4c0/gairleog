@@ -1,4 +1,4 @@
-(def X (random pot candle grass empty empty))
+(def X (random pot candles grass empty empty))
 (themedef
   (random
     (do

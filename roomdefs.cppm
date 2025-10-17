@@ -10,8 +10,6 @@ import tiledefs;
 import traits;
 
 namespace roomdefs {
-  export struct error : lispy::parser_error {};
-
   export struct t {
     unsigned w {};
     unsigned h {};
@@ -143,6 +141,6 @@ namespace roomdefs {
     auto n = lispy::run<node>(g_src, &ctx);
     return (n && n->room) ? n->room : hai::sptr<t> {};
   } catch (const lispy::parser_error & e) {
-    throw error { e };
+    throw lispy::to_file_err("roomdefs.lsp", e);
   }
 }

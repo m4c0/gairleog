@@ -8,8 +8,6 @@ using namespace lispy;
 using namespace lispy::experimental;
 
 namespace hitdefs {
-  export struct error : lispy::parser_error {};
-
   export enum class action {
     block,
     exit,
@@ -74,6 +72,6 @@ namespace hitdefs {
     ctx.run(g_source);
     return result;
   } catch (const lispy::parser_error & e) {
-    throw error { e };
+    throw lispy::to_file_err("hitdefs.lsp", e);
   }
 }

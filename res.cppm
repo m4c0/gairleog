@@ -16,16 +16,6 @@ import sires;
 import sprdef;
 
 namespace res {
-  static void report(jute::view file, const lispy::parser_error & e) {
-    char msg[128] {};
-    auto len = snprintf(msg, sizeof(msg), "%.*s:%d:%d: %.*s",
-        static_cast<unsigned>(file.size()), file.begin(),
-        e.line, e.col,
-        static_cast<unsigned>(e.msg.size()), e.msg.begin());
-    if (len > 0) throw jute::view { msg, static_cast<unsigned>(len) }.cstr();
-    else throw (*e.msg).cstr();
-  }
-
   static void safe_load(jute::view file, hai::fn<void, jute::view> cb) {
     sires::read(file, nullptr, [=](auto ptr, hai::cstr & src) mutable {
       cb(src);
@@ -39,11 +29,11 @@ namespace res {
     safe_load(sprdef_file, [=](auto src) mutable {
       sprdef::run(src);
 
-      safe_load("roomdefs.lsp", [=](auto src) mutable {
-        roomdefs::run(src);
+      safe_load("entdefs.lsp", [=](auto src) mutable {
+        entdefs::run(src);
 
-        safe_load("entdefs.lsp", [=](auto src) mutable {
-          entdefs::run(src);
+        safe_load("roomdefs.lsp", [=](auto src) mutable {
+          roomdefs::run(src);
 
           safe_load("hitdefs.lsp", [=](auto src) mutable {
             hitdefs::run(src);
@@ -53,14 +43,8 @@ namespace res {
         });
       });
     });
-  } catch (const entdefs::error & e) {
-    report("entdefs.lsp", e);
-  } catch (const hitdefs::error & e) {
-    report("hitdefs.lsp", e);
-  } catch (const roomdefs::error & e) {
-    report("roomdefs.lsp", e);
   } catch (const sprdef::error & e) {
-    report(sprdef_file, e);
+    throw lispy::to_file_err(sprdef_file, e);
   }
   export void load_all(void (*cb)()) {
     load("pixelite2.lsp", cb);

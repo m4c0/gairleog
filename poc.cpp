@@ -35,11 +35,13 @@ static void on_frame() {
   });
 }
 
-static void on_exit() {
+static void on_exit() try {
   ents::reset();
   g_map.build();
   g_map.foreach(ents::add);
   v::on_frame = on_frame;
+} catch (const hai::cstr & err) {
+  silog::die("%s", err.begin());
 }
 
 static constexpr const auto move(int dx, int dy) {
