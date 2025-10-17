@@ -31,11 +31,6 @@ namespace roomdefs {
     if (i < 1) lispy::err(n, "life should be greater than 0");
     return i;
   }
-  static unsigned to_spr(const lispy::node * name) {
-    if (!lispy::is_atom(name)) lispy::err(name, "spr expects atom as name");
-    if (!sprdef::has(name->atom)) lispy::err(name, "invalid sprite name");
-    return sprdef::get(name->atom);
-  }
 
   struct node : lispy::node, tiledefs::t {
     void (*attr)(node *, const node *);
@@ -60,7 +55,7 @@ namespace roomdefs {
       tiledefs::lispy<node>(ctx);
       ctx.fns["light"] = mem_fn<&node::attr, &node::light,  to_light>;
       ctx.fns["life"]  = mem_fn<&node::attr, &node::life,   to_life>;
-      ctx.fns["spr"]   = mem_fn<&node::attr, &node::sprite, to_spr>;
+      ctx.fns["spr"]   = mem_fn<&node::attr, &node::sprite, sprdef::to_spr>;
       auto * nn = fill_clone<node>(&ctx, n, aa, as);
       nn->has_tdef = true;
       return nn;

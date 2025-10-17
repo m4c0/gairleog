@@ -34,4 +34,10 @@ namespace sprdef {
   } catch (const lispy::parser_error & e) {
     throw error { e };
   }
+
+  export unsigned to_spr(const lispy::node * name) {
+    if (!lispy::is_atom(name)) lispy::err(name, "spr expects atom as name");
+    if (!has(name->atom)) lispy::err(name, "invalid sprite name");
+    return get(name->atom);
+  }
 }

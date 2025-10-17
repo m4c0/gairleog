@@ -1,6 +1,7 @@
 export module entdefs;
 import jute;
 import lispy;
+import sprdef;
 import tiledefs;
 
 using namespace lispy;
@@ -11,6 +12,7 @@ namespace entdefs {
 
   struct cnode : node, tiledefs::t {
     void (*attr)(cnode *, const cnode *);
+    int sprite;
   };
   struct context : basic_context<cnode> {
   };
@@ -18,6 +20,7 @@ namespace entdefs {
     context ctx {};
     ctx.fns["entdef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       context ctx { basic_context<cnode>{ n->ctx->allocator } };
+      ctx.fns["spr"] = mem_fn<&cnode::attr, &cnode::sprite, sprdef::to_spr>;
       tiledefs::lispy<cnode>(ctx);
       return n;
     };
