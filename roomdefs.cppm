@@ -1,4 +1,5 @@
 export module roomdefs;
+import entdefs;
 import hai;
 import hashley;
 import jute;
@@ -21,26 +22,8 @@ namespace roomdefs {
   hai::cstr g_src {};
   export void run(jute::view src) { g_src = src.cstr(); }
 
-  static float to_light(const lispy::node * n) {
-    auto i = lispy::to_f(n);
-    if (i < 0 || i > 1) lispy::err(n, "light intensity should be between 0 and 1");
-    return i;
-  }
-  static float to_life(const lispy::node * n) {
-    auto i = lispy::to_i(n);
-    if (i < 1) lispy::err(n, "life should be greater than 0");
-    return i;
-  }
-  static unsigned to_spr(const lispy::node * name) {
-    if (!lispy::is_atom(name)) lispy::err(name, "spr expects atom as name");
-    if (!sprdef::has(name->atom)) lispy::err(name, "invalid sprite name");
-    return sprdef::get(name->atom);
-  }
-
-  struct node : lispy::node, tiledefs::t {
-    void (*attr)(node *, const node *);
+  struct node : lispy::node {
     hai::sptr<roomdefs::t> room {};
-    bool has_tdef;
   };
   struct context : lispy::context {
     unsigned w {};
@@ -55,16 +38,6 @@ namespace roomdefs {
       { .allocator = lispy::allocator<node>() },
       ew, eh,
     }; 
-    ctx.fns["tile"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      basic_context<node> ctx { n->ctx->allocator };
-      tiledefs::lispy<node>(ctx);
-      ctx.fns["light"] = mem_fn<&node::attr, &node::light,  to_light>;
-      ctx.fns["life"]  = mem_fn<&node::attr, &node::life,   to_life>;
-      ctx.fns["spr"]   = mem_fn<&node::attr, &node::sprite, to_spr>;
-      auto * nn = fill_clone<node>(&ctx, n, aa, as);
-      nn->has_tdef = true;
-      return nn;
-    };
     ctx.fns["themedef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as != 1) lispy::err(n, "themedef requires at exactly one parameter");
       static_cast<context *>(n->ctx)->theme = static_cast<const node *>(aa[0]);
@@ -94,12 +67,8 @@ namespace roomdefs {
 
           auto cell = lispy::eval<node>(n->ctx, n->ctx->defs[c]);
           if (!lispy::is_atom(cell)) lispy::err(aa[i], "cell must be a sprite name", idx);
-
-          if (!ctx->defs.has(cell->atom)) lispy::err(cell, "unknown tiledef");
-          auto tdn = lispy::eval<node>(ctx, ctx->defs[cell->atom]);
-          if (!tdn->has_tdef) lispy::err(tdn, "expecting a tiledef");
-
-          data[i * cols + idx] = *tdn;
+          if (!entdefs::has(cell->atom)) lispy::err(cell, "unknown entdef");
+          data[i * cols + idx] = entdefs::get(cell->atom);
         }
       }
 
