@@ -1,5 +1,6 @@
 export module entdefs;
 import jute;
+import hashley;
 import lispy;
 import sprdef;
 import tiledefs;
@@ -9,6 +10,15 @@ using namespace lispy::experimental;
 
 namespace entdefs {
   export struct error : lispy::parser_error {};
+
+  hashley::fin<tiledefs::t> defs { 127 };
+
+  export bool has(jute::view name) {
+    return defs.has(name);
+  }
+  export const auto & get(jute::view name) {
+    return defs[name];
+  }
 
   static float to_light(const lispy::node * n) {
     auto i = lispy::to_f(n);
@@ -42,7 +52,9 @@ namespace entdefs {
       ctx.fns["life"]  = mem_fn<&cnode::attr, &cnode::life,   to_life>;
       ctx.fns["spr"]   = mem_fn<&cnode::attr, &cnode::sprite, to_spr>;
       tiledefs::lispy<cnode>(ctx);
-      return fill_clone<cnode>(&ctx, n, aa + 1, as - 1);
+      auto nn = fill_clone<cnode>(&ctx, n, aa + 1, as - 1);
+      defs[aa[0]->atom] = *nn;
+      return nn;
     };
     ctx.run(src);
   } catch (const lispy::parser_error & e) {

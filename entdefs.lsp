@@ -62,7 +62,7 @@
     (spr environment/props/tree4)
   ))
 
-(entdef tree_swap
+(entdef tree_swamp
   (solid)
   (random
     (spr environment/props/tree1_swamp)
