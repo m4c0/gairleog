@@ -6,6 +6,7 @@ import jute;
 import lispy;
 import rng;
 import sprdef;
+import themedefs;
 import tiledefs;
 import traits;
 
@@ -36,11 +37,6 @@ namespace roomdefs {
       { .allocator = lispy::allocator<node>() },
       ew, eh,
     }; 
-    ctx.fns["themedef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      if (as != 1) lispy::err(n, "themedef requires at exactly one parameter");
-      static_cast<context *>(n->ctx)->theme = static_cast<const node *>(aa[0]);
-      return aa[0];
-    };
     ctx.fns["room"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as < 2) lispy::err(n, "rooms must have at least two rows");
 
@@ -51,8 +47,9 @@ namespace roomdefs {
       if (!(as == ctx->h && cols == ctx->w) &&
           !(as == ctx->w && cols == ctx->h)) return {};
 
-      if (!ctx->theme) lispy::err(n, "must define theme before rooms");
-      auto _ = lispy::eval<node>(ctx, ctx->theme);
+      basic_context<node> tctx {};
+      tctx.parent = n->ctx;
+      themedefs::eval(&tctx);
 
       hai::array<tiledefs::t> data { as * cols };
       for (auto i = 0; i < as; i++) {
@@ -61,9 +58,9 @@ namespace roomdefs {
         if (cols != a.size()) lispy::err(aa[i], "all rows must have the same length");
         for (auto idx = 0; idx < cols; idx++) {
           auto c = a.subview(idx, 1).middle;
-          if (!n->ctx->defs.has(c)) lispy::err(aa[i], "unknown def", idx);
+          if (!tctx.defs.has(c)) lispy::err(aa[i], "unknown def", idx);
 
-          auto cell = lispy::eval<node>(n->ctx, n->ctx->defs[c]);
+          auto cell = lispy::eval<node>(&tctx, tctx.defs[c]);
           if (!lispy::is_atom(cell)) lispy::err(aa[i], "cell must be a sprite name", idx);
           if (!entdefs::has(cell->atom)) lispy::err(cell, "unknown entdef");
           data[i * cols + idx] = entdefs::get(cell->atom);

@@ -2,6 +2,7 @@
 #pragma leco add_resource "entdefs.lsp"
 #pragma leco add_resource "hitdefs.lsp"
 #pragma leco add_resource "roomdefs.lsp"
+#pragma leco add_resource "themedefs.lsp"
 module;
 #include <stdio.h>
 
@@ -14,6 +15,7 @@ import lispy;
 import roomdefs;
 import sires;
 import sprdef;
+import themedefs;
 
 namespace res {
   static void safe_load(jute::view file, hai::fn<void, jute::view> cb) {
@@ -32,13 +34,17 @@ namespace res {
       safe_load("entdefs.lsp", [=](auto src) mutable {
         entdefs::run(src);
 
-        safe_load("roomdefs.lsp", [=](auto src) mutable {
-          roomdefs::run(src);
+        safe_load("themedefs.lsp", [=](auto src) mutable {
+          themedefs::run(src);
 
-          safe_load("hitdefs.lsp", [=](auto src) mutable {
-            hitdefs::run(src);
+          safe_load("roomdefs.lsp", [=](auto src) mutable {
+            roomdefs::run(src);
 
-            cb();
+            safe_load("hitdefs.lsp", [=](auto src) mutable {
+              hitdefs::run(src);
+
+              cb();
+            });
           });
         });
       });
