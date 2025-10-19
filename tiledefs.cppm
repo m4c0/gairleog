@@ -21,6 +21,8 @@ namespace tiledefs {
   };
 
   export struct t {
+    jute::heap loot {};
+
     float    light  {};
     unsigned life   {};
     unsigned sprite {};

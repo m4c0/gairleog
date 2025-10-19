@@ -22,6 +22,10 @@ namespace entdefs {
     if (i < 1) lispy::err(n, "life should be greater than 0");
     return i;
   }
+  static jute::heap to_loot(const lispy::node * n) {
+    if (!entdefs::has(n->atom)) lispy::err(n, "unknown entdef");
+    return jute::heap { n->atom };
+  }
   static unsigned to_spr(const lispy::node * name) {
     if (!lispy::is_atom(name)) lispy::err(name, "spr expects atom as name");
     if (!sprdef::has(name->atom)) lispy::err(name, "invalid sprite name");
@@ -32,6 +36,7 @@ namespace entdefs {
     basic_context<cnode> ctx {};
     ctx.fns["light"] = mem_fn<&cnode::attr, &cnode::light,  to_light>;
     ctx.fns["life"]  = mem_fn<&cnode::attr, &cnode::life,   to_life>;
+    ctx.fns["loot"]  = mem_fn<&cnode::attr, &cnode::loot,   to_loot>;
     ctx.fns["spr"]   = mem_fn<&cnode::attr, &cnode::sprite, to_spr>;
     tiledefs::lispy<cnode>(ctx);
     return ctx;

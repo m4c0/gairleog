@@ -1,5 +1,8 @@
 (entdef empty)
 
+(entdef apple  (food) (spr items/food/appletomato_red))
+(entdef potato (food) (spr items/food/potato_orange))
+
 (entdef boulder
   (solid)
   (random
@@ -16,6 +19,10 @@
 (entdef pot
   (solid)
   (ceramic)
+  (random
+    (loot apple)
+    (loot potato)
+  )
   (random
     (spr environment/props/pot_yellow)
     (spr environment/props/pot_black)
