@@ -28,17 +28,23 @@ namespace entdefs {
     return sprdef::get(name->atom);
   }
 
+  static const auto entdef_ctx = [] {
+    basic_context<cnode> ctx {};
+    ctx.fns["light"] = mem_fn<&cnode::attr, &cnode::light,  to_light>;
+    ctx.fns["life"]  = mem_fn<&cnode::attr, &cnode::life,   to_life>;
+    ctx.fns["spr"]   = mem_fn<&cnode::attr, &cnode::sprite, to_spr>;
+    tiledefs::lispy<cnode>(ctx);
+    return ctx;
+  }();
+
   void run(jute::view src) try {
     context ctx {};
     ctx.fns["entdef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as < 1) lispy::err(n, "entdef expects a name and attributes");
       if (!is_atom(aa[0])) lispy::err(aa[0], "expecting an atom as the entdef name");
 
-      context ctx { basic_context<cnode>{ n->ctx->allocator } };
-      ctx.fns["light"] = mem_fn<&cnode::attr, &cnode::light,  to_light>;
-      ctx.fns["life"]  = mem_fn<&cnode::attr, &cnode::life,   to_life>;
-      ctx.fns["spr"]   = mem_fn<&cnode::attr, &cnode::sprite, to_spr>;
-      tiledefs::lispy<cnode>(ctx);
+      basic_context<cnode> ctx {};
+      ctx.parent = &entdef_ctx;
       auto nn = fill_clone<cnode>(&ctx, n, aa + 1, as - 1);
       defs[aa[0]->atom] = *nn;
       return nn;
