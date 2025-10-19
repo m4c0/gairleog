@@ -1,5 +1,6 @@
 export module ents;
 import dotz;
+import entdefs;
 import hai;
 import hitdefs;
 import tiledefs;
@@ -20,11 +21,14 @@ namespace ents {
     ents.truncate(0);
   }
 
-  export void add(dotz::ivec2 pos, tiledefs::t tdef) {
+  static t create(dotz::ivec2 pos, tiledefs::t tdef) {
     t ent = { tdef };
     ent.pos = pos;
     ent.life = tdef.life ? tdef.life : 1;
-    ents.push_back_doubling(ent);
+    return ent;
+  }
+  export void add(dotz::ivec2 pos, tiledefs::t tdef) {
+    ents.push_back_doubling(create(pos, tdef));
   }
 
   export enum class move_outcome {
@@ -48,7 +52,13 @@ namespace ents {
           case hit:
             p_pos = ent->pos;
             d.life--;
-            if (!d.life) d = {};
+            if (!d.life) {
+              if (d.loot == "") {
+                d = {};
+              } else {
+                d = create(d.pos, entdefs::get(d.loot));
+              }
+            }
             break;
           case miss:
             p_pos = ent->pos;
