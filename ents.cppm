@@ -3,6 +3,7 @@ import dotz;
 import entdefs;
 import hai;
 import hitdefs;
+import inv;
 import tiledefs;
 
 namespace ents {
@@ -64,6 +65,7 @@ namespace ents {
             p_pos = ent->pos;
             break;
           case pick:
+            inv::add(d);
             d = {}; 
             break;
           case poison:
