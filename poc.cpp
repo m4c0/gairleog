@@ -35,13 +35,27 @@ static void on_frame() {
   });
 }
 
+static void on_game();
+
 static void on_exit() try {
   ents::reset();
   g_map.build();
   g_map.foreach(ents::add);
-  v::on_frame = on_frame;
+  on_game();
 } catch (const hai::cstr & err) {
   silog::die("%s", err.begin());
+}
+
+static void on_inventory() {
+  using namespace casein;
+  reset_k(KEY_DOWN);
+  reset_k(KEY_UP);
+
+  handle(KEY_DOWN, K_ESCAPE, on_game);
+
+  v::on_frame = [] {
+    auto m = v::map();
+  };
 }
 
 static constexpr const auto move(int dx, int dy) {
@@ -57,6 +71,18 @@ static constexpr const auto move(int dx, int dy) {
   };
 }
 
+static void on_game() {
+  v::on_frame = on_frame;
+
+  using namespace casein;
+  handle(KEY_DOWN, K_UP,    move(0, -1));
+  handle(KEY_DOWN, K_DOWN,  move(0, +1));
+  handle(KEY_DOWN, K_LEFT,  move(-1, 0));
+  handle(KEY_DOWN, K_RIGHT, move(+1, 0));
+
+  handle(KEY_DOWN, K_TAB, on_inventory);
+}
+
 const int i = [] {
   try {
     res::load_all([] {
@@ -65,12 +91,6 @@ const int i = [] {
   } catch (const hai::cstr & e) {
     silog::die("Failure loading resource: %s", e.begin());
   }
-
-  using namespace casein;
-  handle(KEY_DOWN, K_UP,    move(0, -1));
-  handle(KEY_DOWN, K_DOWN,  move(0, +1));
-  handle(KEY_DOWN, K_LEFT,  move(-1, 0));
-  handle(KEY_DOWN, K_RIGHT, move(+1, 0));
 
   return 0;
 }();
