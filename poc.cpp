@@ -84,6 +84,9 @@ static void on_game() {
   v::on_frame = on_frame;
 
   using namespace casein;
+  reset_k(KEY_DOWN);
+  reset_k(KEY_UP);
+
   handle(KEY_DOWN, K_UP,    move(0, -1));
   handle(KEY_DOWN, K_DOWN,  move(0, +1));
   handle(KEY_DOWN, K_LEFT,  move(-1, 0));
