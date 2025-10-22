@@ -11,4 +11,6 @@ namespace inv {
   export void add(tiledefs::t tdef) {
     data.push_back({ tdef });
   }
+
+  export const auto & all() { return data; }
 }

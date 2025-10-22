@@ -5,6 +5,7 @@ import dotz;
 import ents;
 import hai;
 import hitdefs;
+import inv;
 import map;
 import res;
 import silog;
@@ -55,6 +56,14 @@ static void on_inventory() {
 
   v::on_frame = [] {
     auto m = v::map();
+    auto y = 0;
+    for (auto & i : inv::all()) {
+      m->push({
+        .pos { 0, y++ },
+        .id = i.sprite,
+      });
+    }
+    v::pc = { 0, 6 };
   };
 }
 
