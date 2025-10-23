@@ -56,16 +56,25 @@ static void recurse(const char * dir) {
 }
 
 static void embed_font() {
+  fputln(lsp, "(sprdef font ", next_id, ")");
+
   auto img = stbi::load(jojo::read("dungeon-437.png"));
   auto * ptr = reinterpret_cast<unsigned *>(*img.data);
   for (auto cy = 0; cy < 16; cy++) {
     for (auto cx = 0; cx < 16; cx++) {
-      auto pp = cy * 16 * 128 + cx * 16;
+      dotz::ivec2 id { next_id % 64, next_id / 64 };
+      auto sp = id * 16;
+
+      auto pp = cy * 16 * 256 + cx * 16;
       for (auto y = 0; y < 16; y++) {
+        auto yp = out + (sp.y + y) * 1024 + sp.x;
         for (auto x = 0; x < 16; x++) {
-          auto n = (ptr[pp + y * 128 + x] & 0xFF00) >> 8;
+          unsigned char n = 0xFF & ((ptr[pp + y * 256 + x] & 0xFF00) >> 8);
+          yp[x] = { n, n, n, n };
         }
       }
+
+      next_id++;
     }
   }
 }
