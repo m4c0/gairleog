@@ -55,6 +55,21 @@ static void recurse(const char * dir) {
   }
 }
 
+static void embed_font() {
+  auto img = stbi::load(jojo::read("dungeon-437.png"));
+  auto * ptr = reinterpret_cast<unsigned *>(*img.data);
+  for (auto cy = 0; cy < 16; cy++) {
+    for (auto cx = 0; cx < 16; cx++) {
+      auto pp = cy * 16 * 128 + cx * 16;
+      for (auto y = 0; y < 16; y++) {
+        for (auto x = 0; x < 16; x++) {
+          auto n = (ptr[pp + y * 128 + x] & 0xFF00) >> 8;
+        }
+      }
+    }
+  }
+}
+
 int main() {
   if (mtime::of("sprites/pixelite2.lsp") && mtime::of("sprites/pixelite2.png")) return 0;
 
@@ -63,6 +78,8 @@ int main() {
 
   ::lsp = lsp;
   recurse("PixeLike2_AssetPack");
+
+  embed_font();
 
   stbi::write_rgba_unsafe("sprites/pixelite2.png", 1024, 1024, out);
 }
