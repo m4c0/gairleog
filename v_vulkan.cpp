@@ -85,8 +85,11 @@ const int i = [] {
       auto cb = g_es->sw.command_buffer();
       auto ext = g_es->sw.extent();
 
+      //----- magic block for double-buffer
+      auto ofs = 0U;
       auto pc = v::pc;
       pc.grid_size.x *= g_es->sw.aspect();
+      //------
 
       auto rp = g_es->sw.cmd_render_pass({
         .clear_colours { vee::clear_colour(0, 0, 0, 1) },
@@ -96,7 +99,7 @@ const int i = [] {
       vee::cmd_bind_gr_pipeline(cb, *g_as->ppl);
       vee::cmd_bind_descriptor_set(cb, *g_as->pl, 0, g_as->dset.descriptor_set());
       vee::cmd_push_vertex_constants(cb, *g_as->pl, &pc);
-      vee::cmd_bind_vertex_buffers(cb, 1, *g_as->buf.buffer);
+      vee::cmd_bind_vertex_buffers(cb, 1, *g_as->buf.buffer, ofs);
       g_as->oq.run(cb, 0, g_as->count);
     });
     g_es->sw.queue_present(q);
