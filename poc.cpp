@@ -59,9 +59,22 @@ static void on_inventory() {
     auto y = 0;
     for (auto & i : inv::all()) {
       m->push({
-        .pos { 0, y++ },
+        .pos { -3, y },
         .id = i.sprite,
       });
+      m->push({
+        .pos { -2, y },
+        .id = sprdef::get("font") + '?',
+      });
+      m->push({
+        .pos { -1, y },
+        .id = sprdef::get("font") + '?',
+      });
+      m->push({
+        .pos { 0, y },
+        .id = sprdef::get("font") + '?',
+      });
+      y++;
     }
     v::pc = { 0, 6 };
   };
