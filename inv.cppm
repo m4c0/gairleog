@@ -21,4 +21,6 @@ namespace inv {
     if (idx < 0 || idx >= data.size()) return invalid;
     return data[idx];
   }
+
+  export auto size() { return data.size(); }
 }

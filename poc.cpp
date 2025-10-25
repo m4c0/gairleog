@@ -38,6 +38,7 @@ static void on_frame() {
 
 static void on_game();
 
+// TODO: drop a random item on level change
 static void on_exit() try {
   ents::reset();
   g_map.build();
@@ -48,15 +49,19 @@ static void on_exit() try {
 }
 
 static void on_inventory() {
+  static int sel;
+
   using namespace casein;
   reset_k(KEY_DOWN);
   reset_k(KEY_UP);
 
   handle(KEY_DOWN, K_ESCAPE, on_game);
+  handle(KEY_DOWN, K_UP,   [] { sel = (sel == 0) ? 0 : sel - 1; });
+  handle(KEY_DOWN, K_DOWN, [] { sel = (sel < inv::size() - 1) ? sel + 1 : sel; });
 
+  sel = 0;
   v::on_frame = [] {
     auto m = v::map();
-    int sel = 0;
     for (auto y = -3; y <= 3; y++)  {
       auto & i = inv::at(y + sel);
       if (!i.sprite) continue;
@@ -77,7 +82,6 @@ static void on_inventory() {
         .pos { 0, y },
         .id = sprdef::get("font") + '?',
       });
-      y++;
     }
     v::pc = { 0, 6 };
   };
@@ -114,6 +118,7 @@ static void on_game() {
 const int i = [] {
   try {
     res::load_all([] {
+      inv::reset();
       v::on_frame = on_exit;
     });
   } catch (const hai::cstr & e) {
