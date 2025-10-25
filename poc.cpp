@@ -48,6 +48,15 @@ static void on_exit() try {
   silog::die("%s", err.begin());
 }
 
+static float inv_alpha(int y) {
+  switch (dotz::abs(y)) {
+    case 0: return 1.0;
+    case 1: return 0.2;
+    case 2: return 0.08;
+    case 3: return 0.02;
+    default: return 0.0;
+  }
+}
 static void on_inventory() {
   static int sel;
 
@@ -66,20 +75,26 @@ static void on_inventory() {
       auto & i = inv::at(y + sel);
       if (!i.sprite) continue;
 
+      auto a = inv_alpha(y);
+
       m->push({
-        .pos { -3, y },
+        .pos { -3.0f, y - 0.5f },
+        .mult = a,
         .id = i.sprite,
       });
       m->push({
-        .pos { -2, y },
+        .pos { -2.0f, y - 0.5f },
+        .mult = a,
         .id = sprdef::get("font") + '?',
       });
       m->push({
-        .pos { -1, y },
+        .pos { -1.0f, y - 0.5f },
+        .mult = a,
         .id = sprdef::get("font") + '?',
       });
       m->push({
-        .pos { 0, y },
+        .pos { 0.0f, y - 0.5f },
+        .mult = a,
         .id = sprdef::get("font") + '?',
       });
     }
