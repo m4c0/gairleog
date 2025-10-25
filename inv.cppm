@@ -12,5 +12,9 @@ namespace inv {
     data.push_back({ tdef });
   }
 
-  export const auto & all() { return data; }
+  static t invalid {};
+  export const auto & at(int idx) {
+    if (idx < 0 || idx >= data.size()) return invalid;
+    return data.seek(idx);
+  }
 }

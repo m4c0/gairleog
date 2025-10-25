@@ -56,8 +56,11 @@ static void on_inventory() {
 
   v::on_frame = [] {
     auto m = v::map();
-    auto y = 0;
-    for (auto & i : inv::all()) {
+    int sel = 0;
+    for (auto y = -3; y <= 3; y++)  {
+      auto & i = inv::at(y + sel);
+      if (!i.sprite) continue;
+
       m->push({
         .pos { -3, y },
         .id = i.sprite,
