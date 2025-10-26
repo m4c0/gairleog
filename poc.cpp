@@ -70,7 +70,13 @@ static void on_inventory() {
 
   sel = 0;
   v::on_frame = [] {
+    auto font = sprdef::get("font");
     auto m = v::map();
+    m->push({
+      .pos { -4.0f, -0.5f },
+      .id = font + '>',
+    });
+
     for (auto y = -3; y <= 3; y++)  {
       auto & i = inv::at(y + sel);
       if (!i.sprite) continue;
@@ -85,17 +91,17 @@ static void on_inventory() {
       m->push({
         .pos { -2.0f, y - 0.5f },
         .mult = a,
-        .id = sprdef::get("font") + '?',
+        .id = font + '?',
       });
       m->push({
         .pos { -1.0f, y - 0.5f },
         .mult = a,
-        .id = sprdef::get("font") + '?',
+        .id = font + '?',
       });
       m->push({
         .pos { 0.0f, y - 0.5f },
         .mult = a,
-        .id = sprdef::get("font") + '?',
+        .id = font + '?',
       });
     }
     v::pc = { 0, 6 };
