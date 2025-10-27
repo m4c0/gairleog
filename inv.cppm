@@ -23,4 +23,8 @@ namespace inv {
   }
 
   export auto size() { return data.size(); }
+
+  export void consume(int sel) {
+    if (sel < 0 || sel >= data.size()) return;
+  }
 }

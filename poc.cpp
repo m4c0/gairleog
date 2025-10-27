@@ -68,6 +68,10 @@ static void on_inventory() {
   handle(KEY_DOWN, K_UP,   [] { sel = (sel == 0) ? 0 : sel - 1; });
   handle(KEY_DOWN, K_DOWN, [] { sel = (sel < inv::size() - 1) ? sel + 1 : sel; });
 
+  handle(KEY_DOWN, K_ENTER, [] {
+    inv::consume(sel);
+  });
+
   sel = 0;
   v::on_frame = [] {
     auto font = sprdef::get("font");
