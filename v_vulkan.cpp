@@ -12,9 +12,17 @@ import wagen;
 struct app_stuff {
   voo::device_and_queue dq { "gairleog", casein::native_ptr };
   vee::render_pass rp = voo::single_att_render_pass(dq);
-  voo::single_frag_dset dset { 1 };
+  vee::descriptor_set_layout dsl = vee::create_descriptor_set_layout({
+    vee::dsl_fragment_sampler(),
+    vee::dsl_vertex_uniform(),
+  });
+  vee::descriptor_pool dpool = vee::create_descriptor_pool(1, {
+    vee::combined_image_sampler(1),
+    vee::uniform_buffer(1),
+  });
+  vee::descriptor_set dset = vee::allocate_descriptor_set(*dpool, *dsl);
   vee::pipeline_layout pl = vee::create_pipeline_layout(
-      dset.descriptor_set_layout(),
+      *dsl,
       vee::vertex_push_constant_range<v::upc>());
   vee::gr_pipeline ppl = vee::create_graphics_pipeline({
     .pipeline_layout = *pl,
@@ -69,7 +77,7 @@ const int i = [] {
     g_as = new app_stuff {};
 
     voo::load_image("pixelite2.png", g_as->dq.physical_device(), g_as->dq.queue(), &g_as->img, [] {
-      vee::update_descriptor_set(g_as->dset.descriptor_set(), 0, i, *g_as->img.iv, *g_as->smp);
+      vee::update_descriptor_set(g_as->dset, 0, i, *g_as->img.iv, *g_as->smp);
     });
   });
   on(RESIZE, [] { delete g_es; g_es = nullptr; });
@@ -97,7 +105,7 @@ const int i = [] {
       vee::cmd_set_viewport(cb, ext);
       vee::cmd_set_scissor(cb, ext);
       vee::cmd_bind_gr_pipeline(cb, *g_as->ppl);
-      vee::cmd_bind_descriptor_set(cb, *g_as->pl, 0, g_as->dset.descriptor_set());
+      vee::cmd_bind_descriptor_set(cb, *g_as->pl, 0, g_as->dset);
       vee::cmd_push_vertex_constants(cb, *g_as->pl, &pc);
       vee::cmd_bind_vertex_buffers(cb, 1, *g_as->buf.buffer, ofs);
       g_as->oq.run(cb, 0, g_as->count);
