@@ -70,16 +70,19 @@ static void on_inventory() {
 
   handle(KEY_DOWN, K_ENTER, [] {
     inv::consume(sel);
+    while (sel == inv::size()) sel--;
   });
 
   sel = 0;
   v::on_frame = [] {
     auto font = sprdef::get("font");
     auto m = v::map();
-    m->push({
-      .pos { -4.0f, -0.5f },
-      .id = font + '>',
-    });
+    if (inv::size() > 0) {
+      m->push({
+        .pos { -4.0f, -0.5f },
+        .id = font + '>',
+      });
+    }
 
     for (auto y = -3; y <= 3; y++)  {
       auto & i = inv::at(y + sel);
