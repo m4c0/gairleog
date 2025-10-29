@@ -35,10 +35,12 @@ namespace v {
   static int g_program;
   static int g_quad_buffer;
   static int g_inst_buffer;
+  static int g_uni_buffer;
   static int g_texture;
   static int g_u_aspect;
-  static int g_u_grid_pos;
-  static int g_u_grid_size;
+  static int g_u_uni;
+
+  static grid g_grid {};
 
   void frame(void *);
 
@@ -62,8 +64,7 @@ namespace v {
     blend_func(ONE, ONE_MINUS_SRC_ALPHA);
 
     g_u_aspect = get_uniform_location(p, "_12");
-    g_u_grid_pos = get_uniform_location(p, "_29.grid_pos");
-    g_u_grid_size = get_uniform_location(p, "_29.grid_size");
+    g_u_uni = get_uniform_block_index(p, "uni");
     auto u_tex = get_uniform_location(p, "tex");
     uniform1i(u_tex, 0); 
 
@@ -74,6 +75,8 @@ namespace v {
     vertex_attrib_pointer(0, 2, FLOAT, false, 0, 0);
 
     static constexpr const auto stride = sizeof(sprite);
+
+    g_uni_buffer = gelo::create_buffer();
 
     b = g_inst_buffer = gelo::create_buffer();
     bind_buffer(ARRAY_BUFFER, b);
@@ -143,17 +146,16 @@ namespace v {
     clear(COLOR_BUFFER_BIT);
     viewport(0, 0, casein::window_size.x, casein::window_size.y);
 
+    bind_buffer(UNIFORM_BUFFER, g_uni_buffer);
+    buffer_data(UNIFORM_BUFFER, &g_grid, sizeof(grid), DYNAMIC_DRAW);
+    bind_buffer_base(UNIFORM_BUFFER, g_u_uni, g_uni_buffer);
+
     bind_buffer(ARRAY_BUFFER, g_inst_buffer);
     buffer_data(ARRAY_BUFFER, buffer.begin(), buffer.size() * sizeof(sprite), DYNAMIC_DRAW);
     draw_arrays_instanced(TRIANGLES, 0, 6, buffer.size());
   }
 
-  void set_grid(grid g) {
-    using namespace gelo;
-
-    uniform2f(g_u_grid_pos, g.grid_pos.x, g.grid_pos.y);
-    uniform2f(g_u_grid_size, g.grid_size.x, g.grid_size.y);
-  }
+  void set_grid(grid g) { g_grid = g; }
 }
 
 struct mapper : v::mapper {
