@@ -36,6 +36,7 @@ namespace v {
   static int g_quad_buffer;
   static int g_inst_buffer;
   static int g_texture;
+  static int g_u_aspect;
   static int g_u_grid_pos;
   static int g_u_grid_size;
 
@@ -60,8 +61,9 @@ namespace v {
     enable(BLEND);
     blend_func(ONE, ONE_MINUS_SRC_ALPHA);
 
-    g_u_grid_pos = get_uniform_location(p, "_18.grid_pos");
-    g_u_grid_size = get_uniform_location(p, "_18.grid_size");
+    g_u_aspect = get_uniform_location(p, "_12");
+    g_u_grid_pos = get_uniform_location(p, "_29.grid_pos");
+    g_u_grid_size = get_uniform_location(p, "_29.grid_size");
     auto u_tex = get_uniform_location(p, "tex");
     uniform1i(u_tex, 0); 
 
@@ -135,17 +137,22 @@ namespace v {
   void render() {
     using namespace gelo;
 
-    float aspect = casein::window_size.x / casein::window_size.y;
+    uniform1f(g_u_aspect, casein::window_size.x / casein::window_size.y);
 
     clear_color(0, 0, 0, 1);
     clear(COLOR_BUFFER_BIT);
-    uniform2f(g_u_grid_pos, v::pc.grid_pos.x, v::pc.grid_pos.y);
-    uniform2f(g_u_grid_size, v::pc.grid_size.x * aspect, -v::pc.grid_size.y);
     viewport(0, 0, casein::window_size.x, casein::window_size.y);
 
     bind_buffer(ARRAY_BUFFER, g_inst_buffer);
     buffer_data(ARRAY_BUFFER, buffer.begin(), buffer.size() * sizeof(sprite), DYNAMIC_DRAW);
     draw_arrays_instanced(TRIANGLES, 0, 6, buffer.size());
+  }
+
+  void set_grid(grid g) {
+    using namespace gelo;
+
+    uniform2f(g_u_grid_pos, g.grid_pos.x, g.grid_pos.y);
+    uniform2f(g_u_grid_size, g.grid_size.x, g.grid_size.y);
   }
 }
 
