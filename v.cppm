@@ -20,10 +20,11 @@ namespace v {
     unsigned id;
   };
 
-  export struct upc {
+  export struct grid {
     dotz::vec2 grid_pos;
     dotz::vec2 grid_size;
-  } pc;
+  };
+  export void set_grid(grid g);
 
   export struct mapper {
     virtual ~mapper() {}

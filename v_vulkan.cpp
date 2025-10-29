@@ -23,7 +23,7 @@ struct app_stuff {
   vee::descriptor_set dset = vee::allocate_descriptor_set(*dpool, *dsl);
   vee::pipeline_layout pl = vee::create_pipeline_layout(
       *dsl,
-      vee::vertex_push_constant_range<v::upc>());
+      vee::vertex_push_constant_range<float>());
   vee::gr_pipeline ppl = vee::create_graphics_pipeline({
     .pipeline_layout = *pl,
     .render_pass = *rp,
@@ -54,6 +54,10 @@ struct app_stuff {
       dq.physical_device(),
       v::max_sprites * sizeof(v::sprite),
       vee::buffer_usage::vertex_buffer);
+  voo::bound_buffer uni = voo::bound_buffer::create_from_host(
+      dq.physical_device(),
+      sizeof(v::grid),
+      vee::buffer_usage::uniform_buffer);
   voo::bound_image img {};
   unsigned count {};
 } * g_as;
@@ -71,11 +75,17 @@ hai::uptr<v::mapper> v::map() {
   return hai::uptr<v::mapper> { new ::mapper {} };
 }
 
+void v::set_grid(v::grid g) {
+  voo::mapmem m { *g_as->uni.memory };
+  *static_cast<grid *>(*m) = g;
+}
+
 const int i = [] {
   using namespace vinyl;
   on(START,  [] {
     g_as = new app_stuff {};
 
+    vee::update_descriptor_set_for_uniform(g_as->dset, 1, *g_as->uni.buffer);
     voo::load_image("pixelite2.png", g_as->dq.physical_device(), g_as->dq.queue(), &g_as->img, [] {
       vee::update_descriptor_set(g_as->dset, 0, i, *g_as->img.iv, *g_as->smp);
     });
@@ -95,8 +105,7 @@ const int i = [] {
 
       //----- magic block for double-buffer
       auto ofs = 0U;
-      auto pc = v::pc;
-      pc.grid_size.x *= g_es->sw.aspect();
+      float pc = g_es->sw.aspect();
       //------
 
       auto rp = g_es->sw.cmd_render_pass({

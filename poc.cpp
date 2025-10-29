@@ -22,7 +22,7 @@ static void on_frame() {
   ents::foreach([&](const auto & e) {
     if (!e.flags.player) return;
     g_map.tick_lights(e.pos, e.light, ms.millis());
-    v::pc = { e.pos + 0.5f, 6 };
+    v::set_grid({ e.pos + 0.5f, 6 });
   });
   ms = {};
 
@@ -111,7 +111,7 @@ static void on_inventory() {
         .id = font + '?',
       });
     }
-    v::pc = { 0, 6 };
+    v::set_grid({ 0, 6 });
   };
 }
 

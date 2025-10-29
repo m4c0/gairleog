@@ -30,7 +30,7 @@ static void on_frame() {
 const int i = [] {
   try {
     res::load_all([] {
-      v::pc = { 16, 16 };
+      v::set_grid({ 16, 16 });
       v::on_frame = on_frame;
     });
   } catch (const hai::cstr & e) {
