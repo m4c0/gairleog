@@ -150,6 +150,7 @@ static void on_game() {
 const int i = [] {
   try {
     res::load_all([] {
+      lootfx::reset();
       inv::reset();
       v::on_frame = on_exit;
     });
