@@ -7,7 +7,7 @@ namespace lootfx {
     jute::heap name {};
   };
 
-  hai::array<fx> map { 1024 };
+  hai::array<fx> map { 4096 };
 
   export bool has(int s) { return map[s].name.size() > 0; }
 
