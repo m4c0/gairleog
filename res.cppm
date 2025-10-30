@@ -1,6 +1,7 @@
 #pragma leco add_resource_dir "sprites"
 #pragma leco add_resource "entdefs.lsp"
 #pragma leco add_resource "hitdefs.lsp"
+#pragma leco add_resource "lootfx.lsp"
 #pragma leco add_resource "roomdefs.lsp"
 #pragma leco add_resource "themedefs.lsp"
 module;
@@ -12,6 +13,7 @@ import hai;
 import hitdefs;
 import jute;
 import lispy;
+import lootfx;
 import roomdefs;
 import sires;
 import sprdef;
@@ -43,7 +45,11 @@ namespace res {
             safe_load("hitdefs.lsp", [=](auto src) mutable {
               hitdefs::run(src);
 
-              cb();
+              safe_load("lootfx.lsp", [=](auto src) mutable {
+                lootfx::run(src);
+
+                cb();
+              });
             });
           });
         });

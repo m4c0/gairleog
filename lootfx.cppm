@@ -1,3 +1,4 @@
+#pragma leco add_impl lootfx_impl
 export module lootfx;
 import hai;
 import jute;
@@ -21,6 +22,8 @@ namespace lootfx {
   export bool has(int s) { return map[s].name.size() > 0; }
 
   export const fx & get(int s) { return map[s]; }
+
+  export void run(jute::view);
 
   export void pick(int s) {
     if (has(s)) return;
