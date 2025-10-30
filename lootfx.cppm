@@ -11,11 +11,12 @@ namespace lootfx {
 
   export bool has(int s) { return map[s].name.size() > 0; }
 
-  export fx & get(int s) { return map[s]; }
+  export const fx & get(int s) { return map[s]; }
 
   export void pick(int s) {
-    auto & m = get(s);
-    if (m.name.size()) return;
-    m.name = "Yga";
+    if (has(s)) return;
+
+    auto & m = map[s];
+    m.name = "+\3-str";
   }
 }
