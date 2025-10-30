@@ -6,6 +6,7 @@ import ents;
 import hai;
 import hitdefs;
 import inv;
+import lootfx;
 import map;
 import res;
 import silog;
@@ -69,6 +70,7 @@ static void on_inventory() {
   handle(KEY_DOWN, K_DOWN, [] { sel = (sel < inv::size() - 1) ? sel + 1 : sel; });
 
   handle(KEY_DOWN, K_ENTER, [] {
+    lootfx::for_sprite(inv::at(sel).sprite).valid = true;
     inv::consume(sel);
     while (sel == inv::size()) sel--;
   });
@@ -95,6 +97,9 @@ static void on_inventory() {
         .mult = a,
         .id = i.sprite,
       });
+      if (lootfx::for_sprite(i.sprite).valid) {
+        continue;
+      }
       m->push({
         .pos { -2.0f, y - 0.5f },
         .mult = a,
