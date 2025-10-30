@@ -6,6 +6,7 @@ import ents;
 import hai;
 import hitdefs;
 import inv;
+import jute;
 import lootfx;
 import map;
 import res;
@@ -70,7 +71,7 @@ static void on_inventory() {
   handle(KEY_DOWN, K_DOWN, [] { sel = (sel < inv::size() - 1) ? sel + 1 : sel; });
 
   handle(KEY_DOWN, K_ENTER, [] {
-    lootfx::for_sprite(inv::at(sel).sprite).valid = true;
+    lootfx::pick(inv::at(sel).sprite);
     inv::consume(sel);
     while (sel == inv::size()) sel--;
   });
@@ -97,24 +98,22 @@ static void on_inventory() {
         .mult = a,
         .id = i.sprite,
       });
-      if (lootfx::for_sprite(i.sprite).valid) {
-        continue;
+
+      const auto str = [&](jute::view str) {
+        for (int i = 0; i < str.size(); i++) {
+          m->push({
+            .pos { -2.0f + i, y - 0.5f },
+            .mult = a,
+            .id = font + str[i],
+          });
+        }
+      };
+
+      if (lootfx::has(i.sprite)) {
+        str(lootfx::get(i.sprite).name);
+      } else {
+        str("???");
       }
-      m->push({
-        .pos { -2.0f, y - 0.5f },
-        .mult = a,
-        .id = font + '?',
-      });
-      m->push({
-        .pos { -1.0f, y - 0.5f },
-        .mult = a,
-        .id = font + '?',
-      });
-      m->push({
-        .pos { 0.0f, y - 0.5f },
-        .mult = a,
-        .id = font + '?',
-      });
     }
     v::set_grid({ 0, 6 });
   };
