@@ -8,6 +8,7 @@ using namespace lispy::experimental;
 
 namespace lootfx {
   struct {
+    jute::heap src {};
     hai::fn<node *> alloc {};
     hashley::fin<const node *> nodes { 127 };
     hai::varray<jute::view> keys { 128 };
@@ -23,6 +24,7 @@ namespace lootfx {
   void run(jute::view src) try {
     data = {};
     data.alloc = allocator<node>();
+    data.src = jute::heap { src };
 
     basic_context<node> ctx { data.alloc };
     ctx.fns["fx"] = [](auto n, auto aa, auto as) -> const node * {
@@ -32,7 +34,7 @@ namespace lootfx {
       data.keys.push_back_doubling(aa[0]->atom);
       return n;
     };
-    ctx.run(src);
+    ctx.run(data.src);
   } catch (const parser_error & e) {
     throw to_file_err("lootfx.lsp", e);
   }
