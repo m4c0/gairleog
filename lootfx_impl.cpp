@@ -10,7 +10,17 @@ namespace lootfx {
   struct {
     hai::fn<node *> alloc {};
     hashley::fin<const node *> nodes { 127 };
+    hai::varray<jute::view> keys { 128 };
   } data {};
+
+  void reset() {
+    for (auto & m : map) m = {};
+
+    rest.truncate(0);
+    for (auto k : data.keys) rest.push_back_doubling(fx {
+      .name = jute::heap{ k }
+    });
+  }
 
   void run(jute::view src) try {
     data = {};
@@ -21,6 +31,7 @@ namespace lootfx {
       if (as != 2) err("expecting a name and an action");
       if (!is_atom(aa[0])) err("expecting an atom as the name");
       data.nodes[aa[0]->atom] = aa[1];
+      data.keys.push_back_doubling(aa[0]->atom);
       return n;
     };
     ctx.run(src);

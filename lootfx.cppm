@@ -12,12 +12,7 @@ namespace lootfx {
   hai::array<fx> map { 4096 };
   hai::varray<fx> rest { 16 };
 
-  export void reset() {
-    for (auto & m : map) m = {};
-
-    rest.push_back(fx { .name = "Heal" });
-    rest.push_back(fx { .name = "Poison" });
-  }
+  export void reset();
 
   export bool has(int s) { return map[s].name.size() > 0; }
 
