@@ -5,18 +5,14 @@ import jute;
 import rng;
 
 namespace lootfx {
-  export struct fx {
-    jute::heap name {};
-  };
-
-  hai::array<fx> map { 4096 };
-  hai::varray<fx> rest { 16 };
+  hai::array<jute::view> map { 4096 };
+  hai::varray<jute::view> rest { 16 };
 
   export void reset();
 
-  export bool has(int s) { return map[s].name.size() > 0; }
+  export bool has(int s) { return map[s].size() > 0; }
 
-  export const fx & get(int s) { return map[s]; }
+  export auto get(int s) { return map[s]; }
 
   export void run(jute::view);
 

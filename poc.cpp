@@ -110,7 +110,7 @@ static void on_inventory() {
       };
 
       if (lootfx::has(i.sprite)) {
-        str(lootfx::get(i.sprite).name);
+        str(lootfx::get(i.sprite));
       } else {
         str("???");
       }

@@ -17,9 +17,7 @@ namespace lootfx {
     for (auto & m : map) m = {};
 
     rest.truncate(0);
-    for (auto k : data.keys) rest.push_back_doubling(fx {
-      .name = jute::heap{ k }
-    });
+    for (auto k : data.keys) rest.push_back_doubling(k);
   }
 
   void run(jute::view src) try {
