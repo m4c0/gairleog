@@ -16,12 +16,17 @@ namespace lootfx {
 
   export void run(jute::view);
 
-  export void pick(int s) {
+  void apply(jute::view key);
+  void pick(int s) {
     if (has(s)) return;
     if (rest.size() == 0) return;
 
     auto n = rng::rand(rest.size());
     map[s] = rest[n];
     rest[n] = rest.pop_back();
+  }
+  export void apply(int s) {
+    pick(s);
+    apply(get(s));
   }
 }

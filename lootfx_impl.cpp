@@ -38,4 +38,9 @@ namespace lootfx {
   } catch (const parser_error & e) {
     throw to_file_err("lootfx.lsp", e);
   }
+
+  void apply(jute::view key) try {
+  } catch (const parser_error & e) {
+    throw to_file_err("lootfx.lsp", e);
+  }
 }

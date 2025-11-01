@@ -71,7 +71,7 @@ static void on_inventory() {
   handle(KEY_DOWN, K_DOWN, [] { sel = (sel < inv::size() - 1) ? sel + 1 : sel; });
 
   handle(KEY_DOWN, K_ENTER, [] {
-    lootfx::pick(inv::at(sel).sprite);
+    lootfx::apply(inv::at(sel).sprite);
     inv::consume(sel);
     while (sel == inv::size()) sel--;
   });
