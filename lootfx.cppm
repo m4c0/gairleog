@@ -5,6 +5,12 @@ import jute;
 import rng;
 
 namespace lootfx {
+  export enum class action {
+    heal,
+    str,
+  };
+  export using action_list_t = hai::chain<action>;
+
   hai::array<jute::view> map { 4096 };
   hai::varray<jute::view> rest { 16 };
 
@@ -16,7 +22,7 @@ namespace lootfx {
 
   export void run(jute::view);
 
-  void apply(jute::view key);
+  void apply(jute::view key, action_list_t * result);
   void pick(int s) {
     if (has(s)) return;
     if (rest.size() == 0) return;
@@ -25,8 +31,10 @@ namespace lootfx {
     map[s] = rest[n];
     rest[n] = rest.pop_back();
   }
-  export void apply(int s) {
+  export action_list_t apply(int s) {
+    action_list_t result { 8 };
     pick(s);
-    apply(get(s));
+    apply(get(s), &result);
+    return result;
   }
 }

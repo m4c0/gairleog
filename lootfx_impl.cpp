@@ -39,14 +39,20 @@ namespace lootfx {
     throw to_file_err("lootfx.lsp", e);
   }
 
-  void apply(jute::view key) try {
+  struct action_context : basic_context<node> {
+    action_list_t * r;
+  };
+  void apply(jute::view key, action_list_t * r) try {
     if (!data.nodes.has(key)) return;
 
-    basic_context<node> ctx {};
+    action_context ctx {};
+    ctx.r = r;
     ctx.fns["heal"] = [](auto n, auto aa, auto as) -> const node * {
+      static_cast<action_context *>(n->ctx)->r->push_back(action::heal);
       return n;
     };
     ctx.fns["str"] = [](auto n, auto aa, auto as) -> const node * {
+      static_cast<action_context *>(n->ctx)->r->push_back(action::str);
       return n;
     };
     ctx.eval(data.nodes[key]);
