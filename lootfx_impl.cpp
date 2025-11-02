@@ -28,8 +28,8 @@ namespace lootfx {
 
     basic_context<node> ctx { data.alloc };
     ctx.fns["fx"] = [](auto n, auto aa, auto as) -> const node * {
-      if (as != 2) err("expecting a name and an action");
-      if (!is_atom(aa[0])) err("expecting an atom as the name");
+      if (as != 2) err(n, "expecting a name and an action");
+      if (!is_atom(aa[0])) err(aa[0], "expecting an atom as the name");
       data.nodes[aa[0]->atom] = aa[1];
       data.keys.push_back_doubling(aa[0]->atom);
       return n;
@@ -45,6 +45,7 @@ namespace lootfx {
   template<action A>
   static const node * act(const node * n, const node * const * aa, unsigned as) {
     static_cast<action_context *>(n->ctx)->r->push_back(A);
+    if (as != 0) err(n, "expecting no parameter");
     return n;
   }
   void apply(jute::view key, action_list_t * r) try {
