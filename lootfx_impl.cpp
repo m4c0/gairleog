@@ -40,6 +40,16 @@ namespace lootfx {
   }
 
   void apply(jute::view key) try {
+    if (!data.nodes.has(key)) return;
+
+    basic_context<node> ctx {};
+    ctx.fns["heal"] = [](auto n, auto aa, auto as) -> const node * {
+      return n;
+    };
+    ctx.fns["str"] = [](auto n, auto aa, auto as) -> const node * {
+      return n;
+    };
+    ctx.eval(data.nodes[key]);
   } catch (const parser_error & e) {
     throw to_file_err("lootfx.lsp", e);
   }
