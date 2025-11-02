@@ -39,20 +39,18 @@ namespace lootfx {
     throw to_file_err("lootfx.lsp", e);
   }
 
-  struct action_context : basic_context<node> {
-    action_list_t * r;
-  };
+  static action_list_t * current;
   template<action A>
   static const node * act(const node * n, const node * const * aa, unsigned as) {
-    static_cast<action_context *>(n->ctx)->r->push_back(A);
     if (as != 0) err(n, "expecting no parameter");
+    current->push_back(A);
     return n;
   }
   void apply(jute::view key, action_list_t * r) try {
     if (!data.nodes.has(key)) return;
+    current = r;
 
-    action_context ctx {};
-    ctx.r = r;
+    basic_context<node> ctx {};
     ctx.fns["heal"] = act<action::heal>;
     ctx.fns["str"]  = act<action::str>;
     ctx.eval(data.nodes[key]);

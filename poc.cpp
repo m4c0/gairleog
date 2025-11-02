@@ -71,7 +71,13 @@ static void on_inventory() {
   handle(KEY_DOWN, K_DOWN, [] { sel = (sel < inv::size() - 1) ? sel + 1 : sel; });
 
   handle(KEY_DOWN, K_ENTER, [] {
-    lootfx::apply(inv::at(sel).sprite);
+    for (auto act : lootfx::apply(inv::at(sel).sprite)) {
+      switch (act) {
+        using enum lootfx::action;
+        case heal: silog::log(silog::debug, "heal"); break;
+        case str:  silog::log(silog::debug, "str"); break;
+      }
+    }
     inv::consume(sel);
     while (sel == inv::size()) sel--;
   });
