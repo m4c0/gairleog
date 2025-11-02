@@ -42,19 +42,18 @@ namespace lootfx {
   struct action_context : basic_context<node> {
     action_list_t * r;
   };
+  template<action A>
+  static const node * act(const node * n, const node * const * aa, unsigned as) {
+    static_cast<action_context *>(n->ctx)->r->push_back(A);
+    return n;
+  }
   void apply(jute::view key, action_list_t * r) try {
     if (!data.nodes.has(key)) return;
 
     action_context ctx {};
     ctx.r = r;
-    ctx.fns["heal"] = [](auto n, auto aa, auto as) -> const node * {
-      static_cast<action_context *>(n->ctx)->r->push_back(action::heal);
-      return n;
-    };
-    ctx.fns["str"] = [](auto n, auto aa, auto as) -> const node * {
-      static_cast<action_context *>(n->ctx)->r->push_back(action::str);
-      return n;
-    };
+    ctx.fns["heal"] = act<action::heal>;
+    ctx.fns["str"]  = act<action::str>;
     ctx.eval(data.nodes[key]);
   } catch (const parser_error & e) {
     throw to_file_err("lootfx.lsp", e);
