@@ -1,6 +1,7 @@
 #pragma leco app
 
 import casein;
+import enemies;
 import ents;
 import hai;
 import map;
@@ -18,6 +19,10 @@ static void load() {
     });
   });
 }
+static void tick() {
+  enemies::tick();
+  load();
+}
 static void on_frame() try {
   ents::reset();
 
@@ -29,6 +34,7 @@ static void on_frame() try {
   v::set_grid({ 16, 16 });
   v::on_frame = [] {};
 
+  casein::handle(casein::KEY_DOWN, casein::K_TAB,   tick);
   casein::handle(casein::KEY_DOWN, casein::K_SPACE, on_frame);
 } catch (const hai::cstr & err) {
   silog::die("%s", err.begin());
