@@ -1,4 +1,5 @@
 (def X (random pot candles grass empty empty))
+(def E (random enemy empty empty))
 (random
   (do
     (def . (random grass empty empty))

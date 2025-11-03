@@ -3,6 +3,14 @@
 (entdef apple  (food) (spr items/food/appletomato_red))
 (entdef potato (food) (spr items/food/potato_orange))
 
+(entdef enemy
+  (solid)
+  (enemy)
+  (random
+    (spr characters/beast_snake)
+    (spr characters/spirit_will_o_the_wisp)
+  ))
+
 (entdef boulder
   (solid)
   (random
