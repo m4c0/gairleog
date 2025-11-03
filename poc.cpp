@@ -2,6 +2,7 @@
 
 import casein;
 import dotz;
+import enemies;
 import ents;
 import hai;
 import hitdefs;
@@ -131,7 +132,7 @@ static constexpr const auto move(int dx, int dy) {
       if (!p.flags.player) return;
       switch (ents::move(&p, { dx, dy })) {
         using enum ents::move_outcome;
-        case none: break;
+        case none: enemies::tick(); break;
         case exit: v::on_frame = on_exit; break;
       }
     });
