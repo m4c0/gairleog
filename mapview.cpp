@@ -22,6 +22,7 @@ static void load() {
 static void on_frame() {
   g_map.build();
   load();
+  v::set_grid({ 16, 16 });
   v::on_frame = [] {};
 
   casein::handle(casein::KEY_DOWN, casein::K_SPACE, on_frame);
@@ -30,7 +31,6 @@ static void on_frame() {
 const int i = [] {
   try {
     res::load_all([] {
-      v::set_grid({ 16, 16 });
       v::on_frame = on_frame;
     });
   } catch (const hai::cstr & e) {
