@@ -99,9 +99,14 @@ static void on_inventory() {
       if (!i.sprite) continue;
 
       auto a = inv_alpha(y);
+      auto s = 1.0f / (dotz::abs(y / 3.0f) + 1.0f);
+
+      float xx = -2.0f;
+      float yy = (y * 1.5f - 0.5f) * s;
 
       m->push({
-        .pos { -3.0f, y - 0.5f },
+        .pos { xx - s, yy },
+        .scale { s },
         .mult = a,
         .id = i.sprite,
       });
@@ -109,7 +114,8 @@ static void on_inventory() {
       const auto str = [&](jute::view str) {
         for (int i = 0; i < str.size(); i++) {
           m->push({
-            .pos { -2.0f + i, y - 0.5f },
+            .pos { xx + i * s, yy },
+            .scale { s },
             .mult = a,
             .id = font + str[i],
           });
