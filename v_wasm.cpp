@@ -85,12 +85,16 @@ namespace v {
     vertex_attrib_divisor(1, 1);
 
     enable_vertex_attrib_array(2);
-    vertex_attrib_i_pointer(2, 1, UNSIGNED_INT, stride, traits::offset_of(&v::sprite::id));
+    vertex_attrib_pointer(2, 2, FLOAT, false, stride, traits::offset_of(&v::sprite::scale));
     vertex_attrib_divisor(2, 1);
 
     enable_vertex_attrib_array(3);
-    vertex_attrib_pointer(3, 1, FLOAT, false, stride, traits::offset_of(&v::sprite::mult));
+    vertex_attrib_i_pointer(3, 1, UNSIGNED_INT, stride, traits::offset_of(&v::sprite::id));
     vertex_attrib_divisor(3, 1);
+
+    enable_vertex_attrib_array(4);
+    vertex_attrib_pointer(4, 1, FLOAT, false, stride, traits::offset_of(&v::sprite::mult));
+    vertex_attrib_divisor(4, 1);
   }
 
   void load_texture(jute::view name) {
