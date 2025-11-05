@@ -134,8 +134,7 @@ static void on_inventory() {
 
 static constexpr const auto move(int dx, int dy) {
   return [=] {
-    ents::foreach([&](auto & p) {
-      if (!p.flags.player) return;
+    ents::foreach({ .player = true }, [&](auto & p) {
       switch (ents::move(&p, { dx, dy })) {
         using enum ents::move_outcome;
         case none: enemies::tick(); break;

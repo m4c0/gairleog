@@ -17,13 +17,11 @@ namespace enemies {
 
   export void tick() {
     dotz::ivec2 player {};
-    ents::foreach([&](auto & p) {
-      if (p.flags.player) player = p.pos;
+    ents::foreach({ .player = true }, [&](auto & p) {
+      player = p.pos;
     });
 
-    ents::foreach([&](auto & p) {
-      if (!p.flags.enemy) return;
-
+    ents::foreach({ .enemy = true }, [&](auto & p) {
       ents::move(&p, next_move(p, player));
     });
   }

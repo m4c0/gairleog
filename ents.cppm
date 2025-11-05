@@ -7,6 +7,8 @@ import inv;
 import tiledefs;
 
 namespace ents {
+  export using flags = tiledefs::flags;
+
   export struct t : tiledefs::t {
     dotz::ivec2 pos {};
     unsigned life {};
@@ -16,6 +18,14 @@ namespace ents {
 
   export void foreach(auto && fn) {
     for (auto & e : ents) if (e.life) fn(e);
+  }
+  export void foreach(flags flags, auto && fn) {
+    auto flg = tiledefs::bit_of(flags);
+    for (auto & e : ents) {
+      if (!e.life) continue;
+      if ((tiledefs::bit_of(e.flags) & flg) != flg) continue;
+      fn(e);
+    }
   }
 
   export void reset() {
