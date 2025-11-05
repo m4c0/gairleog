@@ -26,12 +26,12 @@ namespace res {
     });
   }
 
-  static void load(jute::view sprdef_file, hai::fn<void> cb) try {
+  static void load(jute::view sprdef_file, hai::fn<void> cb) {
     sires::on_error([](auto ptr, auto msg) {
       throw msg.cstr();
     });
     safe_load(sprdef_file, [=](auto src) mutable {
-      sprdef::run(src);
+      sprdef::run(sprdef_file, src);
 
       safe_load("entdefs.lsp", [=](auto src) mutable {
         entdefs::run(src);
@@ -55,8 +55,6 @@ namespace res {
         });
       });
     });
-  } catch (const sprdef::error & e) {
-    throw lispy::to_file_err(sprdef_file, e);
   }
   export void load_all(void (*cb)()) {
     load("pixelite2.lsp", cb);
