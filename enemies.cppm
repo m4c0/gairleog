@@ -6,12 +6,15 @@ import rng;
 
 namespace enemies {
   static dotz::ivec2 next_move(const ents::t & e, dotz::ivec2 player) {
-    switch (rng::rand(4)) {
-      case 0: return { -1, 0 };
-      case 1: return { 1, 0 };
-      case 2: return { 0, -1 };
-      case 3: return { 0, 1 };
-      default: return {};
+    auto d = e.pos - player;
+    if (dotz::length(d) > 4) {
+      switch (rng::rand(4)) {
+        case 0: return { -1, 0 };
+        case 1: return { 1, 0 };
+        case 2: return { 0, -1 };
+        case 3: return { 0, 1 };
+        default: return {};
+      }
     }
   }
 
