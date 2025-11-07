@@ -23,6 +23,14 @@ static void tick() {
   enemies::tick();
   load();
 }
+static constexpr const auto move(int dx, int dy) {
+  return [=] {
+    ents::foreach({ .player = true }, [&](auto & p) {
+      ents::move(&p, { dx, dy });
+      load();
+    });
+  };
+}
 static void on_frame() try {
   ents::reset();
 
@@ -34,8 +42,15 @@ static void on_frame() try {
   v::set_grid({ 16, 16 });
   v::on_frame = [] {};
 
-  casein::handle(casein::KEY_DOWN, casein::K_TAB,   tick);
-  casein::handle(casein::KEY_DOWN, casein::K_SPACE, on_frame);
+  using namespace casein;
+
+  handle(KEY_DOWN, K_TAB,   tick);
+  handle(KEY_DOWN, K_SPACE, on_frame);
+
+  handle(KEY_DOWN, K_UP,    move(0, -1));
+  handle(KEY_DOWN, K_DOWN,  move(0, +1));
+  handle(KEY_DOWN, K_LEFT,  move(-1, 0));
+  handle(KEY_DOWN, K_RIGHT, move(+1, 0));
 } catch (const hai::cstr & err) {
   silog::die("%s", err.begin());
 }
