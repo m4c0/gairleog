@@ -17,6 +17,7 @@ namespace enemies {
       }
     }
 
+    // TODO: A*
     auto ad = dotz::abs(d);
     if (ad.x > ad.y) {
       return { -dotz::sign(d.x), 0 };
