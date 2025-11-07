@@ -16,6 +16,13 @@ namespace enemies {
         default: return {};
       }
     }
+
+    auto ad = dotz::abs(d);
+    if (ad.x > ad.y) {
+      return { -dotz::sign(d.x), 0 };
+    } else {
+      return { 0, -dotz::sign(d.y )};
+    }
   }
 
   export void tick() {
