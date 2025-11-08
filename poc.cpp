@@ -51,6 +51,7 @@ static void on_exit() try {
   silog::die("%s", err.begin());
 }
 
+static int g_sel = 0;
 static float inv_alpha(int y) {
   switch (dotz::abs(y)) {
     case 0: return 1.0;
@@ -60,30 +61,30 @@ static float inv_alpha(int y) {
     default: return 0.0;
   }
 }
-static void on_inventory() {
-  static int sel;
-
+static void inv_setup() {
   using namespace casein;
-  reset_k(KEY_DOWN);
-  reset_k(KEY_UP);
 
   handle(KEY_DOWN, K_ESCAPE, on_game);
-  handle(KEY_DOWN, K_UP,   [] { sel = (sel == 0) ? 0 : sel - 1; });
-  handle(KEY_DOWN, K_DOWN, [] { sel = (sel < inv::size() - 1) ? sel + 1 : sel; });
+  handle(KEY_DOWN, K_UP,   [] { g_sel = (g_sel == 0) ? 0 : g_sel - 1; });
+  handle(KEY_DOWN, K_DOWN, [] { g_sel = (g_sel < inv::size() - 1) ? g_sel + 1 : g_sel; });
 
   handle(KEY_DOWN, K_ENTER, [] {
-    for (auto act : lootfx::apply(inv::at(sel).sprite)) {
+    for (auto act : lootfx::apply(inv::at(g_sel).sprite)) {
       switch (act) {
         using enum lootfx::action;
         case heal: silog::log(silog::debug, "heal"); break;
         case str:  silog::log(silog::debug, "str"); break;
       }
     }
-    inv::consume(sel);
-    while (sel == inv::size()) sel--;
+    inv::consume(g_sel);
+    while (g_sel == inv::size()) g_sel--;
   });
+}
+static void on_inventory() {
+  using namespace casein;
+  reset_k(KEY_DOWN);
+  reset_k(KEY_UP);
 
-  sel = 0;
   v::on_frame = [] {
     auto font = sprdef::get("font");
     auto m = v::map();
@@ -95,7 +96,7 @@ static void on_inventory() {
     }
 
     for (auto y = -3; y <= 3; y++)  {
-      auto & i = inv::at(y + sel);
+      auto & i = inv::at(y + g_sel);
       if (!i.sprite) continue;
 
       auto a = inv_alpha(y);
@@ -130,6 +131,9 @@ static void on_inventory() {
     }
     v::set_grid({ 0, 6 });
   };
+
+  g_sel = 0;
+  inv_setup();
 }
 
 static constexpr const auto move(int dx, int dy) {
