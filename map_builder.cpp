@@ -1,5 +1,6 @@
 module map;
 import dotz;
+import entdefs;
 import perlin;
 import rng;
 import roomdefs;
@@ -110,19 +111,6 @@ void map::build() {
     }
   }
 
-  data[1][1] = {{
-    .light = 1,
-    .sprite = sprdef::get("characters/human_knight"),
-    .flags = {
-      .player = true,
-      .solid = true,
-    },
-  }};
-  data[h - 2][w - 2] = {{
-    .light = 2,
-    .sprite = sprdef::get("environment/props/door_closed"),
-    .flags {
-      .exit = true,
-    }},
-  };
+  data[1][1] = { entdefs::get("player") };
+  data[h - 2][w - 2] = { entdefs::get("exit") };
 }

@@ -1,5 +1,16 @@
 (entdef empty)
 
+(entdef player
+  (light 1)
+  (player)
+  (solid)
+  (spr characters/human_knight))
+
+(entdef exit
+  (light 1)
+  (exit)
+  (spr environment/props/door_closed))
+
 (entdef apple  (food) (spr items/food/appletomato_red))
 (entdef potato (food) (spr items/food/potato_orange))
 
