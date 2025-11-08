@@ -2,6 +2,7 @@
 
 (entdef player
   (light 1)
+  (life 10)
   (player)
   (solid)
   (spr characters/human_knight))
@@ -17,6 +18,7 @@
 (entdef enemy
   (solid)
   (enemy)
+  (loot apple)
   (random
     (spr characters/beast_snake)
     (spr characters/spirit_will_o_the_wisp)
