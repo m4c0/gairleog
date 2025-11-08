@@ -3,8 +3,6 @@
   (room !. .!)
   (room !. ..)
   (room !! ..)
-  (room !! !.)
-  (room !! !!)
 
   (room ... ...)
   (room !.. .!.)
