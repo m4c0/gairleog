@@ -81,7 +81,7 @@ namespace {
   }
 }
 
-void make_walls(map & map);
+void make_walls(perlin & pln, map & map);
 
 void map::build() {
   for (auto y = 0; y < h; y++) {
@@ -93,7 +93,9 @@ void map::build() {
   for (auto x = 0; x < w; x++) data[0][x] = data[h - 1][x] = wall;
 
   (w > h ? vsplit : hsplit)(*this, {1,1}, {w-2,h-2});
-  make_walls(*this);
+
+  perlin pln {};
+  make_walls(pln, *this);
 
   const unsigned bases[] {
     sprdef::get("environment/walls/brick_clay"),
@@ -102,7 +104,6 @@ void map::build() {
     sprdef::get("environment/walls/walls_dungeon_gray"),
     sprdef::get("environment/walls/walls_dungeon_yellow"),
   };
-  perlin pln {};
   for (auto y = 0; y < h; y++) {
     for (auto x = 0; x < w; x++) {
       if (!data[y][x].flags.wall) continue;
