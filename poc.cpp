@@ -15,6 +15,7 @@ import res;
 import silog;
 import sitime;
 import sprdef;
+import sv;
 import tiledefs;
 import v;
 
@@ -123,6 +124,14 @@ static void on_inventory() {
         .pos { -4.0f, -0.5f },
         .id = font + '>',
       });
+    } else {
+      constexpr const auto str = "No items"_sv;
+      for (int i = 0; i < str.size(); i++) {
+        m->push({
+          .pos { -2.0f + i, -0.5f },
+          .id = font + str[i],
+        });
+      }
     }
 
     auto ms = g_sel_anim.millis() * 10;
