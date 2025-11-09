@@ -61,6 +61,7 @@ namespace ents {
             res = move_outcome::exit;
             break;
           case hit:
+            // TODO: attack anim
             p_pos = ent->pos;
             d.life--;
             if (!d.life) {
@@ -72,6 +73,7 @@ namespace ents {
             }
             break;
           case miss:
+            // TODO: attack anim
             p_pos = ent->pos;
             break;
           case pick:

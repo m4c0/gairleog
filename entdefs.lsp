@@ -5,7 +5,8 @@
   (life 10)
   (player)
   (solid)
-  (spr characters/human_knight))
+  (spr characters/human_knight)
+  (atkspr fx/fx_blue_slash))
 
 (entdef exit
   (light 1)
