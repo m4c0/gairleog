@@ -1,6 +1,7 @@
 export module tiledefs;
 import jute;
 import lispy;
+import sprdef;
 
 namespace tiledefs {
   export struct flags {
@@ -23,10 +24,10 @@ namespace tiledefs {
   export struct t {
     jute::heap loot {};
 
-    float    light         {};
-    unsigned life          {};
-    unsigned sprite        {};
-    unsigned attack_sprite {};
+    float        light         {};
+    unsigned     life          {};
+    unsigned     sprite        {};
+    sprdef::pair attack_sprite {};
 
     flags    flags  {};
   };

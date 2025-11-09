@@ -22,16 +22,16 @@ namespace fx {
     data.truncate(0);
   }
 
-  export void add(dotz::vec2 p, sv sprite) try {
+  export void add(dotz::vec2 p, sprdef::pair sprite) {
+    if (!sprite.id) return;
+
     mtx::lock l { &mutex };
 
     data.push_back(t {
-      .spr = sprdef::get(sprite),
+      .spr = sprite,
       .timer = {},
       .pos = p,
     });
-  } catch (const hai::cstr & err) {
-    silog::log(silog::error, "Missing effect in sprdefs: %s", err.begin());
   }
 
   export void draw(auto & m) {

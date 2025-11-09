@@ -4,6 +4,7 @@ import casein;
 import dotz;
 import enemies;
 import ents;
+import fx;
 import hai;
 import hitdefs;
 import inv;
@@ -43,6 +44,7 @@ static void on_frame() {
       .id = d.sprite,
     });
   });
+  fx::draw(m);
 }
 
 static void on_game();

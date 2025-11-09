@@ -31,6 +31,11 @@ namespace entdefs {
     if (!sprdef::has(name->atom)) lispy::err(name, "invalid sprite name");
     return sprdef::get(name->atom).id;
   }
+  static auto to_spr_pair(const lispy::node * name) {
+    if (!lispy::is_atom(name)) lispy::err(name, "spr expects atom as name");
+    if (!sprdef::has(name->atom)) lispy::err(name, "invalid sprite name");
+    return sprdef::get(name->atom);
+  }
 
   static const auto entdef_ctx = [] {
     basic_context<cnode> ctx {};
@@ -38,7 +43,7 @@ namespace entdefs {
     ctx.fns["life"]   = mem_fn<&cnode::attr, &cnode::life,          to_life>;
     ctx.fns["loot"]   = mem_fn<&cnode::attr, &cnode::loot,          to_loot>;
     ctx.fns["spr"]    = mem_fn<&cnode::attr, &cnode::sprite,        to_spr>;
-    ctx.fns["atkspr"] = mem_fn<&cnode::attr, &cnode::attack_sprite, to_spr>;
+    ctx.fns["atkspr"] = mem_fn<&cnode::attr, &cnode::attack_sprite, to_spr_pair>;
     tiledefs::lispy<cnode>(ctx);
     return ctx;
   }();

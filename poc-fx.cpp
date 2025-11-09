@@ -6,6 +6,7 @@ import hai;
 import res;
 import rng;
 import silog;
+import sprdef;
 import v;
 
 static void on_frame() {
@@ -24,7 +25,7 @@ const int i = [] {
       handle(KEY_DOWN, K_SPACE, [] {
         float x = rng::rand(6) - 3.f;
         float y = rng::rand(6) - 3.f;
-        fx::add({x, y}, "fx/fx_blue_bite");
+        fx::add({x, y}, sprdef::get("fx/fx_blue_bite"));
       });
 
       v::on_frame = on_frame;

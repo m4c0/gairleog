@@ -1,6 +1,7 @@
 export module ents;
 import dotz;
 import entdefs;
+import fx;
 import hai;
 import hitdefs;
 import inv;
@@ -61,7 +62,7 @@ namespace ents {
             res = move_outcome::exit;
             break;
           case hit:
-            // TODO: attack anim
+            fx::add(d.pos, ent->attack_sprite);
             p_pos = ent->pos;
             d.life--;
             if (!d.life) {
