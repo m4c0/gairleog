@@ -17,6 +17,11 @@ namespace fx {
   hai::varray<t> data { 16 };
   mtx::mutex mutex {};
 
+  export void reset() {
+    mtx::lock l { &mutex };
+    data.truncate(0);
+  }
+
   export void add(dotz::vec2 p, sv sprite) try {
     mtx::lock l { &mutex };
 
