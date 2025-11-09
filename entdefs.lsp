@@ -20,6 +20,7 @@
   (solid)
   (enemy)
   (loot apple)
+  (atkspr fx/themed/fx_frost_bite)
   (random
     (spr characters/beast_snake)
     (spr characters/spirit_will_o_the_wisp)
