@@ -20,7 +20,7 @@ static FILE * lsp;
 
 static void process(jute::view file) {
   auto fid = file.split('/').after.rsplit('.').before;
-  fputln(lsp, "(sprdef ", fid, " ", next_id, ")");
+  auto id = next_id;
   auto img = stbi::load(jojo::read_cstr(file));
   auto data = reinterpret_cast<const stbi::pixel *>(*img.data);
   // TODO: deal with animations
@@ -41,6 +41,8 @@ static void process(jute::view file) {
       next_id++;
     }
   }
+
+  fputln(lsp, "(sprdef ", fid, " ", id, " ", next_id - id, ")");
 }
 
 static void recurse(const char * dir) {
@@ -56,8 +58,7 @@ static void recurse(const char * dir) {
 }
 
 static void embed_font() {
-  fputln(lsp, "(sprdef font ", next_id, ")");
-
+  auto id = next_id;
   auto img = stbi::load(jojo::read("dungeon-437.png"));
   auto * ptr = reinterpret_cast<unsigned *>(*img.data);
   for (auto cy = 0; cy < 16; cy++) {
@@ -77,13 +78,15 @@ static void embed_font() {
       next_id++;
     }
   }
+
+  fputln(lsp, "(sprdef font ", id, " ", next_id - id, ")");
 }
 
 int main() {
   if (mtime::of("sprites/pixelite2.lsp") && mtime::of("sprites/pixelite2.png")) return 0;
 
   hay<FILE *, sysstd::fopen, fclose> lsp { "sprites/pixelite2.lsp", "wb" };
-  fputln(lsp, "(sprdef empty 0)");
+  fputln(lsp, "(sprdef empty 0 0)");
 
   ::lsp = lsp;
   recurse("PixeLike2_AssetPack");

@@ -18,7 +18,7 @@ namespace sprdef {
     int spr_id;
     bool valid;
   };
-  static auto sprdef(const lispy::node * n, const custom_node * def, const custom_node * val) {
+  static auto sprdef(const lispy::node * n, const custom_node * def, const custom_node * val, const custom_node * qty) {
     if (!lispy::is_atom(def)) lispy::err(def, "def name must be an atom");
     map()[def->atom] = lispy::to_i(val);
     return n;
