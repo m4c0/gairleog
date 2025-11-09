@@ -95,7 +95,16 @@ static void inv_setup() {
       }
     }
     inv::consume(g_sel);
-    while (g_sel == inv::size()) g_sel--;
+    if (g_sel == inv::size()) {
+      reset_keys();
+      g_sel_anim = {};
+      g_tgt_sel = g_sel - 1;
+    } else {
+      reset_keys();
+      g_sel_anim = {};
+      g_tgt_sel = g_sel;
+      g_sel -= 1;
+    }
   });
 }
 static void on_inventory() {
