@@ -98,11 +98,11 @@ void map::build() {
   make_walls(pln, *this);
 
   const unsigned bases[] {
-    sprdef::get("environment/walls/brick_clay"),
-    sprdef::get("environment/walls/walls_cave_brown"),
-    sprdef::get("environment/walls/walls_cave_gray"),
-    sprdef::get("environment/walls/walls_dungeon_gray"),
-    sprdef::get("environment/walls/walls_dungeon_yellow"),
+    sprdef::get("environment/walls/brick_clay").id,
+    sprdef::get("environment/walls/walls_cave_brown").id,
+    sprdef::get("environment/walls/walls_cave_gray").id,
+    sprdef::get("environment/walls/walls_dungeon_gray").id,
+    sprdef::get("environment/walls/walls_dungeon_yellow").id,
   };
   for (auto y = 0; y < h; y++) {
     for (auto x = 0; x < w; x++) {

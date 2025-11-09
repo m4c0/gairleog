@@ -102,7 +102,7 @@ static void on_inventory() {
   v::on_frame = [] {
     if (g_sel == g_tgt_sel) inv_setup();
 
-    auto font = sprdef::get("font");
+    auto font = sprdef::get("font").id;
     auto m = v::map();
     if (inv::size() > 0) {
       m->push({

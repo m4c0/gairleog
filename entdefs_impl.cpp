@@ -29,7 +29,7 @@ namespace entdefs {
   static unsigned to_spr(const lispy::node * name) {
     if (!lispy::is_atom(name)) lispy::err(name, "spr expects atom as name");
     if (!sprdef::has(name->atom)) lispy::err(name, "invalid sprite name");
-    return sprdef::get(name->atom);
+    return sprdef::get(name->atom).id;
   }
 
   static const auto entdef_ctx = [] {
