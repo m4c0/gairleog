@@ -38,8 +38,11 @@ static void on_frame() {
 
   auto m = v::map();
   ents::foreach([&](const auto & d) {
+    auto p = d.pos;
+    if (d.size.x < 1) p.x++;
     m->push({
-      .pos = d.pos,
+      .pos = p,
+      .scale = d.size,
       .mult = g_map.at(d.pos).clight,
       .id = d.sprite,
     });

@@ -12,6 +12,7 @@ namespace ents {
 
   export struct t : tiledefs::t {
     dotz::ivec2 pos {};
+    dotz::vec2 size { 1 };
     unsigned life {};
     unsigned poison {};
   };
@@ -88,6 +89,7 @@ namespace ents {
         }
       }
     });
+    if (by.x != 0) ent->size.x = by.x;
     ent->pos = p_pos;
     return res;
   }
