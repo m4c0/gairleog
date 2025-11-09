@@ -3,10 +3,12 @@
 import casein;
 import dotz;
 import hai;
-import sprdef;
+import mtx;
 import res;
+import rng;
 import silog;
 import sitime;
+import sprdef;
 import sv;
 import v;
 
@@ -18,15 +20,21 @@ namespace fx {
   };
 
   static hai::varray<t> data { 16 };
+  static mtx::mutex mutex {};
 
   void add(dotz::vec2 p, sv sprite) {
+    mtx::lock l { &mutex };
+
     data.push_back(t {
       .spr = sprdef::get(sprite),
+      .timer = {},
       .pos = p,
     });
   }
 
   void draw(auto & m) {
+    mtx::lock l { &mutex };
+
     for (int i = data.size() - 1; i >= 0; i--) {
       auto & t = data[i];
 
@@ -55,10 +63,14 @@ static void on_frame() try {
 
 const int i = [] {
   try {
+    rng::seed();
+
     res::load_all([] {
       using namespace casein;
       handle(KEY_DOWN, K_SPACE, [] {
-        fx::add({}, "fx/fx_blue_bite");
+        float x = rng::rand(6) - 3.f;
+        float y = rng::rand(6) - 3.f;
+        fx::add({x, y}, "fx/fx_blue_bite");
       });
 
       v::on_frame = on_frame;
