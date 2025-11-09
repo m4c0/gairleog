@@ -27,6 +27,6 @@ namespace inv {
   export void consume(int sel) {
     if (sel < 0 || sel >= data.size()) return;
     for (auto i = sel; i < data.size() - 1; i++) data[i] = data[i + 1];
-    data.truncate(data.size() - 1);
+    data.pop_back();
   }
 }
