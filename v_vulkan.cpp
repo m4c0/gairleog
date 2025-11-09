@@ -27,6 +27,7 @@ struct app_stuff {
   vee::gr_pipeline ppl = vee::create_graphics_pipeline({
     .pipeline_layout = *pl,
     .render_pass = *rp,
+    .back_face_cull = false,
     .shaders {
       voo::shader("gairleog.vert.spv").pipeline_vert_stage(),
       voo::shader("gairleog.frag.spv").pipeline_frag_stage(),
