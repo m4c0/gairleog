@@ -7,29 +7,48 @@ import sprdef;
 import res;
 import silog;
 import sitime;
+import sv;
 import v;
 
-static sprdef::pair spr;
-static sitime::stopwatch timer;
-static dotz::vec2 pos;
+namespace fx {
+  struct t {
+    sprdef::pair spr {};
+    sitime::stopwatch timer {};
+    dotz::vec2 pos {};
+  };
+
+  static hai::varray<t> data { 16 };
+
+  void add(dotz::vec2 p, sv sprite) {
+    data.push_back(t {
+      .spr = sprdef::get(sprite),
+      .pos = p,
+    });
+  }
+
+  void draw(auto & m) {
+    for (int i = data.size() - 1; i >= 0; i--) {
+      auto & t = data[i];
+
+      auto frame = t.timer.millis() / 50;
+      if (!t.spr.id || frame >= t.spr.qty) {
+        t = data.pop_back();
+        continue;
+      }
+
+      m->push({
+        .pos = t.pos,
+        .id = t.spr.id + frame,
+      });
+    }
+  }
+}
 
 static void on_frame() try {
   v::set_grid({ 0, 6 });
 
   auto m = v::map();
-
-  if (spr.id == 0) return;
-
-  auto frame = timer.millis() / 50;
-  if (frame >= spr.qty) {
-    spr = {};
-    return;
-  }
-
-  m->push({
-    .pos = pos,
-    .id = spr.id + frame,
-  });
+  fx::draw(m);
 } catch (const hai::cstr & err) {
   silog::die("%s", err.begin());
 }
@@ -39,9 +58,7 @@ const int i = [] {
     res::load_all([] {
       using namespace casein;
       handle(KEY_DOWN, K_SPACE, [] {
-        pos = {};
-        spr = sprdef::get("fx/fx_blue_bite");
-        timer = {};
+        fx::add({}, "fx/fx_blue_bite");
       });
 
       v::on_frame = on_frame;
