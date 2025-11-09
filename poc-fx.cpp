@@ -1,5 +1,7 @@
 #pragma leco app
 
+import casein;
+import dotz;
 import hai;
 import sprdef;
 import res;
@@ -9,16 +11,24 @@ import v;
 
 static sprdef::pair spr;
 static sitime::stopwatch timer;
+static dotz::vec2 pos;
 
 static void on_frame() try {
   v::set_grid({ 0, 6 });
 
-  auto frame = timer.millis() / 50;
-
   auto m = v::map();
+
+  if (spr.id == 0) return;
+
+  auto frame = timer.millis() / 50;
+  if (frame >= spr.qty) {
+    spr = {};
+    return;
+  }
+
   m->push({
-    .pos = { 0 },
-    .id = spr.id + frame % spr.qty,
+    .pos = pos,
+    .id = spr.id + frame,
   });
 } catch (const hai::cstr & err) {
   silog::die("%s", err.begin());
@@ -27,8 +37,12 @@ static void on_frame() try {
 const int i = [] {
   try {
     res::load_all([] {
-      spr = sprdef::get("fx/fx_blue_bite");
-      timer = {};
+      using namespace casein;
+      handle(KEY_DOWN, K_SPACE, [] {
+        pos = {};
+        spr = sprdef::get("fx/fx_blue_bite");
+        timer = {};
+      });
 
       v::on_frame = on_frame;
     });
