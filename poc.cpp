@@ -130,6 +130,21 @@ static void on_inventory() {
       }
     };
 
+    ents::t player {};
+    ents::foreach({ .player = true }, [&](auto p) {
+      player = p;
+    });
+    if (!player.life) return on_game();
+
+    print({
+      .pos { -8.0f, -0.5f },
+      .scale { 0.5f },
+    }, "Life: ");
+    print({
+      .pos { -8.0f, 0.0f },
+      .scale { 0.5f },
+    }, "Str:  ");
+
     if (inv::size() > 0) {
       print({ .pos { -4.0f, -0.5f } }, ">");
     } else {
