@@ -80,6 +80,7 @@ static void inv_setup() {
   using namespace casein;
 
   handle(KEY_DOWN, K_ESCAPE, on_game);
+  handle(KEY_DOWN, K_TAB,    on_game);
   handle(KEY_DOWN, K_UP,   [] {
     reset_keys();
     g_sel_anim = {};
