@@ -5,10 +5,13 @@ import hai;
 import res;
 import silog;
 import sprdef;
+import sv;
 import v;
 
 static void on_frame() {
   v::set_grid({ 6, 6 });
+
+  auto font = sprdef::get("font").id;
 
   auto brown = sprdef::get("fx/fx_brown_bite").id + 4;
   auto blue = sprdef::get("fx/fx_blue_bite").id + 4;
@@ -18,19 +21,18 @@ static void on_frame() {
 
   auto m = v::map();
   struct state {
-    dotz::vec2 aa {};
-    dotz::vec2 bb {};
+    dotz::vec2 pos {};
     dotz::vec2 delta {};
   } s;
   const auto box = [&](dotz::vec2 delta, auto && fn) {
     auto old_delta = s.delta;
-    auto old_pos = s.aa;
+    auto old_pos = s.pos;
 
     s.delta = delta;
     fn();
     
     s.delta = old_delta;
-    s.aa = old_pos + s.delta;
+    s.pos = old_pos + s.delta;
   };
   const auto hbox = [&](auto && fn) {
     box({ 1, 0 }, fn);
@@ -41,13 +43,17 @@ static void on_frame() {
   const auto sprite = [&](auto id) {
     box({}, [&] {
       m->push({
-        .pos = s.aa,
+        .pos = s.pos,
         .id = id,
       });
     });
   };
+  const auto text = [&](sv str) {
+    for (auto c : str) {
+      sprite(font + c);
+    }
+  };
 
-  s.bb = { 6, 8 };
   vbox([&] {
     hbox([&] {
       sprite(brown);
@@ -56,6 +62,7 @@ static void on_frame() {
     });
     hbox([&] {
       sprite(gray);
+      text("ok!");
     });
     hbox([&] {
       sprite(brown);
