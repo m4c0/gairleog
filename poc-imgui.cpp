@@ -22,15 +22,26 @@ static void on_frame() {
     dotz::vec2 delta {};
   } s;
   const auto hbox = [&](auto && fn) {
-    s.delta = { 1, 0 };
+    auto old_delta = s.delta;
+    auto old_x = s.pos.x;
 
+    s.delta = { 1, 0 };
     fn();
     
-    // TODO: unpush delta
-    // TODO: reset x
-    s.pos.x = 0;
-    // TODO: vbox
-    s.pos.y++;
+    s.delta = old_delta;
+    s.pos.x = old_x;;
+    s.pos = s.pos + s.delta;
+  };
+  const auto vbox = [&](auto && fn) {
+    auto old_delta = s.delta;
+    auto old_y = s.pos.y;
+
+    s.delta = { 0, 1 };
+    fn();
+
+    s.delta = old_delta;
+    s.pos.y = old_y;
+    s.pos = s.pos + s.delta;
   };
   const auto sprite = [&](auto id) {
     m->push({
@@ -40,20 +51,22 @@ static void on_frame() {
     s.pos = s.pos + s.delta;
   };
 
-  hbox([&] {
-    sprite(brown);
-    sprite(blue);
-    sprite(purple);
-  });
-  hbox([&] {
-    sprite(gray);
-  });
-  hbox([&] {
-    sprite(brown);
-    sprite(blue);
-    sprite(purple);
-    sprite(orange);
-    sprite(gray);
+  vbox([&] {
+    hbox([&] {
+      sprite(brown);
+      sprite(blue);
+      sprite(purple);
+    });
+    hbox([&] {
+      sprite(gray);
+    });
+    hbox([&] {
+      sprite(brown);
+      sprite(blue);
+      sprite(purple);
+      sprite(orange);
+      sprite(gray);
+    });
   });
 }
 
