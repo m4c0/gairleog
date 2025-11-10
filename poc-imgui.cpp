@@ -2,6 +2,7 @@
 
 import dotz;
 import hai;
+import imgui;
 import res;
 import silog;
 import sprdef;
@@ -20,72 +21,29 @@ static void on_frame() {
   auto orange = sprdef::get("fx/fx_orange_bite").id + 4;
 
   auto m = v::map();
-  struct state {
-    dotz::vec2 pos {};
-    dotz::vec2 delta {};
-    dotz::vec2 scale { 1 };
-  } s;
-  const auto box = [&](dotz::vec2 delta, auto && fn) {
-    auto old_delta = s.delta;
-    auto old_pos = s.pos;
 
-    s.delta = delta;
-    fn();
-    
-    s.delta = old_delta;
-    s.pos = old_pos + s.delta * s.scale;
-  };
-  const auto hbox = [&](auto && fn) {
-    box({ 1.f, 0.f }, fn);
-  };
-  const auto vbox = [&](auto && fn) {
-    box({ 0.f, 1.f }, fn);
-  };
-  const auto scale = [&](dotz::vec2 scale, auto && fn) {
-    auto old_s = s.scale;
-    s.scale = s.scale * scale;
-    fn();
-    s.scale = old_s;
-  };
-  const auto space = [&](dotz::vec2 size) {
-    scale(size, [&] {
-      box({}, [] {});
-    });
-  };
-  const auto sprite = [&](auto id) {
-    box({}, [&] {
-      m->push({
-        .pos = s.pos,
-        .scale = s.scale,
-        .id = id,
-      });
-    });
-  };
-  const auto text = [&](sv str) {
-    for (auto c : str) {
-      sprite(font + c);
-    }
-  };
-
-  vbox([&] {
-    hbox([&] {
-      sprite(brown);
-      sprite(blue);
-      sprite(purple);
-    });
-    scale({ 0.5f }, [&] {
+  using namespace imgui;
+  start(&*m, [&] {
+    vbox([&] {
       hbox([&] {
-        sprite(gray);
-        space({ 0.5f });
-        text("ok!");
+        sprite(brown);
+        sprite(blue);
+        sprite(purple);
       });
-    });
-    hbox([&] {
-      sprite(brown);
-      sprite(blue);
-      sprite(purple);
-      sprite(orange);
-      sprite(gray);
+      scale({ 0.5f }, [&] {
+        hbox([&] {
+          sprite(gray);
+          space({ 0.5f });
+          text(font, "ok!");
+        });
+      });
+      hbox([&] {
+        sprite(brown);
+        sprite(blue);
+        sprite(purple);
+        sprite(orange);
+        sprite(gray);
+      });
     });
   });
 }
