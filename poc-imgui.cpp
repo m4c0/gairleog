@@ -23,6 +23,7 @@ static void on_frame() {
   struct state {
     dotz::vec2 pos {};
     dotz::vec2 delta {};
+    dotz::vec2 scale { 1 };
   } s;
   const auto box = [&](dotz::vec2 delta, auto && fn) {
     auto old_delta = s.delta;
@@ -35,15 +36,22 @@ static void on_frame() {
     s.pos = old_pos + s.delta;
   };
   const auto hbox = [&](auto && fn) {
-    box({ 1, 0 }, fn);
+    box({ s.scale.x, 0.f }, fn);
   };
   const auto vbox = [&](auto && fn) {
-    box({ 0, 1 }, fn);
+    box({ 0.f, s.scale.y }, fn);
+  };
+  const auto scale = [&](dotz::vec2 scale, auto && fn) {
+    auto old_s = s.scale;
+    s.scale = scale;
+    fn();
+    s.scale = old_s;
   };
   const auto sprite = [&](auto id) {
     box({}, [&] {
       m->push({
         .pos = s.pos,
+        .scale = s.scale,
         .id = id,
       });
     });
@@ -62,7 +70,9 @@ static void on_frame() {
     });
     hbox([&] {
       sprite(gray);
-      text("ok!");
+      scale({ 0.5f }, [&] {
+        hbox([&] { text("ok!"); });
+      });
     });
     hbox([&] {
       sprite(brown);
