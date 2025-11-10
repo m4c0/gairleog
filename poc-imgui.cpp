@@ -23,7 +23,7 @@ static void on_frame() {
   auto m = v::map();
 
   using namespace imgui;
-  start(&*m, [&] {
+  start(&*m, {}, [&] {
     vbox([&] {
       hbox([&] {
         sprite(brown);

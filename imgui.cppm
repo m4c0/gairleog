@@ -11,8 +11,8 @@ namespace imgui {
     dotz::vec2 scale { 1 };
   } g_state;
 
-  export void start(v::mapper * m, auto && fn) {
-    g_state = { m };
+  export void start(v::mapper * m, dotz::vec2 pos, auto && fn) {
+    g_state = { .m = m, .pos = pos };
     fn();
   }
 
