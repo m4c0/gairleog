@@ -18,39 +18,36 @@ static void on_frame() {
 
   auto m = v::map();
   struct state {
-    dotz::vec2 pos {};
+    dotz::vec2 aa {};
+    dotz::vec2 bb {};
     dotz::vec2 delta {};
   } s;
-  const auto hbox = [&](auto && fn) {
+  const auto box = [&](dotz::vec2 delta, auto && fn) {
     auto old_delta = s.delta;
-    auto old_x = s.pos.x;
+    auto old_pos = s.aa;
 
-    s.delta = { 1, 0 };
+    s.delta = delta;
     fn();
     
     s.delta = old_delta;
-    s.pos.x = old_x;;
-    s.pos = s.pos + s.delta;
+    s.aa = old_pos + s.delta;
+  };
+  const auto hbox = [&](auto && fn) {
+    box({ 1, 0 }, fn);
   };
   const auto vbox = [&](auto && fn) {
-    auto old_delta = s.delta;
-    auto old_y = s.pos.y;
-
-    s.delta = { 0, 1 };
-    fn();
-
-    s.delta = old_delta;
-    s.pos.y = old_y;
-    s.pos = s.pos + s.delta;
+    box({ 0, 1 }, fn);
   };
   const auto sprite = [&](auto id) {
-    m->push({
-      .pos = s.pos,
-      .id = id,
+    box({}, [&] {
+      m->push({
+        .pos = s.aa,
+        .id = id,
+      });
     });
-    s.pos = s.pos + s.delta;
   };
 
+  s.bb = { 6, 8 };
   vbox([&] {
     hbox([&] {
       sprite(brown);
