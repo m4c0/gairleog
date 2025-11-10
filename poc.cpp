@@ -121,19 +121,19 @@ static void on_inventory() {
 
     auto font = sprdef::get("font").id;
     auto m = v::map();
-    if (inv::size() > 0) {
-      m->push({
-        .pos { -4.0f, -0.5f },
-        .id = font + '>',
-      });
-    } else {
-      constexpr const auto str = "No items"_sv;
+
+    const auto print = [&](v::sprite s, sv str) {
       for (int i = 0; i < str.size(); i++) {
-        m->push({
-          .pos { -2.0f + i, -0.5f },
-          .id = font + str[i],
-        });
+        s.id = font + str[i];
+        m->push(s);
+        s.pos.x += s.scale.x;
       }
+    };
+
+    if (inv::size() > 0) {
+      print({ .pos { -4.0f, -0.5f } }, ">");
+    } else {
+      print({ .pos { -2.0f, -0.5f } }, "No items");
     }
 
     auto ms = g_sel_anim.millis() * 10;
@@ -162,14 +162,11 @@ static void on_inventory() {
       });
 
       const auto str = [&](jute::view str) {
-        for (int i = 0; i < str.size(); i++) {
-          m->push({
-            .pos { xx + i * s, yy },
-            .scale { s },
-            .mult = a,
-            .id = font + str[i],
-          });
-        }
+        print({
+          .pos { xx, yy },
+          .scale { s },
+          .mult = a,
+        }, str);
       };
 
       if (lootfx::has(i.sprite)) {
