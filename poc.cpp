@@ -8,6 +8,7 @@ import ents;
 import fx;
 import hai;
 import hitdefs;
+import imgui;
 import inv;
 import jute;
 import lootfx;
@@ -122,6 +123,26 @@ static void on_inventory() {
     auto font = sprdef::get("font").id;
     auto m = v::map();
 
+    using namespace imgui;
+    start(&*m, { -8.f, -0.5f }, [&] {
+      hbox([&] {
+        scale({ 0.5f }, [&] {
+          vbox([&] {
+            hbox([&] {
+              text(font, "Life: ");
+              text(font, "\1\1\1\1");
+            });
+            space({ 0.1f });
+            hbox([&] {
+              text(font, "Str:  ");
+              text(font, "\1\1\1\1");
+            });
+          });
+        });
+        // text(font, ">");
+      });
+    });
+
     const auto print = [&](v::sprite s, sv str) {
       for (int i = 0; i < str.size(); i++) {
         s.id = font + str[i];
@@ -135,15 +156,6 @@ static void on_inventory() {
       player = p;
     });
     if (!player.life) return on_game();
-
-    print({
-      .pos { -8.0f, -0.5f },
-      .scale { 0.5f },
-    }, "Life: ");
-    print({
-      .pos { -8.0f, 0.0f },
-      .scale { 0.5f },
-    }, "Str:  ");
 
     if (inv::size() > 0) {
       print({ .pos { -4.0f, -0.5f } }, ">");
