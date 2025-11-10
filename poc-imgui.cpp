@@ -1,5 +1,6 @@
 #pragma leco app
 
+import dotz;
 import hai;
 import res;
 import silog;
@@ -16,41 +17,43 @@ static void on_frame() {
   auto orange = sprdef::get("fx/fx_orange_bite").id + 4;
 
   auto m = v::map();
-  m->push({
-    .pos { 0, 0 },
-    .id = brown,
+  struct state {
+    dotz::vec2 pos {};
+    dotz::vec2 delta {};
+  } s;
+  const auto hbox = [&](auto && fn) {
+    s.delta = { 1, 0 };
+
+    fn();
+    
+    // TODO: unpush delta
+    // TODO: reset x
+    s.pos.x = 0;
+    // TODO: vbox
+    s.pos.y++;
+  };
+  const auto sprite = [&](auto id) {
+    m->push({
+      .pos = s.pos,
+      .id = id,
+    });
+    s.pos = s.pos + s.delta;
+  };
+
+  hbox([&] {
+    sprite(brown);
+    sprite(blue);
+    sprite(purple);
   });
-  m->push({
-    .pos { 1, 0 },
-    .id = blue,
+  hbox([&] {
+    sprite(gray);
   });
-  m->push({
-    .pos { 2, 0 },
-    .id = purple,
-  });
-  m->push({
-    .pos { 0, 1 },
-    .id = gray,
-  });
-  m->push({
-    .pos { 0, 2 },
-    .id = orange,
-  });
-  m->push({
-    .pos { 1, 2 },
-    .id = blue,
-  });
-  m->push({
-    .pos { 2, 2 },
-    .id = purple,
-  });
-  m->push({
-    .pos { 3, 2 },
-    .id = orange,
-  });
-  m->push({
-    .pos { 4, 2 },
-    .id = brown,
+  hbox([&] {
+    sprite(brown);
+    sprite(blue);
+    sprite(purple);
+    sprite(orange);
+    sprite(gray);
   });
 }
 
