@@ -1,5 +1,6 @@
 #pragma leco app
 
+import audio;
 import casein;
 import dotz;
 import enemies;
