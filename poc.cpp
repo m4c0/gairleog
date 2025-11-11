@@ -123,6 +123,12 @@ static void on_inventory() {
     auto font = sprdef::get("font").id;
     auto m = v::map();
 
+    ents::t player {};
+    ents::foreach({ .player = true }, [&](auto p) {
+      player = p;
+    });
+    if (!player.life) return on_game();
+
     using namespace imgui;
     start(&*m, { -8.f, -0.5f }, [&] {
       hbox([&] {
@@ -150,12 +156,6 @@ static void on_inventory() {
         s.pos.x += s.scale.x;
       }
     };
-
-    ents::t player {};
-    ents::foreach({ .player = true }, [&](auto p) {
-      player = p;
-    });
-    if (!player.life) return on_game();
 
     if (inv::size() > 0) {
       print({ .pos { -4.0f, -0.5f } }, ">");
