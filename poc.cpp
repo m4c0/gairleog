@@ -158,9 +158,9 @@ static void on_inventory() {
     };
 
     if (inv::size() > 0) {
-      print({ .pos { -4.0f, -0.5f } }, ">");
+      print({ .pos { -2.0f, -0.5f } }, ">");
     } else {
-      print({ .pos { -2.0f, -0.5f } }, "No items");
+      print({ .pos { -0.0f, -0.5f } }, "No items");
     }
 
     auto ms = g_sel_anim.millis() * 10;
@@ -178,7 +178,7 @@ static void on_inventory() {
       auto a = inv_alpha(ry);
       auto s = 1.0f / (dotz::abs(ry / 3.0f) + 1.0f);
 
-      float xx = -2.0f;
+      float xx = -0.0f;
       float yy = (ry * 1.5f - 0.5f) * s;
 
       m->push({
