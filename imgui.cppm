@@ -9,6 +9,7 @@ namespace imgui {
     dotz::vec2 pos {};
     dotz::vec2 delta {};
     dotz::vec2 scale { 1 };
+    float mult { 1 };
   } g_state;
 
   export void start(v::mapper * m, dotz::vec2 pos, auto && fn) {
@@ -33,6 +34,12 @@ namespace imgui {
     box({ 0.f, 1.f }, fn);
   };
 
+  export void mult(float f, auto && fn) {
+    auto old_m = g_state.mult;
+    g_state.mult = g_state.mult * f;
+    fn();
+    g_state.mult = old_m;
+  };
   export void scale(dotz::vec2 s, auto && fn) {
     auto old_s = g_state.scale;
     g_state.scale = g_state.scale * s;
@@ -51,6 +58,7 @@ namespace imgui {
       g_state.m->push({
         .pos = g_state.pos,
         .scale = g_state.scale,
+        .mult = g_state.mult,
         .id = id,
       });
     });
