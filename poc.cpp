@@ -188,19 +188,18 @@ static void on_inventory() {
         .id = i.sprite,
       });
 
-      const auto str = [&](jute::view str) {
-        print({
-          .pos { xx, yy },
-          .scale { s },
-          .mult = a,
-        }, str);
-      };
-
-      if (lootfx::has(i.sprite)) {
-        str(lootfx::get(i.sprite));
-      } else {
-        str("???");
-      }
+      using namespace imgui;
+      start(&*m, { xx, yy }, [&] {
+        scale({ s }, [&] {
+          mult(a, [&] {
+            if (lootfx::has(i.sprite)) {
+              text(font, lootfx::get(i.sprite));
+            } else {
+              text(font, "???");
+            }
+          });
+        });
+      });
     }
     v::set_grid({ 0, 6 });
   };
