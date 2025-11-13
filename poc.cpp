@@ -67,15 +67,6 @@ static void on_exit() try {
 static sitime::stopwatch g_sel_anim {};
 static int g_sel = 0;
 static int g_tgt_sel = 0;
-static float inv_alpha(int y) {
-  switch (dotz::abs(y)) {
-    case 0: return 1.0;
-    case 1: return 0.2;
-    case 2: return 0.08;
-    case 3: return 0.02;
-    default: return 0.0;
-  }
-}
 
 static void on_inv_use() try {
   ents::t * player;
@@ -143,9 +134,9 @@ static void on_inventory() {
     if (!player.life) return on_game();
 
     using namespace imgui;
-    start(&*m, { -8.f, -0.5f }, [&] {
+    start(&*m, { -14.f, -0.5f }, [&] {
       hbox([&] {
-        scale({ 0.5f }, [&] {
+        scale({ 0.75f }, [&] {
           vbox([&] {
             hbox([&] {
               text(font, "Life: ");
@@ -165,7 +156,6 @@ static void on_inventory() {
             });
           });
         });
-        // text(font, ">");
       });
     });
 
@@ -189,14 +179,14 @@ static void on_inventory() {
     auto dt = dotz::clamp(ms / 1000.0f, 0.0f, 1.0f);
     auto dd = (g_tgt_sel - g_sel) * dt;
 
-    for (auto y = -3; y <= 3; y++)  {
+    for (auto y = -5; y <= 5; y++)  {
       auto & i = inv::at(y + g_sel);
       if (!i.sprite) continue;
 
       float ry = y - dd;
 
-      auto a = inv_alpha(ry);
-      auto s = 1.0f / (dotz::abs(ry / 3.0f) + 1.0f);
+      auto a = 1.0f - dotz::pow(dotz::abs(ry / 6.0f), 0.5f);
+      auto s = 1.0f / (dotz::abs(ry / 5.0f) + 1.0f);
 
       float xx = -0.0f;
       float yy = (ry * 1.5f - 0.5f) * s;
@@ -223,7 +213,7 @@ static void on_inventory() {
         });
       });
     }
-    v::set_grid({ 0, 6 });
+    v::set_grid({ 0, 12 });
   };
 
   g_sel = 0;
