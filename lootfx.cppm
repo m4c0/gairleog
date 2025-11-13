@@ -8,7 +8,10 @@ namespace lootfx {
   export enum class action {
     defence,
     heal,
+    max_life,
     strength,
+    weakness,
+    wither,
   };
   export using action_list_t = hai::chain<action>;
 

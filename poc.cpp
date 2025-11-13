@@ -89,7 +89,10 @@ static void on_inv_use() try {
       using enum lootfx::action;
       case defence: player->defense++; break;
       case heal: if (player->life < player->max_life) player->life++; break;
+      case max_life: player->max_life++; break;
       case strength: player->strength++; break;
+      case weakness: if (player->strength > 0) player->strength--; break;
+      case wither: if (player->defense > 0) player->defense--; break;
     }
   }
   inv::consume(g_sel);
