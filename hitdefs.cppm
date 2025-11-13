@@ -1,8 +1,8 @@
 export module hitdefs;
+import entdefs;
 import jute;
 import hai;
 import lispy;
-import tiledefs;
 
 using namespace lispy;
 using namespace lispy::experimental;
@@ -44,23 +44,23 @@ namespace hitdefs {
     return ctx.eval(n);
   }
 
-  export action_list_t check(tiledefs::flags from, tiledefs::flags to) try {
+  export action_list_t check(entdefs::flags from, entdefs::flags to) try {
     action_list_t result { 8 };
     struct context : hitdefs::context {
       unsigned from;
       unsigned to;
     } ctx {};
 
-    ctx.from = tiledefs::bit_of(from);
-    ctx.to   = tiledefs::bit_of(to);
+    ctx.from = entdefs::bit_of(from);
+    ctx.to   = entdefs::bit_of(to);
     ctx.result = &result;
     ctx.fns["hitdef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as != 3) lispy::err(n, "hitdef requires source, target and action");
       if (!is_atom(aa[0])) lispy::err(aa[0], "source must be an atom");
       if (!is_atom(aa[1])) lispy::err(aa[1], "target must be an atom");
 
-      auto from = tiledefs::bit_of(aa[0]->atom);
-      auto to   = tiledefs::bit_of(aa[1]->atom);
+      auto from = entdefs::bit_of(aa[0]->atom);
+      auto to   = entdefs::bit_of(aa[1]->atom);
 
       if (!from) lispy::err(aa[0], "unknown component");
       if (!to)   lispy::err(aa[1], "unknown component");

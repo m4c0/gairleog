@@ -7,15 +7,14 @@ import lispy;
 import rng;
 import sprdef;
 import themedefs;
-import tiledefs;
 import traits;
 
 namespace roomdefs {
   export struct t {
     unsigned w {};
     unsigned h {};
-    hai::array<tiledefs::t> d {};
-    tiledefs::t (*fn)(const t & t, unsigned x, unsigned y) {};
+    hai::array<entdefs::t> d {};
+    entdefs::t (*fn)(const t & t, unsigned x, unsigned y) {};
   };
 
   hai::cstr g_src {};
@@ -51,7 +50,7 @@ namespace roomdefs {
       tctx.parent = n->ctx;
       themedefs::eval(&tctx);
 
-      hai::array<tiledefs::t> data { as * cols };
+      hai::array<entdefs::t> data { as * cols };
       for (auto i = 0; i < as; i++) {
         if (!lispy::is_atom(aa[i])) lispy::err(aa[i], "all rows must be atoms");
         auto a = aa[i]->atom;

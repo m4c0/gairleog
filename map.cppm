@@ -3,9 +3,9 @@
 #pragma leco add_impl map_walls
 export module map;
 import dotz;
-import tiledefs;
+import entdefs;
 
-struct tile : tiledefs::t {
+struct tile : entdefs::t {
   float clight {};
 };
 

@@ -18,7 +18,6 @@ import silog;
 import sitime;
 import sprdef;
 import sv;
-import tiledefs;
 import v;
 
 static map g_map {};

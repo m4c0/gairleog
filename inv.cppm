@@ -1,18 +1,25 @@
 export module inv; 
 import hai;
-import tiledefs;
+
+import entdefs;
 
 namespace inv {
-  export struct t : tiledefs::t {
+  export struct t : entdefs::t {
   };
 
   hai::varray<t> data { 128 };
 
   export void reset() {
     data.truncate(0);
+    data.push_back(t { entdefs::get("apple") });
+    data.push_back(t { entdefs::get("potato") });
+    data.push_back(t { entdefs::get("apple") });
+    data.push_back(t { entdefs::get("potato") });
+    data.push_back(t { entdefs::get("apple") });
+    data.push_back(t { entdefs::get("apple") });
   }
 
-  export void add(tiledefs::t tdef) {
+  export void add(entdefs::t tdef) {
     data.push_back_doubling(t { tdef });
   }
 

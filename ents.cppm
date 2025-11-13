@@ -5,12 +5,11 @@ import fx;
 import hai;
 import hitdefs;
 import inv;
-import tiledefs;
 
 namespace ents {
-  export using flags = tiledefs::flags;
+  export using flags = entdefs::flags;
 
-  export struct t : tiledefs::t {
+  export struct t : entdefs::t {
     dotz::ivec2 pos {};
     dotz::vec2 size { 1 };
     unsigned life {};
@@ -22,10 +21,10 @@ namespace ents {
     for (auto & e : ents) if (e.life) fn(e);
   }
   export void foreach(flags flags, auto && fn) {
-    auto flg = tiledefs::bit_of(flags);
+    auto flg = entdefs::bit_of(flags);
     for (auto & e : ents) {
       if (!e.life) continue;
-      if ((tiledefs::bit_of(e.flags) & flg) != flg) continue;
+      if ((entdefs::bit_of(e.flags) & flg) != flg) continue;
       fn(e);
     }
   }
@@ -34,13 +33,13 @@ namespace ents {
     ents.truncate(0);
   }
 
-  static t create(dotz::ivec2 pos, tiledefs::t tdef) {
+  static t create(dotz::ivec2 pos, entdefs::t tdef) {
     t ent = { tdef };
     ent.pos = pos;
     ent.life = tdef.life ? tdef.life : 1;
     return ent;
   }
-  export void add(dotz::ivec2 pos, tiledefs::t tdef) {
+  export void add(dotz::ivec2 pos, entdefs::t tdef) {
     ents.push_back_doubling(create(pos, tdef));
   }
 

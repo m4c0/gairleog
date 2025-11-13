@@ -1,17 +1,17 @@
 #pragma leco test
+import entdefs;
 import hai;
 import hitdefs;
 import print;
 import res;
 import rng;
-import tiledefs;
 
 void run() {
-  tiledefs::flags src_compos {
+  entdefs::flags src_compos {
     .player = true,
     .solid  = true,
   };
-  tiledefs::flags tgt_compos {
+  entdefs::flags tgt_compos {
     .enemy = true,
     .solid = true,
     .toad  = true,

@@ -6,7 +6,7 @@ using namespace lispy;
 using namespace lispy::experimental;
 
 namespace entdefs {
-  struct cnode : node, tiledefs::t {
+  struct cnode : node, t {
     void (*attr)(cnode *, const cnode *);
   };
   struct context : basic_context<cnode> {
@@ -46,7 +46,7 @@ namespace entdefs {
     ctx.fns["loot"]     = mem_fn<&cnode::attr, &cnode::loot,          to_loot>;
     ctx.fns["spr"]      = mem_fn<&cnode::attr, &cnode::sprite,        to_spr>;
     ctx.fns["atkspr"]   = mem_fn<&cnode::attr, &cnode::attack_sprite, to_spr_pair>;
-    tiledefs::lispy<cnode>(ctx);
+    entdefs::lispy<cnode>(ctx);
     return ctx;
   }();
 
