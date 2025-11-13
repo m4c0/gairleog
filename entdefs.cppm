@@ -28,12 +28,12 @@ namespace entdefs {
 
     float        light         {};
     unsigned     life          {};
+    unsigned     max_life      {};
     unsigned     sprite        {};
     sprdef::pair attack_sprite {};
     unsigned     strength      {};
     unsigned     defense       {};
-
-    flags    flags  {};
+    flags        flags         {};
   };
 
   export inline unsigned bit_of(flags f) {

@@ -3,6 +3,7 @@
 (entdef player
   (light 1)
   (life 10)
+  (maxlife 10)
   (strength 1)
   (defense 0)
   (player)

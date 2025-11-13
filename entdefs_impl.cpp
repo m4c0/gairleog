@@ -44,6 +44,7 @@ namespace entdefs {
     ctx.fns["life"]     = mem_fn<&cnode::attr, &cnode::life,          to_life>;
     ctx.fns["light"]    = mem_fn<&cnode::attr, &cnode::light,         to_light>;
     ctx.fns["loot"]     = mem_fn<&cnode::attr, &cnode::loot,          to_loot>;
+    ctx.fns["maxlife"]  = mem_fn<&cnode::attr, &cnode::max_life,      to_life>;
     ctx.fns["spr"]      = mem_fn<&cnode::attr, &cnode::sprite,        to_spr>;
     ctx.fns["strength"] = mem_fn<&cnode::attr, &cnode::strength,      to_i>;
     entdefs::lispy<cnode>(ctx);

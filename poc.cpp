@@ -102,7 +102,7 @@ static void inv_setup() {
     for (auto act : lootfx::apply(inv::at(g_sel).sprite)) {
       switch (act) {
         using enum lootfx::action;
-        case heal: player->life++; break;
+        case heal: if (player->life < player->max_life) player->life++; break;
         case str:  player->strength++; break;
       }
     }
@@ -142,6 +142,8 @@ static void on_inventory() {
             hbox([&] {
               text(font, "Life: ");
               number(font, player.life);
+              text(font, "/");
+              number(font, player.max_life);
             });
             space({ 0.1f });
             hbox([&] {
