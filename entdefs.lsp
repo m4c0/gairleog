@@ -16,8 +16,11 @@
   (exit)
   (spr environment/props/door_closed))
 
-(entdef apple  (food) (spr items/food/appletomato_red))
-(entdef potato (food) (spr items/food/potato_orange))
+(entdef apple   (food) (spr items/food/appletomato_red))
+(entdef berry   (food) (spr items/food/cherriesberries_green))
+(entdef chichen (food) (spr items/food/chicken_raw))
+(entdef potato  (food) (spr items/food/potato_orange))
+(entdef turnip  (food) (spr items/food/radishturnip_brown))
 
 (entdef enemy
   (solid)
