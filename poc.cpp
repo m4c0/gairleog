@@ -143,6 +143,11 @@ static void on_inventory() {
               text(font, "Str:  ");
               text(font, "\1\1\1\1");
             });
+            space({ 0.1f });
+            hbox([&] {
+              text(font, "Def:  ");
+              text(font, "\1\1\1\1");
+            });
           });
         });
         // text(font, ">");
