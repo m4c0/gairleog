@@ -2,6 +2,7 @@ module v;
 import casein;
 import dotz;
 import hai;
+import silog;
 import sires;
 import traits;
 import vee;
@@ -82,47 +83,54 @@ void v::set_grid(v::grid g) {
   *static_cast<grid *>(*m) = g;
 }
 
+static void on_start() try {
+  g_as = new app_stuff {};
+
+  vee::update_descriptor_set_for_uniform(g_as->dset, 1, *g_as->uni.buffer);
+  voo::load_image("pixelite2.png", g_as->dq.physical_device(), g_as->dq.queue(), &g_as->img, [] {
+    vee::update_descriptor_set(g_as->dset, 0, 0, *g_as->img.iv, *g_as->smp);
+  });
+} catch (const hai::cstr & msg) {
+  silog::die("Error starting: %s", msg.begin());
+}
+static void on_frame() try {
+  if (!g_es) g_es = new ext_stuff {};
+
+  auto q = g_as->dq.queue();
+
+  g_es->sw.acquire_next_image();
+  g_es->sw.queue_one_time_submit(q, [] {
+    v::on_frame();
+
+    auto cb = g_es->sw.command_buffer();
+    auto ext = g_es->sw.extent();
+
+    //----- magic block for double-buffer
+    auto ofs = 0U;
+    float pc = g_es->sw.aspect();
+    //------
+
+    auto rp = g_es->sw.cmd_render_pass({
+      .clear_colours { vee::clear_colour(0, 0, 0, 1) },
+    });
+    vee::cmd_set_viewport(cb, ext);
+    vee::cmd_set_scissor(cb, ext);
+    vee::cmd_bind_gr_pipeline(cb, *g_as->ppl);
+    vee::cmd_bind_descriptor_set(cb, *g_as->pl, 0, g_as->dset);
+    vee::cmd_push_vertex_constants(cb, *g_as->pl, &pc);
+    vee::cmd_bind_vertex_buffers(cb, 1, *g_as->buf.buffer, ofs);
+    g_as->oq.run(cb, 0, g_as->count);
+  });
+  g_es->sw.queue_present(q);
+} catch (const hai::cstr & msg) {
+  silog::die("Error: %s", msg.begin());
+}
+
 const int i = [] {
   using namespace vinyl;
-  on(START,  [] {
-    g_as = new app_stuff {};
-
-    vee::update_descriptor_set_for_uniform(g_as->dset, 1, *g_as->uni.buffer);
-    voo::load_image("pixelite2.png", g_as->dq.physical_device(), g_as->dq.queue(), &g_as->img, [] {
-      vee::update_descriptor_set(g_as->dset, 0, i, *g_as->img.iv, *g_as->smp);
-    });
-  });
+  on(START,  on_start);
   on(RESIZE, [] { delete g_es; g_es = nullptr; });
-  on(FRAME,  [] {
-    if (!g_es) g_es = new ext_stuff {};
-
-    auto q = g_as->dq.queue();
-
-    g_es->sw.acquire_next_image();
-    g_es->sw.queue_one_time_submit(q, [] {
-      v::on_frame();
-
-      auto cb = g_es->sw.command_buffer();
-      auto ext = g_es->sw.extent();
-
-      //----- magic block for double-buffer
-      auto ofs = 0U;
-      float pc = g_es->sw.aspect();
-      //------
-
-      auto rp = g_es->sw.cmd_render_pass({
-        .clear_colours { vee::clear_colour(0, 0, 0, 1) },
-      });
-      vee::cmd_set_viewport(cb, ext);
-      vee::cmd_set_scissor(cb, ext);
-      vee::cmd_bind_gr_pipeline(cb, *g_as->ppl);
-      vee::cmd_bind_descriptor_set(cb, *g_as->pl, 0, g_as->dset);
-      vee::cmd_push_vertex_constants(cb, *g_as->pl, &pc);
-      vee::cmd_bind_vertex_buffers(cb, 1, *g_as->buf.buffer, ofs);
-      g_as->oq.run(cb, 0, g_as->count);
-    });
-    g_es->sw.queue_present(q);
-  });
+  on(FRAME,  on_frame);
   on(STOP,   [] {
     delete g_es;
     delete g_as;

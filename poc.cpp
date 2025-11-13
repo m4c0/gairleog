@@ -76,6 +76,35 @@ static float inv_alpha(int y) {
     default: return 0.0;
   }
 }
+
+static void on_inv_use() try {
+  ents::t * player;
+  ents::foreach({ .player = true }, [&](auto & p) {
+    player = &p;
+  });
+  if (!player || player->life == 0) return;
+
+  for (auto act : lootfx::apply(inv::at(g_sel).sprite)) {
+    switch (act) {
+      using enum lootfx::action;
+      case heal: if (player->life < player->max_life) player->life++; break;
+      case str:  player->strength++; break;
+    }
+  }
+  inv::consume(g_sel);
+  if (g_sel == inv::size()) {
+    reset_keys();
+    g_sel_anim = {};
+    g_tgt_sel = g_sel - 1;
+  } else {
+    reset_keys();
+    g_sel_anim = {};
+    g_tgt_sel = g_sel;
+    g_sel -= 1;
+  }
+} catch (const hai::cstr & msg) {
+  silog::die("Error: %s", msg.begin());
+}
 static void inv_setup() {
   using namespace casein;
 
@@ -92,32 +121,7 @@ static void inv_setup() {
     g_tgt_sel = (g_sel < inv::size() - 1) ? g_sel + 1 : g_sel;
   });
 
-  handle(KEY_DOWN, K_ENTER, [] {
-    ents::t * player;
-    ents::foreach({ .player = true }, [&](auto & p) {
-      player = &p;
-    });
-    if (!player || player->life == 0) return;
-
-    for (auto act : lootfx::apply(inv::at(g_sel).sprite)) {
-      switch (act) {
-        using enum lootfx::action;
-        case heal: if (player->life < player->max_life) player->life++; break;
-        case str:  player->strength++; break;
-      }
-    }
-    inv::consume(g_sel);
-    if (g_sel == inv::size()) {
-      reset_keys();
-      g_sel_anim = {};
-      g_tgt_sel = g_sel - 1;
-    } else {
-      reset_keys();
-      g_sel_anim = {};
-      g_tgt_sel = g_sel;
-      g_sel -= 1;
-    }
-  });
+  handle(KEY_DOWN, K_ENTER, on_inv_use);
 }
 static void on_inventory() {
   reset_keys();
@@ -223,13 +227,17 @@ static void on_inventory() {
 
 static constexpr const auto move(int dx, int dy) {
   return [=] {
-    ents::foreach({ .player = true }, [&](auto & p) {
-      switch (ents::move(&p, { dx, dy })) {
-        using enum ents::move_outcome;
-        case none: enemies::tick(); break;
-        case exit: v::on_frame = on_exit; break;
-      }
-    });
+    try {
+      ents::foreach({ .player = true }, [&](auto & p) {
+        switch (ents::move(&p, { dx, dy })) {
+          using enum ents::move_outcome;
+          case none: enemies::tick(); break;
+          case exit: v::on_frame = on_exit; break;
+        }
+      });
+    } catch (const hai::cstr & msg) {
+      silog::die("Error: %s", msg.begin());
+    }
   };
 }
 
