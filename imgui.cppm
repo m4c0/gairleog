@@ -68,7 +68,7 @@ namespace imgui {
       sprite(font + c);
     }
   };
-  export void text(unsigned font, unsigned n) {
+  export void number(unsigned font, unsigned n) {
     if (n == 0) return sprite(font + '0');
 
     char buf[16] {};

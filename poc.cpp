@@ -142,17 +142,17 @@ static void on_inventory() {
           vbox([&] {
             hbox([&] {
               text(font, "Life: ");
-              text(font, player.life);
+              number(font, player.life);
             });
             space({ 0.1f });
             hbox([&] {
               text(font, "Str:  ");
-              text(font, player.strength);
+              number(font, player.strength);
             });
             space({ 0.1f });
             hbox([&] {
               text(font, "Def:  ");
-              text(font, player.defense);
+              number(font, player.defense);
             });
           });
         });
@@ -171,7 +171,7 @@ static void on_inventory() {
     if (inv::size() > 0) {
       print({ .pos { -2.0f, -0.5f } }, ">");
     } else {
-      print({ .pos { -0.0f, -0.5f } }, "No items");
+      print({ .pos { -2.0f, -0.5f } }, "No items");
     }
 
     auto ms = g_sel_anim.millis() * 10;
@@ -201,13 +201,15 @@ static void on_inventory() {
 
       using namespace imgui;
       start(&*m, { xx, yy }, [&] {
-        scale({ s }, [&] {
-          mult(a, [&] {
-            if (lootfx::has(i.sprite)) {
-              text(font, lootfx::get(i.sprite));
-            } else {
-              text(font, "???");
-            }
+        hbox([&] {
+          scale({ s }, [&] {
+            mult(a, [&] {
+              if (lootfx::has(i.sprite)) {
+                text(font, lootfx::get(i.sprite));
+              } else {
+                text(font, "???");
+              }
+            });
           });
         });
       });
