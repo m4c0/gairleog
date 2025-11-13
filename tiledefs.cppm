@@ -28,6 +28,8 @@ namespace tiledefs {
     unsigned     life          {};
     unsigned     sprite        {};
     sprdef::pair attack_sprite {};
+    unsigned     strength      {};
+    unsigned     defense       {};
 
     flags    flags  {};
   };

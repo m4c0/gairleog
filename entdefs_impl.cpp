@@ -39,11 +39,13 @@ namespace entdefs {
 
   static const auto entdef_ctx = [] {
     basic_context<cnode> ctx {};
-    ctx.fns["light"]  = mem_fn<&cnode::attr, &cnode::light,         to_light>;
-    ctx.fns["life"]   = mem_fn<&cnode::attr, &cnode::life,          to_life>;
-    ctx.fns["loot"]   = mem_fn<&cnode::attr, &cnode::loot,          to_loot>;
-    ctx.fns["spr"]    = mem_fn<&cnode::attr, &cnode::sprite,        to_spr>;
-    ctx.fns["atkspr"] = mem_fn<&cnode::attr, &cnode::attack_sprite, to_spr_pair>;
+    ctx.fns["strength"] = mem_fn<&cnode::attr, &cnode::strength,      to_i>;
+    ctx.fns["defense"]  = mem_fn<&cnode::attr, &cnode::defense,       to_i>;
+    ctx.fns["light"]    = mem_fn<&cnode::attr, &cnode::light,         to_light>;
+    ctx.fns["life"]     = mem_fn<&cnode::attr, &cnode::life,          to_life>;
+    ctx.fns["loot"]     = mem_fn<&cnode::attr, &cnode::loot,          to_loot>;
+    ctx.fns["spr"]      = mem_fn<&cnode::attr, &cnode::sprite,        to_spr>;
+    ctx.fns["atkspr"]   = mem_fn<&cnode::attr, &cnode::attack_sprite, to_spr_pair>;
     tiledefs::lispy<cnode>(ctx);
     return ctx;
   }();

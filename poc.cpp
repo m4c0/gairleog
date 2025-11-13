@@ -141,12 +141,12 @@ static void on_inventory() {
             space({ 0.1f });
             hbox([&] {
               text(font, "Str:  ");
-              text(font, 1);
+              text(font, player.strength);
             });
             space({ 0.1f });
             hbox([&] {
               text(font, "Def:  ");
-              text(font, 1);
+              text(font, player.defense);
             });
           });
         });

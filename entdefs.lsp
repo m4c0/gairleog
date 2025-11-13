@@ -3,6 +3,8 @@
 (entdef player
   (light 1)
   (life 10)
+  (strength 1)
+  (defense 0)
   (player)
   (solid)
   (spr characters/human_knight)
@@ -19,6 +21,8 @@
 (entdef enemy
   (solid)
   (enemy)
+  (strength 1)
+  (defense 0)
   (loot apple)
   (atkspr fx/themed/fx_frost_bite)
   (random
