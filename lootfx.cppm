@@ -6,8 +6,9 @@ import rng;
 
 namespace lootfx {
   export enum class action {
+    defence,
     heal,
-    str,
+    strength,
   };
   export using action_list_t = hai::chain<action>;
 

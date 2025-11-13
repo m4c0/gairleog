@@ -3,4 +3,6 @@
   (random (heal) ())
   (random (heal) ())))
 
-(fx Strength (str))
+(fx Strength (strength))
+
+(fx Defence (defence))

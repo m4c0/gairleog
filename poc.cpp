@@ -87,8 +87,9 @@ static void on_inv_use() try {
   for (auto act : lootfx::apply(inv::at(g_sel).sprite)) {
     switch (act) {
       using enum lootfx::action;
+      case defence: player->defense++; break;
       case heal: if (player->life < player->max_life) player->life++; break;
-      case str:  player->strength++; break;
+      case strength: player->strength++; break;
     }
   }
   inv::consume(g_sel);

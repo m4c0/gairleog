@@ -51,8 +51,9 @@ namespace lootfx {
     current = r;
 
     basic_context<node> ctx {};
-    ctx.fns["heal"] = act<action::heal>;
-    ctx.fns["str"]  = act<action::str>;
+    ctx.fns["defence"]  = act<action::defence>;
+    ctx.fns["heal"]     = act<action::heal>;
+    ctx.fns["strength"] = act<action::strength>;
     ctx.eval(data.nodes[key]);
   } catch (const parser_error & e) {
     throw to_file_err("lootfx.lsp", e);
