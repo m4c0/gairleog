@@ -94,11 +94,17 @@ static void inv_setup() {
   });
 
   handle(KEY_DOWN, K_ENTER, [] {
+    ents::t * player;
+    ents::foreach({ .player = true }, [&](auto & p) {
+      player = &p;
+    });
+    if (!player || player->life == 0) return;
+
     for (auto act : lootfx::apply(inv::at(g_sel).sprite)) {
       switch (act) {
         using enum lootfx::action;
-        case heal: silog::log(silog::debug, "heal"); break;
-        case str:  silog::log(silog::debug, "str"); break;
+        case heal: player->life++; break;
+        case str:  player->strength++; break;
       }
     }
     inv::consume(g_sel);
