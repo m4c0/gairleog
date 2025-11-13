@@ -136,17 +136,17 @@ static void on_inventory() {
           vbox([&] {
             hbox([&] {
               text(font, "Life: ");
-              text(font, "\1\1\1\1");
+              text(font, player.life);
             });
             space({ 0.1f });
             hbox([&] {
               text(font, "Str:  ");
-              text(font, "\1\1\1\1");
+              text(font, 1);
             });
             space({ 0.1f });
             hbox([&] {
               text(font, "Def:  ");
-              text(font, "\1\1\1\1");
+              text(font, 1);
             });
           });
         });

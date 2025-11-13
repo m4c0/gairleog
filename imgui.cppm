@@ -68,4 +68,16 @@ namespace imgui {
       sprite(font + c);
     }
   };
+  export void text(unsigned font, unsigned n) {
+    if (n == 0) return sprite(font + '0');
+
+    char buf[16] {};
+    int qty = 0;
+    while (n > 0) {
+      buf[qty++] = '0' + (n % 10);
+      n /= 10;
+    }
+
+    for (; qty > 0; qty--) sprite(font + buf[qty - 1]);
+  };
 }
