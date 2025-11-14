@@ -6,9 +6,11 @@ import rng;
 
 namespace lootfx {
   export enum class action {
+    damage,
     defence,
     heal,
     max_life,
+    poison,
     strength,
     weakness,
     wither,

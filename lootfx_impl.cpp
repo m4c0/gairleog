@@ -51,9 +51,11 @@ namespace lootfx {
     current = r;
 
     basic_context<node> ctx {};
+    ctx.fns["damage"]   = act<action::damage>;
     ctx.fns["defence"]  = act<action::defence>;
     ctx.fns["heal"]     = act<action::heal>;
     ctx.fns["maxlife"]  = act<action::max_life>;
+    ctx.fns["poison"]   = act<action::poison>;
     ctx.fns["strength"] = act<action::strength>;
     ctx.fns["weakness"] = act<action::weakness>;
     ctx.fns["wither"]   = act<action::wither>;

@@ -3,10 +3,16 @@
   (random (heal) ())
   (random (heal) ())))
 
-(random
-  (do
-    (fx Strength (strength))
-    (fx Defence (defence)))
-  (do
-    (fx "+1Str -1Def" (do (strength) (wither)))
-    (fx "+1Def -1Str" (do (weakness) (defence)))))
+(fx Damage (damage))
+(fx Defence (defence))
+(fx Strength (strength))
+
+(fx "+1Str -1Def" (do (strength) (wither)))
+(fx "+1Def -1Str" (do (weakness) (defence)))
+
+(fx "+1 Life" (maxlife))
+
+(fx Poison (do
+  (poison)
+  (random (poison) ())
+  (random (poison) ())))
