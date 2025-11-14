@@ -79,8 +79,8 @@ static void on_inv_use() try {
     switch (act) {
       using enum lootfx::action;
       case damage:
-        if (player->life > 0) player->life--;
-        if (player->life == 0) *player = {};
+        // TODO: game over
+        if (!ents::take_hit(player)) return on_game();
         break;
       case defence: player->defense++; break;
       case heal: if (player->life < player->max_life) player->life++; break;
@@ -136,6 +136,7 @@ static void on_inventory() {
     ents::foreach({ .player = true }, [&](auto p) {
       player = p;
     });
+    // TODO: game over
     if (!player.life) return on_game();
 
     using namespace imgui;
@@ -237,7 +238,10 @@ static constexpr const auto move(int dx, int dy) {
       ents::foreach({ .player = true }, [&](auto & p) {
         switch (ents::move(&p, { dx, dy })) {
           using enum ents::move_outcome;
-          case none: enemies::tick(); break;
+          case none: {
+            enemies::tick();
+            break;
+          }
           case exit: v::on_frame = on_exit; break;
         }
       });

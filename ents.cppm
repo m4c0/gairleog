@@ -43,11 +43,27 @@ namespace ents {
     ents.push_back_doubling(create(pos, tdef));
   }
 
+  export bool take_hit(t * ent) {
+    if (ent->life) ent->life--;
+    if (ent->life) return true;
+    if (ent->loot == "") {
+      *ent = {};
+    } else {
+      *ent = create(ent->pos, entdefs::get(ent->loot));
+    }
+    return false;
+  }
+
   export enum class move_outcome {
     none,
     exit,
   };
   export move_outcome move(t * ent, dotz::ivec2 by) {
+    if (ent->poison) {
+      ent->poison--;
+      if (!take_hit(ent)) return move_outcome::none;
+    }
+
     move_outcome res {};
     auto p_pos = ent->pos + by;
     ents::foreach([&](auto & d) {
@@ -64,14 +80,8 @@ namespace ents {
           case hit:
             fx::add(d.pos, ent->attack_sprite);
             p_pos = ent->pos;
+            take_hit(&d);
             d.life--;
-            if (!d.life) {
-              if (d.loot == "") {
-                d = {};
-              } else {
-                d = create(d.pos, entdefs::get(d.loot));
-              }
-            }
             break;
           case miss:
             // TODO: attack anim
