@@ -81,7 +81,6 @@ namespace ents {
             fx::add(d.pos, ent->attack_sprite);
             p_pos = ent->pos;
             take_hit(&d);
-            d.life--;
             break;
           case miss:
             // TODO: attack anim
