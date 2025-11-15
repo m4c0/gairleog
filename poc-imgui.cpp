@@ -14,10 +14,10 @@ static void on_frame() {
 
   auto font = sprdef::get("font").id;
 
-  auto brown = sprdef::get("fx/fx_brown_bite").id + 4;
-  auto blue = sprdef::get("fx/fx_blue_bite").id + 4;
+  auto brown  = sprdef::get("fx/fx_brown_bite" ).id + 4;
+  auto blue   = sprdef::get("fx/fx_blue_bite"  ).id + 4;
   auto purple = sprdef::get("fx/fx_purple_bite").id + 4;
-  auto gray = sprdef::get("fx/fx_gray_bite").id + 4;
+  auto gray   = sprdef::get("fx/fx_gray_bite"  ).id + 4;
   auto orange = sprdef::get("fx/fx_orange_bite").id + 4;
 
   auto m = v::map();
