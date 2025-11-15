@@ -5,7 +5,9 @@ import sv;
 import v;
 
 namespace imgui {
-  using node = v::sprite;
+  struct node {
+    v::sprite spr {};
+  };
   struct state {
     dotz::vec2 pos {};
     dotz::vec2 delta {};
@@ -20,7 +22,7 @@ namespace imgui {
 
     fn();
 
-    for (const auto & s : g_buffer) m->push(s);
+    for (const auto & s : g_buffer) if (s.spr.id) m->push(s.spr);
   }
 
   export inline void box(dotz::vec2 delta, auto && fn) {
@@ -57,15 +59,17 @@ namespace imgui {
   };
 
   export void sprite(unsigned id) {
-    box({}, [&] {
-      g_buffer.push_back(node {
+    g_buffer.push_back(node {
+      .spr {
         .pos = g_state.pos,
         .scale = g_state.scale,
         .mult = g_state.mult,
         .id = id,
-      });
+      },
     });
-  };
+    g_state.pos = g_state.pos + g_state.delta * g_state.scale;
+  }
+
   export void text(unsigned font, sv str) {
     for (auto c : str) {
       sprite(font + c);
