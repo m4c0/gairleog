@@ -1,20 +1,26 @@
 export module imgui;
 import dotz;
+import hai;
 import sv;
 import v;
 
 namespace imgui {
+  using node = v::sprite;
   struct state {
-    v::mapper * m;
     dotz::vec2 pos {};
     dotz::vec2 delta {};
     dotz::vec2 scale { 1 };
     float mult { 1 };
   } g_state;
+  hai::varray<node> g_buffer { 10240 };
 
   export void start(v::mapper * m, dotz::vec2 pos, auto && fn) {
-    g_state = { .m = m, .pos = pos };
+    g_buffer.truncate(0);
+    g_state = { .pos = pos };
+
     fn();
+
+    for (const auto & s : g_buffer) m->push(s);
   }
 
   export void box(dotz::vec2 delta, auto && fn) {
@@ -55,7 +61,7 @@ namespace imgui {
 
   export void sprite(unsigned id) {
     box({}, [&] {
-      g_state.m->push({
+      g_buffer.push_back(node {
         .pos = g_state.pos,
         .scale = g_state.scale,
         .mult = g_state.mult,
