@@ -25,12 +25,16 @@ namespace imgui {
     for (const auto & s : g_buffer) if (s.spr.id) m->push(s.spr);
   }
 
+  static inline void adv(dotz::vec2 s = { 1 }) {
+    g_state.pos = g_state.pos + g_state.delta * g_state.scale * s;
+  }
+
   export inline void box(dotz::vec2 delta, auto && fn) {
     state old = g_state;
     g_state.delta = delta;
     fn();
-    old.pos = old.pos + old.delta * old.scale;
     g_state = old;
+    adv();
   };
   export inline void hbox(auto && fn) {
     box({ 1.f, 0.f }, fn);
@@ -52,11 +56,7 @@ namespace imgui {
     g_state.scale = old_s;
   };
 
-  export void space(dotz::vec2 size) {
-    scale(size, [&] {
-      box({}, [] {});
-    });
-  };
+  export void space(dotz::vec2 size) { adv(size); };
 
   export void sprite(unsigned id) {
     g_buffer.push_back(node {
@@ -67,7 +67,7 @@ namespace imgui {
         .id = id,
       },
     });
-    g_state.pos = g_state.pos + g_state.delta * g_state.scale;
+    adv();
   }
 
   export void text(unsigned font, sv str) {
