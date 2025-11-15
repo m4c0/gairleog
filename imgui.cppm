@@ -23,19 +23,17 @@ namespace imgui {
     for (const auto & s : g_buffer) m->push(s);
   }
 
-  export void box(dotz::vec2 delta, auto && fn) {
+  export inline void box(dotz::vec2 delta, auto && fn) {
     state old = g_state;
-
     g_state.delta = delta;
     fn();
-    
     old.pos = old.pos + old.delta * old.scale;
     g_state = old;
   };
-  export void hbox(auto && fn) {
+  export inline void hbox(auto && fn) {
     box({ 1.f, 0.f }, fn);
   };
-  export void vbox(auto && fn) {
+  export inline void vbox(auto && fn) {
     box({ 0.f, 1.f }, fn);
   };
 
