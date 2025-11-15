@@ -24,14 +24,13 @@ namespace imgui {
   }
 
   export void box(dotz::vec2 delta, auto && fn) {
-    auto old_delta = g_state.delta;
-    auto old_pos = g_state.pos;
+    state old = g_state;
 
     g_state.delta = delta;
     fn();
     
-    g_state.delta = old_delta;
-    g_state.pos = old_pos + g_state.delta * g_state.scale;
+    old.pos = old.pos + old.delta * old.scale;
+    g_state = old;
   };
   export void hbox(auto && fn) {
     box({ 1.f, 0.f }, fn);
