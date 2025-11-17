@@ -140,7 +140,7 @@ static void on_inventory() {
     if (!player.life) return on_game();
 
     using namespace imgui;
-    start(&*m, { -14.f, -0.5f }, [&] {
+    start(&*m, { -14.f, -1.5f }, [&] {
       hbox([&] {
         scale({ 0.75f }, [&] {
           vbox([&] {
