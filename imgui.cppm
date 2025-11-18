@@ -5,7 +5,10 @@ import sv;
 import v;
 
 namespace imgui {
-  using node = v::sprite;
+  struct node {
+    v::sprite spr {};
+    dotz::vec2 size { 1 };
+  };
   struct state {
     dotz::vec2 pos {};
     dotz::vec2 delta {};
@@ -20,18 +23,39 @@ namespace imgui {
 
     fn();
 
-    for (const auto & s : g_buffer) m->push(s);
+    for (const auto & s : g_buffer) if (s.spr.id) m->push(s.spr);
+  }
+
+  static inline void adv(dotz::vec2 s = { 1 }) {
+    g_state.pos = g_state.pos + g_state.delta * g_state.scale * s;
   }
 
   export inline void box(dotz::vec2 delta, auto && fn) {
+    node n {};
+
     state old = g_state;
     g_state.delta = delta;
+    g_state.tail = &n;
     fn();
-    old.pos = old.pos + old.delta * old.scale;
     g_state = old;
+    adv();
   };
   export inline void hbox(auto && fn) {
-    box({ 1.f, 0.f }, fn);
+    node n {};
+
+    state old = g_state;
+    g_state.tail = &n;
+    g_state.delta = {};
+    fn();
+
+    float x = 0;
+    for (auto p = n.next; p; p = p->next) {
+      p->spr.pos.x += x;
+      x += p->size.x;
+    }
+
+    g_state = old;
+    adv();
   };
   export inline void vbox(auto && fn) {
     box({ 0.f, 1.f }, fn);
@@ -50,22 +74,33 @@ namespace imgui {
     g_state.scale = old_s;
   };
 
+  static inline void compo(node no) {
+    g_buffer.push_back(no);
+
+    auto * n = &g_buffer.back();
+    g_state.tail->next = n;
+    g_state.tail = n;
+    adv();
+  }
+
   export void space(dotz::vec2 size) {
-    scale(size, [&] {
-      box({}, [] {});
+    compo(node {
+      .size = g_state.scale,
     });
   };
 
   export void sprite(unsigned id) {
-    box({}, [&] {
-      g_buffer.push_back(node {
+    compo(node {
+      .spr {
         .pos = g_state.pos,
         .scale = g_state.scale,
         .mult = g_state.mult,
         .id = id,
-      });
+      },
+      .size = g_state.scale,
     });
-  };
+  }
+
   export void text(unsigned font, sv str) {
     for (auto c : str) {
       sprite(font + c);

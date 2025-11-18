@@ -87,7 +87,7 @@ static void on_start() try {
   g_as = new app_stuff {};
 
   vee::update_descriptor_set_for_uniform(g_as->dset, 1, *g_as->uni.buffer);
-  voo::load_image("pixelite2.png", g_as->dq.physical_device(), g_as->dq.queue(), &g_as->img, [] {
+  voo::load_image("pixelite2.png", g_as->dq.physical_device(), g_as->dq.queue(), &g_as->img, [](auto) {
     vee::update_descriptor_set(g_as->dset, 0, 0, *g_as->img.iv, *g_as->smp);
   });
 } catch (const hai::cstr & msg) {
