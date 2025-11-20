@@ -272,10 +272,51 @@ static void on_start() {
   v::on_frame = on_exit;
 }
 
+static int g_menu_sel = 0;
+static void on_main_menu() {
+  using namespace casein;
+  reset_k(KEY_DOWN);
+  reset_k(KEY_UP);
+
+  handle(KEY_DOWN, K_UP,   [] { g_menu_sel = (g_menu_sel + 3) % 2; });
+  handle(KEY_DOWN, K_DOWN, [] { g_menu_sel = (g_menu_sel + 1) % 2; });
+
+  handle(KEY_DOWN, K_ENTER, [] {
+    switch (g_menu_sel) {
+      case 0: on_start(); break;
+      case 1: interrupt(IRQ_QUIT); break;
+    }
+  });
+
+  v::on_frame = [] {
+    auto m = v::map();
+
+    auto font = sprdef::get("font").id;
+    auto mark = font + '>';
+
+    using namespace imgui;
+    start(&*m, {}, [&] {
+      vbox([&] {
+        hbox([&] {
+          sprite(g_menu_sel == 0 ? mark : 0);
+          space({ 0.5f });
+          text(font, "New Game");
+        });
+        hbox([&] {
+          sprite(g_menu_sel == 1 ? mark : 0);
+          space({ 0.5f });
+          text(font, "Exit");
+        });
+      });
+    });
+    v::set_grid({ 0, 12 });
+  };
+}
+
 const int i = [] {
   try {
     res::load_all([] {
-      on_start();
+      on_main_menu();
     });
   } catch (const hai::cstr & e) {
     silog::die("Failure loading resource: %s", e.begin());
