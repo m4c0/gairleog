@@ -87,7 +87,7 @@ static void on_start() try {
   g_as = new app_stuff {};
 
   vee::update_descriptor_set_for_uniform(g_as->dset, 1, *g_as->uni.buffer);
-  voo::load_image("pixelite2.png", g_as->dq.physical_device(), g_as->dq.queue(), &g_as->img, [](auto) {
+  voo::load_image("pixelite2.png", g_as->dq.physical_device(), &g_as->img, [](auto) {
     vee::update_descriptor_set(g_as->dset, 0, 0, *g_as->img.iv, *g_as->smp);
   });
 } catch (const hai::cstr & msg) {
@@ -96,10 +96,8 @@ static void on_start() try {
 static void on_frame() try {
   if (!g_es) g_es = new ext_stuff {};
 
-  auto q = g_as->dq.queue();
-
   g_es->sw.acquire_next_image();
-  g_es->sw.queue_one_time_submit(q, [] {
+  g_es->sw.queue_one_time_submit([] {
     v::on_frame();
 
     auto cb = g_es->sw.command_buffer();
@@ -121,7 +119,7 @@ static void on_frame() try {
     vee::cmd_bind_vertex_buffers(cb, 1, *g_as->buf.buffer, ofs);
     g_as->oq.run(cb, 0, g_as->count);
   });
-  g_es->sw.queue_present(q);
+  g_es->sw.queue_present();
 } catch (const hai::cstr & msg) {
   silog::die("Error: %s", msg.begin());
 }
