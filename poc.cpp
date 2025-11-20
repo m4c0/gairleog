@@ -266,12 +266,16 @@ static void on_game() {
   handle(KEY_DOWN, K_TAB, on_inventory);
 }
 
+static void on_start() {
+  lootfx::reset();
+  inv::reset();
+  v::on_frame = on_exit;
+}
+
 const int i = [] {
   try {
     res::load_all([] {
-      lootfx::reset();
-      inv::reset();
-      v::on_frame = on_exit;
+      on_start();
     });
   } catch (const hai::cstr & e) {
     silog::die("Failure loading resource: %s", e.begin());
