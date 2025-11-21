@@ -303,6 +303,13 @@ static void on_main_menu() {
           text(font, "New Game");
         });
         hbox([&] {
+          sprite(0);
+          space({ 0.5f });
+          mult(0.2, [&] {
+            text(font, "Continue");
+          });
+        });
+        hbox([&] {
           sprite(g_menu_sel == 1 ? mark : 0);
           space({ 0.5f });
           text(font, "Exit");
