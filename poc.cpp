@@ -309,7 +309,7 @@ static void on_main_menu() {
         });
       });
     });
-    v::set_grid({ 0, 12 });
+    v::set_grid({ 6, 12 });
   };
 }
 
