@@ -4,6 +4,7 @@ import audio;
 import casein;
 import dotz;
 import enemies;
+import entdefs;
 import ents;
 import fx;
 import hai;
@@ -292,7 +293,7 @@ static void on_main_menu() {
     auto m = v::map();
 
     auto font = sprdef::get("font").id;
-    auto mark = font + '>';
+    auto mark = entdefs::get("player").sprite;
 
     using namespace imgui;
     start(&*m, {}, [&] {
