@@ -37,7 +37,7 @@
 (entdef boulder
   (solid)
   (ceramic)
-  (life 50)
+  (life 30)
   (random
     (spr environment/props/boulder1)
     (spr environment/props/boulder2)
@@ -96,7 +96,7 @@
 (entdef tree_withered
   (solid)
   (ceramic)
-  (life 50)
+  (life 30)
   (random
     (spr environment/props/tree1_withered)
     (spr environment/props/tree2_withered)
@@ -107,7 +107,7 @@
 (entdef tree
   (solid)
   (ceramic)
-  (life 50)
+  (life 5)
   (loot tree_withered)
   (random
     (spr environment/props/tree1)
@@ -119,7 +119,7 @@
 (entdef tree_swamp
   (solid)
   (ceramic)
-  (life 50)
+  (life 5)
   (loot tree_withered)
   (random
     (spr environment/props/tree1_swamp)
