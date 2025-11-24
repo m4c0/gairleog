@@ -316,9 +316,9 @@ static void do_main_menu() {
         });
         hbox([&] {
           if (has_cont && g_menu_clk && g_menu_sel == id) on_start();
-          sprite(has_cont && g_menu_sel == id ? mark : 0);
-          space({ 0.5f });
           mult(has_cont ? 1.0 : 0.2, [&] {
+            sprite(has_cont && g_menu_sel == id ? mark : 0);
+            space({ 0.5f });
             text(font, "Continue");
           });
           if (has_cont) id++;
