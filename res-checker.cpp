@@ -1,4 +1,5 @@
 #pragma leco test
+import errs;
 import hai;
 import hitdefs;
 import print;

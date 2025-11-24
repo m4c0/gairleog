@@ -3,6 +3,7 @@
 import casein;
 import enemies;
 import ents;
+import errs;
 import hai;
 import map;
 import res;

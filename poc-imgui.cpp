@@ -1,6 +1,7 @@
 #pragma leco app
 
 import dotz;
+import errs;
 import hai;
 import imgui;
 import res;

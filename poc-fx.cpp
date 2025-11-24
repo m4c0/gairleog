@@ -1,6 +1,7 @@
 #pragma leco app
 
 import casein;
+import errs;
 import fx;
 import hai;
 import res;

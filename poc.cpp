@@ -6,6 +6,7 @@ import dotz;
 import enemies;
 import entdefs;
 import ents;
+import errs;
 import fx;
 import hai;
 import hitdefs;
