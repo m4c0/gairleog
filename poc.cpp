@@ -278,20 +278,16 @@ static void on_start() {
 }
 
 static int g_menu_sel = 0;
+static bool g_menu_clk = false;
 static void do_main_menu() {
   using namespace casein;
   reset_k(KEY_DOWN);
   reset_k(KEY_UP);
 
-  handle(KEY_DOWN, K_UP,   [] { g_menu_sel = (g_menu_sel + 3) % 2; });
-  handle(KEY_DOWN, K_DOWN, [] { g_menu_sel = (g_menu_sel + 1) % 2; });
+  handle(KEY_DOWN, K_UP,   [] { g_menu_sel--; });
+  handle(KEY_DOWN, K_DOWN, [] { g_menu_sel++; });
 
-  handle(KEY_DOWN, K_ENTER, [] {
-    switch (g_menu_sel) {
-      case 0: on_start(); break;
-      case 1: interrupt(IRQ_QUIT); break;
-    }
-  });
+  handle(KEY_DOWN, K_ENTER, [] { g_menu_clk = true; });
 
   v::on_frame = [] {
     auto m = v::map();
@@ -299,29 +295,42 @@ static void do_main_menu() {
     auto font = sprdef::get("font").id;
     auto mark = entdefs::get("player").sprite;
 
+    int id = 0;
+    bool has_cont = save::exists();
+
     using namespace imgui;
     start(&*m, {}, [&] {
       vbox([&] {
         hbox([&] {
-          sprite(g_menu_sel == 0 ? mark : 0);
+          if (g_menu_clk && g_menu_sel == id) on_start();
+          sprite(g_menu_sel == id ? mark : 0);
           space({ 0.5f });
           text(font, "New Game");
+          id++;
         });
         hbox([&] {
-          sprite(0);
+          if (has_cont && g_menu_clk && g_menu_sel == id) on_start();
+          sprite(has_cont && g_menu_sel == id ? mark : 0);
           space({ 0.5f });
-          mult(0.2, [&] {
+          mult(has_cont ? 1.0 : 0.2, [&] {
             text(font, "Continue");
           });
+          if (has_cont) id++;
         });
         hbox([&] {
-          sprite(g_menu_sel == 1 ? mark : 0);
+          if (g_menu_clk && g_menu_sel == id) interrupt(IRQ_QUIT);
+          sprite(g_menu_sel == id ? mark : 0);
           space({ 0.5f });
           text(font, "Exit");
+          id++;
         });
       });
     });
     v::set_grid({ 6, 12 });
+
+    if (g_menu_sel < 0) g_menu_sel = id - 1;
+    if (g_menu_sel >= id) g_menu_sel = 0;
+    if (g_menu_clk) g_menu_clk = false;
   };
 }
 static void on_init() {
