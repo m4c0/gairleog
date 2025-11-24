@@ -15,6 +15,7 @@ import jute;
 import lootfx;
 import map;
 import res;
+import save;
 import silog;
 import sitime;
 import sprdef;
@@ -274,7 +275,7 @@ static void on_start() {
 }
 
 static int g_menu_sel = 0;
-static void on_main_menu() {
+static void do_main_menu() {
   using namespace casein;
   reset_k(KEY_DOWN);
   reset_k(KEY_UP);
@@ -319,6 +320,15 @@ static void on_main_menu() {
     });
     v::set_grid({ 6, 12 });
   };
+}
+static void on_main_menu() {
+  using namespace casein;
+  reset_k(KEY_DOWN);
+  reset_k(KEY_UP);
+
+  v::on_frame = [] {};
+
+  save::prefetch(do_main_menu);
 }
 
 const int i = [] {
