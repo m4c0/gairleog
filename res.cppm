@@ -11,6 +11,8 @@ export module res;
 import entdefs;
 import hai;
 import hitdefs;
+import jojo;
+import jojo;
 import jute;
 import lispy;
 import lootfx;
@@ -27,7 +29,7 @@ namespace res {
   }
 
   static void load(jute::view sprdef_file, hai::fn<void> cb) {
-    sires::on_error([](auto ptr, auto msg) {
+    jojo::on_error([](auto ptr, auto msg) {
       throw msg.cstr();
     });
     safe_load(sprdef_file, [=](auto src) mutable {

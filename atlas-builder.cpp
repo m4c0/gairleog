@@ -21,7 +21,7 @@ static FILE * lsp;
 static void process(jute::view file) {
   auto fid = file.split('/').after.rsplit('.').before;
   auto id = next_id;
-  auto img = stbi::load(jojo::read_cstr(file));
+  auto img = stbi::load(jojo::slurp(file));
   auto data = reinterpret_cast<const stbi::pixel *>(*img.data);
   // TODO: deal with animations
   if (img.num_channels != 4) return;
@@ -59,7 +59,7 @@ static void recurse(const char * dir) {
 
 static void embed_font() {
   auto id = next_id;
-  auto img = stbi::load(jojo::read("dungeon-437.png"));
+  auto img = stbi::load(jojo::slurp("dungeon-437.png"));
   auto * ptr = reinterpret_cast<unsigned *>(*img.data);
   for (auto cy = 0; cy < 16; cy++) {
     for (auto cx = 0; cx < 16; cx++) {
