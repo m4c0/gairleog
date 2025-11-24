@@ -11,23 +11,6 @@ namespace inv {
 
   export void reset() {
     data.truncate(0);
-    data.push_back(t { entdefs::get("apple") });
-    data.push_back(t { entdefs::get("potato") });
-    data.push_back(t { entdefs::get("berry") });
-    data.push_back(t { entdefs::get("chicken") });
-    data.push_back(t { entdefs::get("turnip") });
-    data.push_back(t { entdefs::get("potato") });
-    data.push_back(t { entdefs::get("berry") });
-    data.push_back(t { entdefs::get("chicken") });
-    data.push_back(t { entdefs::get("turnip") });
-    data.push_back(t { entdefs::get("apple") });
-    data.push_back(t { entdefs::get("potato") });
-    data.push_back(t { entdefs::get("apple") });
-    data.push_back(t { entdefs::get("potato") });
-    data.push_back(t { entdefs::get("apple") });
-    data.push_back(t { entdefs::get("potato") });
-    data.push_back(t { entdefs::get("apple") });
-    data.push_back(t { entdefs::get("apple") });
   }
 
   export void add(entdefs::t tdef) {

@@ -1,6 +1,10 @@
 module save;
 import buoy;
+import ents;
+import fx;
+import inv;
 import jojo;
+import lootfx;
 import silog;
 
 static const auto file = buoy::path("gairleog", "save.dat");
@@ -9,6 +13,11 @@ static hai::fn<void> g_callback {};
 static bool g_exists = false;
 
 static void invoke_callback() {
+  ents::reset();
+  fx::reset();
+  inv::reset();
+  lootfx::reset();
+
   if (g_callback) g_callback();
 }
 
@@ -21,7 +30,7 @@ void save::prefetch(hai::fn<void> callback) {
   });
 }
 
-void save::reset() {
+void save::post_error() {
   silog::log(silog::info, "Game reset");
   g_exists = false;
   invoke_callback();

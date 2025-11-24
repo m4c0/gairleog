@@ -9,6 +9,6 @@ namespace save {
   export bool exists();
 
   export void prefetch(hai::fn<void> callback);
-  export void reset();
+  export void post_error();
   export void store(hai::fn<void> callback);
 }
