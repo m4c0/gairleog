@@ -30,3 +30,8 @@ void save::reset() {
 bool save::exists() {
   return g_exists;
 }
+
+void save::store(hai::fn<void> callback) {
+  g_exists = true;
+  callback();
+}

@@ -345,7 +345,7 @@ static void on_main_menu() {
 
   if (g_menu_sel == 0) g_menu_sel = 1;
 
-  save::prefetch(do_main_menu);
+  save::store(do_main_menu);
 }
 
 const int i = [] {
