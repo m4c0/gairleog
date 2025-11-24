@@ -21,8 +21,10 @@ import sprdef;
 import themedefs;
 
 namespace res {
+  export struct jid {} jid {};
+
   static void safe_load(jute::view file, hai::fn<void, jute::view> cb) {
-    sires::read(file, nullptr, [=](auto ptr, hai::cstr & src) mutable {
+    sires::read(file, &jid, [=](auto ptr, hai::cstr & src) mutable {
       cb(src);
     });
   }
