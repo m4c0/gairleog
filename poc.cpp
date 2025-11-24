@@ -324,6 +324,15 @@ static void do_main_menu() {
     v::set_grid({ 6, 12 });
   };
 }
+static void on_init() {
+  using namespace casein;
+  reset_k(KEY_DOWN);
+  reset_k(KEY_UP);
+
+  v::on_frame = [] {};
+
+  save::prefetch(do_main_menu);
+}
 static void on_main_menu() {
   using namespace casein;
   reset_k(KEY_DOWN);
@@ -336,9 +345,7 @@ static void on_main_menu() {
 
 const int i = [] {
   try {
-    res::load_all([] {
-      on_main_menu();
-    });
+    res::load_all(on_init);
   } catch (const hai::cstr & e) {
     silog::die("Failure loading resource: %s", e.begin());
   }
