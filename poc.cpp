@@ -331,7 +331,10 @@ static void on_init() {
 
   v::on_frame = [] {};
 
-  save::prefetch(do_main_menu);
+  save::prefetch([] {
+    g_menu_sel = save::exists() ? 1 : 0;
+    do_main_menu();
+  });
 }
 static void on_main_menu() {
   using namespace casein;
@@ -339,6 +342,8 @@ static void on_main_menu() {
   reset_k(KEY_UP);
 
   v::on_frame = [] {};
+
+  if (g_menu_sel == 0) g_menu_sel = 1;
 
   save::prefetch(do_main_menu);
 }

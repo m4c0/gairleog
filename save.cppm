@@ -6,6 +6,8 @@ import hai;
 namespace save {
   export struct jid {} jid {};
 
+  export bool exists();
+
   export void prefetch(hai::fn<void> callback);
   export void reset();
 }
