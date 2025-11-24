@@ -56,6 +56,7 @@ static void on_frame() {
 }
 
 static void on_game();
+static void on_main_menu();
 
 // TODO: drop a random item on level change
 static void on_exit() try {
@@ -266,7 +267,8 @@ static void on_game() {
   handle(KEY_DOWN, K_LEFT,  move(-1, 0));
   handle(KEY_DOWN, K_RIGHT, move(+1, 0));
 
-  handle(KEY_DOWN, K_TAB, on_inventory);
+  handle(KEY_DOWN, K_TAB,    on_inventory);
+  handle(KEY_DOWN, K_ESCAPE, on_main_menu);
 }
 
 static void on_start() {
