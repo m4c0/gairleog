@@ -299,6 +299,21 @@ static void do_main_menu() {
     bool has_cont = save::exists();
 
     using namespace imgui;
+
+    const auto menu_item = [&](bool enabled, sv name) -> bool {
+      bool clicked = false;
+      hbox([&] {
+        if (enabled && g_menu_clk && g_menu_sel == id) clicked = true;;
+        sprite(enabled && g_menu_sel == id ? mark : 0);
+        space({ 0.5f });
+        mult(enabled ? 1.0 : 0.2, [&] {
+          text(font, name);
+        });
+        if (enabled) id++;
+      });
+      return clicked;
+    };
+
     start(&*m, {}, [&] {
       vbox([&] {
         scale({ 2.0f }, [&] {
@@ -307,29 +322,9 @@ static void do_main_menu() {
           });
           hbox([] {});
         });
-        hbox([&] {
-          if (g_menu_clk && g_menu_sel == id) on_start();
-          sprite(g_menu_sel == id ? mark : 0);
-          space({ 0.5f });
-          text(font, "New Game");
-          id++;
-        });
-        hbox([&] {
-          if (has_cont && g_menu_clk && g_menu_sel == id) on_start();
-          mult(has_cont ? 1.0 : 0.2, [&] {
-            sprite(has_cont && g_menu_sel == id ? mark : 0);
-            space({ 0.5f });
-            text(font, "Continue");
-          });
-          if (has_cont) id++;
-        });
-        hbox([&] {
-          if (g_menu_clk && g_menu_sel == id) interrupt(IRQ_QUIT);
-          sprite(g_menu_sel == id ? mark : 0);
-          space({ 0.5f });
-          text(font, "Exit");
-          id++;
-        });
+        if (menu_item(true,     "New Game")) on_start();
+        if (menu_item(has_cont, "Continue")) on_start();
+        if (menu_item(true,     "Exit"))     interrupt(IRQ_QUIT);
       });
     });
     v::set_grid({ {8,4}, 8 });
