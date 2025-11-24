@@ -301,6 +301,12 @@ static void do_main_menu() {
     using namespace imgui;
     start(&*m, {}, [&] {
       vbox([&] {
+        scale({ 2.0f }, [&] {
+          hbox([&] {
+            text(font, "Gairleog");
+          });
+          hbox([] {});
+        });
         hbox([&] {
           if (g_menu_clk && g_menu_sel == id) on_start();
           sprite(g_menu_sel == id ? mark : 0);
@@ -326,7 +332,7 @@ static void do_main_menu() {
         });
       });
     });
-    v::set_grid({ 6, 12 });
+    v::set_grid({ {8,4}, 8 });
 
     if (g_menu_sel < 0) g_menu_sel = id - 1;
     if (g_menu_sel >= id) g_menu_sel = 0;
