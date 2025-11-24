@@ -32,6 +32,7 @@ bool save::exists() {
 }
 
 void save::store(hai::fn<void> callback) {
+  silog::log(silog::info, "Saving game");
   g_exists = true;
   callback();
 }
