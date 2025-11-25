@@ -37,11 +37,20 @@ namespace file {
   };
 
   export class write : public t {
-  public:
-    write() : t { "wb" } {}
-
     void store(const void * data, unsigned size) {
       if (fwrite(data, size, 1, m_f) != 1) throw error {};
+    }
+
+  public:
+    write() : t { "wb" } {
+      constexpr const unsigned id = 'GAIR';
+      store(&id, sizeof(id));
+    }
+
+    void store(unsigned id, const void * data, unsigned size) {
+      store(&id, sizeof(id));
+      store(&size, sizeof(size));
+      store(data, size);
     }
   };
 }
