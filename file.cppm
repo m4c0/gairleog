@@ -19,6 +19,7 @@ namespace file {
   export struct error {};
 
   class t {
+  protected:
     hay<FILE *, open, close> m_f;
 
   public:
@@ -35,5 +36,9 @@ namespace file {
   export class write : public t {
   public:
     write() : t { "wb" } {}
+
+    void store(const void * data, unsigned size) {
+      if (fwrite(data, size, 1, m_f) != 1) throw error {};
+    }
   };
 }
