@@ -15,7 +15,6 @@ import inv;
 import jute;
 import lootfx;
 import map;
-import res;
 import save;
 import silog;
 import sitime;
@@ -359,11 +358,6 @@ static void on_main_menu() {
 }
 
 const int i = [] {
-  try {
-    res::load_all(on_init);
-  } catch (const hai::cstr & e) {
-    silog::die("Failure loading resource: %s", e.begin());
-  }
-
+  save::init(on_init);
   return 0;
 }();

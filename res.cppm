@@ -56,7 +56,7 @@ namespace res {
       });
     });
   }
-  export void load_all(void (*cb)()) {
+  export void load_all(hai::fn<void> cb) {
     load("pixelite2.lsp", cb);
   }
   export void load_locally(void (*cb)()) {
