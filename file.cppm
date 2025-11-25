@@ -52,7 +52,7 @@ namespace file {
         unsigned size;
       } res {};
       read(&res);
-      if (fseek(m_f, -sizeof(res), SEEK_CUR) != 0) throw error {};
+      if (fseek(m_f, -8, SEEK_CUR) != 0) throw error {};
       return res;
     }
     void read(unsigned id, void * data, unsigned size) {
