@@ -41,6 +41,9 @@ namespace file {
     }
   public:
     reader() : t { "rb" } {
+      unsigned ver = 0;
+      read(id, &ver, sizeof(ver));
+      if (ver != version) throw error {};
     }
 
     auto peek() {
