@@ -72,6 +72,7 @@ namespace lootfx {
       case 'LFXS': {
         r->read('LFXS', &lfxs_rem, sizeof(lfxs_rem));
         silog::assert(lfxs_rem == map.size(), "Invalid LFXS");
+        rest.truncate(0);
         return true;
       }
       case 'LFXM': {
@@ -92,6 +93,16 @@ namespace lootfx {
         strbuf.push_back(traits::move(buf));
         return true;
       }
+      case 'LFXR': {
+        silog::assert(sz, "LFXR with empty value");
+
+        hai::cstr buf { sz };
+        r->read('LFXR', buf.data(), buf.size());
+        rest.push_back_doubling(buf);
+
+        strbuf.push_back(traits::move(buf));
+        return true;
+      }
       default: return false;
     }
   }
@@ -99,5 +110,6 @@ namespace lootfx {
     unsigned i = map.size();
     w->write('LFXS', &i, sizeof(i));
     for (auto str : map) w->write('LFXM', str.data(), str.size()); 
+    for (auto str : rest) w->write('LFXR', str.data(), str.size());
   }
 }
