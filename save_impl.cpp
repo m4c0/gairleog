@@ -7,32 +7,29 @@ import lootfx;
 import res;
 import silog;
 
-static hai::fn<void> g_callback {};
 static bool g_exists = false;
 
 // Currently, "save" is also the "state" manager
-static void invoke_callback() {
+static void reset() {
   ents::reset();
   fx::reset();
   inv::reset();
   lootfx::reset();
-
-  if (g_callback) g_callback();
 }
 
 void save::prefetch(hai::fn<void> callback) {
-  g_callback = callback;
   g_exists = false;
 
   file::read f {};
   if (!f) {
     silog::log(silog::info, "Game reset");
-    return invoke_callback();
+    reset();
+    return callback();
   }
 
   silog::log(silog::info, "Game prefetched");
   g_exists = true;
-  invoke_callback();
+  callback();
 }
 
 bool save::exists() {

@@ -9,12 +9,15 @@ import hay;
 namespace file {
   static const auto filename = buoy::path("gairleog", "save.dat");
 
-  // Avoiding annoying Windows warning when instantiating hay
-  constexpr const auto open = fopen;
-  constexpr const auto close = fclose;
+  static inline auto open() {
+    return fopen(filename.begin(), "rb");
+  }
+  static inline auto close(FILE * f) {
+    if (f) fclose(f);
+  }
 
   export class read {
-    hay<FILE *, open, close> m_f { filename.begin(), "rb" };
+    hay<FILE *, open, close> m_f {};
 
   public:
     [[nodiscard]] explicit constexpr operator bool() const {
