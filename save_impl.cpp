@@ -22,7 +22,7 @@ void save::prefetch(hai::fn<void> callback) {
   reset();
 
   try {
-    file::read f {};
+    file::reader f {};
     silog::log(silog::info, "Game prefetched");
     g_exists = true;
   } catch (...) {
@@ -41,7 +41,7 @@ void save::store(hai::fn<void> callback) {
   silog::log(silog::info, "Saving game");
 
   try {
-    file::write f {};
+    file::writer f {};
 
     silog::log(silog::info, "Game saved");
   } catch (...) {
