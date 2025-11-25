@@ -323,7 +323,9 @@ static void do_main_menu() {
         });
         if (menu_item(true,     "New Game")) on_start();
         if (menu_item(has_cont, "Continue")) on_start();
+#ifndef LECO_TARGET_WASM
         if (menu_item(true,     "Exit"))     interrupt(IRQ_QUIT);
+#endif
       });
     });
     v::set_grid({ {8,4}, 8 });
