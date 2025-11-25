@@ -1,4 +1,5 @@
 export module inv; 
+import file;
 import hai;
 
 import entdefs;
@@ -29,5 +30,11 @@ namespace inv {
     if (sel < 0 || sel >= data.size()) return;
     for (auto i = sel; i < data.size() - 1; i++) data[i] = data[i + 1];
     data.pop_back();
+  }
+
+  export bool read(file::reader * r, unsigned id, unsigned sz) {
+    return false;
+  }
+  export void write(file::writer * w) {
   }
 }

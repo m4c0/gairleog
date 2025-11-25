@@ -23,6 +23,13 @@ void save::prefetch(hai::fn<void> callback) {
 
   try {
     file::reader f {};
+    while (auto x = f.peek()) {
+      if (ents::read(&f, x.id, x.size)) continue;
+      else if (inv::read(&f, x.id, x.size)) continue;
+      else if (lootfx::read(&f, x.id, x.size)) continue;
+      else silog::die("Ignoring chunk with ID %.4s and size %d", reinterpret_cast<char *>(&x.id), x.size);
+    }
+    
     silog::log(silog::info, "Game prefetched");
     g_exists = true;
   } catch (...) {
@@ -42,6 +49,9 @@ void save::store(hai::fn<void> callback) {
 
   try {
     file::writer f {};
+    ents::write(&f);
+    inv::write(&f);
+    lootfx::write(&f);
 
     silog::log(silog::info, "Game saved");
   } catch (...) {

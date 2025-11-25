@@ -63,4 +63,10 @@ namespace lootfx {
   } catch (const parser_error & e) {
     throw to_file_err("lootfx.lsp", e);
   }
+
+  bool read(file::reader * r, unsigned id, unsigned sz) {
+    return false;
+  }
+  void write(file::writer * w) {
+  }
 }

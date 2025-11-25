@@ -1,6 +1,7 @@
 export module ents;
 import dotz;
 import entdefs;
+import file;
 import fx;
 import hai;
 import hitdefs;
@@ -100,5 +101,11 @@ namespace ents {
     if (by.x != 0) ent->size.x = by.x;
     ent->pos = p_pos;
     return res;
+  }
+
+  export bool read(file::reader * r, unsigned id, unsigned sz) {
+    return false;
+  }
+  export void write(file::writer * w) {
   }
 }

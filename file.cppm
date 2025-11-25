@@ -48,8 +48,10 @@ namespace file {
 
     auto peek() {
       struct {
-        unsigned id;
-        unsigned size;
+        unsigned id = 0;
+        unsigned size = 0;
+
+        explicit operator bool() const { return id || size; }
       } res {};
       if (fread(&res, sizeof(res), 1, m_f) == 1) {
         if (fseek(m_f, -8, SEEK_CUR) != 0) throw error {};

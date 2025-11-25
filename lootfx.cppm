@@ -1,5 +1,6 @@
 #pragma leco add_impl lootfx_impl
 export module lootfx;
+import file;
 import hai;
 import jute;
 import rng;
@@ -21,6 +22,9 @@ namespace lootfx {
   hai::varray<jute::view> rest { 16 }; // List of available FX
 
   export void reset();
+
+  export bool read(file::reader * r, unsigned id, unsigned sz);
+  export void write(file::writer * w);
 
   export bool has(int s) { return map[s].size() > 0; }
 
