@@ -33,8 +33,14 @@ namespace inv {
   }
 
   export bool read(file::reader * r, unsigned id, unsigned sz) {
-    return false;
+    if (id != 'INVI') return false;
+
+    t d {};
+    r->read('INVI', &d, sizeof(t));
+    add(d);
+    return true;
   }
   export void write(file::writer * w) {
+    for (auto & d : data) w->write('INVI', &d, sizeof(t));
   }
 }
