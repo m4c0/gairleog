@@ -10,6 +10,5 @@ namespace save {
 
   export void init(hai::fn<void> callback);
   export void prefetch(hai::fn<void> callback);
-  export void post_error();
   export void store(hai::fn<void> callback);
 }

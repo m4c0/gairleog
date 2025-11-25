@@ -1,14 +1,11 @@
 module save;
-import buoy;
 import ents;
+import file;
 import fx;
 import inv;
-import jojo;
 import lootfx;
 import res;
 import silog;
-
-static const auto file = buoy::path("gairleog", "save.dat");
 
 static hai::fn<void> g_callback {};
 static bool g_exists = false;
@@ -25,16 +22,16 @@ static void invoke_callback() {
 
 void save::prefetch(hai::fn<void> callback) {
   g_callback = callback;
-  jojo::read(file, &jid, [](auto, auto &) {
-    silog::log(silog::info, "Game prefetched");
-    g_exists = true;
-    invoke_callback();
-  });
-}
-
-void save::post_error() {
-  silog::log(silog::info, "Game reset");
   g_exists = false;
+
+  file::read f {};
+  if (!f) {
+    silog::log(silog::info, "Game reset");
+    return invoke_callback();
+  }
+
+  silog::log(silog::info, "Game prefetched");
+  g_exists = true;
   invoke_callback();
 }
 
@@ -44,6 +41,7 @@ bool save::exists() {
 
 void save::store(hai::fn<void> callback) {
   silog::log(silog::info, "Saving game");
+
   g_exists = true;
   callback();
 }
