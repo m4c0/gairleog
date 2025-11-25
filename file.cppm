@@ -9,19 +9,31 @@ import hay;
 namespace file {
   static const auto filename = buoy::path("gairleog", "save.dat");
 
-  static inline auto open() {
-    return fopen(filename.begin(), "rb");
+  static inline auto open(const char * mode) {
+    return fopen(filename.begin(), mode);
   }
   static inline auto close(FILE * f) {
     if (f) fclose(f);
   }
 
-  export class read {
-    hay<FILE *, open, close> m_f {};
+  export struct error {};
+
+  class t {
+    hay<FILE *, open, close> m_f;
 
   public:
-    [[nodiscard]] explicit constexpr operator bool() const {
-      return static_cast<FILE *>(m_f);
+    explicit t(const char * mode) : m_f { mode } {
+      if (!static_cast<FILE *>(m_f)) throw error {};
     }
+  };
+
+  export class read : public t {
+  public:
+    read() : t { "rb" } {}
+  };
+
+  export class write : public t {
+  public:
+    write() : t { "wb" } {}
   };
 }

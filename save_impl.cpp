@@ -19,16 +19,17 @@ static void reset() {
 
 void save::prefetch(hai::fn<void> callback) {
   g_exists = false;
+  reset();
 
-  file::read f {};
-  if (!f) {
+  try {
+    file::read f {};
+    silog::log(silog::info, "Game prefetched");
+    g_exists = true;
+  } catch (...) {
     silog::log(silog::info, "Game reset");
     reset();
-    return callback();
   }
 
-  silog::log(silog::info, "Game prefetched");
-  g_exists = true;
   callback();
 }
 
@@ -39,6 +40,13 @@ bool save::exists() {
 void save::store(hai::fn<void> callback) {
   silog::log(silog::info, "Saving game");
 
+  try {
+    file::write f {};
+
+    silog::log(silog::info, "Game saved");
+  } catch (...) {
+    silog::log(silog::error, "Error saving game");
+  }
   g_exists = true;
   callback();
 }
