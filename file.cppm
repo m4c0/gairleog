@@ -51,8 +51,12 @@ namespace file {
         unsigned id;
         unsigned size;
       } res {};
-      read(&res);
-      if (fseek(m_f, -8, SEEK_CUR) != 0) throw error {};
+      if (fread(&res, sizeof(res), 1, m_f) == 1) {
+        if (fseek(m_f, -8, SEEK_CUR) != 0) throw error {};
+        return res;
+      }
+      if (!feof(m_f)) throw error {};
+      res = {};
       return res;
     }
     void read(unsigned id, void * data, unsigned size) {
