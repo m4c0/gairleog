@@ -82,7 +82,7 @@ namespace file {
     void write(unsigned id, const void * data, unsigned size) {
       write(&id, sizeof(id));
       write(&size, sizeof(size));
-      write(data, size);
+      if (size != 0) write(data, size);
     }
   };
 }
