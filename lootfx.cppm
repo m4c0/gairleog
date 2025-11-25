@@ -24,7 +24,7 @@ namespace lootfx {
 
   export bool has(int s) { return map[s].size() > 0; }
 
-  export auto get(int s) { return map[s]; }
+  export auto get(int s) { return s < map.size() ? map[s] : ""; }
 
   export void run(jute::view);
 
