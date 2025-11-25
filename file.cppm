@@ -65,6 +65,7 @@ namespace file {
       unsigned i {};
       read(&i); if (i != id) throw error {};
       read(&i); if (i != size) throw error {};
+      if (size == 0) return;
       if (fread(data, size, 1, m_f) != 1) throw error {};
     }
   };
