@@ -6,6 +6,9 @@ export module file;
 import buoy;
 import hay;
 
+static_assert(sizeof(unsigned) == 4);
+static_assert(__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__);
+
 namespace file {
   static const auto filename = buoy::path("gairleog", "save.dat");
 
