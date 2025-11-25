@@ -35,8 +35,28 @@ namespace file {
   };
 
   export class reader : public t {
+    template<typename T>
+    void read(T * t) {
+      if (fread(t, sizeof(T), 1, m_f) != 1) throw error {};
+    }
   public:
     reader() : t { "rb" } {
+    }
+
+    auto peek() {
+      struct {
+        unsigned id;
+        unsigned size;
+      } res {};
+      read(&res);
+      if (fseek(m_f, -sizeof(res), SEEK_CUR) != 0) throw error {};
+      return res;
+    }
+    void read(unsigned id, void * data, unsigned size) {
+      unsigned i {};
+      read(&i); if (i != id) throw error {};
+      read(&i); if (i != size) throw error {};
+      if (fread(data, size, 1, m_f) != 1) throw error {};
     }
   };
 
