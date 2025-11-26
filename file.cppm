@@ -48,9 +48,13 @@ namespace file {
       if (read<unsigned>() != version) throw error {};
     }
 
+    void read(void * data, unsigned size) {
+      if (fread(data, size, 1, m_f) != 1) throw error {};
+    }
+
     template<typename T>
     void read(T * t) {
-      if (fread(t, sizeof(T), 1, m_f) != 1) throw error {};
+      read(t, sizeof(T));
     }
 
     template<typename T> T read();
@@ -65,6 +69,7 @@ namespace file {
       unsigned len = read<unsigned>();
       if (len == 0) return {};
       hai::cstr str { len };
+      read(str.data(), len);
       return jute::heap { str };
     }
   };
