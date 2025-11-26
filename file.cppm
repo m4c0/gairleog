@@ -87,7 +87,7 @@ namespace file {
     }
 
     void write(jute::view str) {
-      write(str.size());
+      write<unsigned>(str.size());
       write(str.data(), str.size());
     }
   };
