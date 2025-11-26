@@ -15,21 +15,29 @@ static int g_ed = 0;
 static hai::array<hai::cstr> g_table {};
 static float g_grid_size = 0;
 
+static unsigned font_id(char c) {
+  static auto font = sprdef::get("font").id;
+  return font + c;
+}
+
 static void on_frame() {
   auto m = v::map();
 
-  auto font = sprdef::get("font").id;
   for (auto y = 0; y < g_table.size(); y++) {
     auto & row = g_table[y];
     for (auto x = 0; x < row.size(); x++) {
       m->push({
         .pos { x, y },
-        .id = font + row.data()[x],
+        .id = font_id(row.data()[x]),
       });
     }
   }
 
-  v::set_grid({ g_grid_size, g_grid_size });
+  dotz::vec2 p {
+    (g_table[0].size() + 0.5f) / 2.0f,
+    (g_table.size() + 0.5f) / 2.0f,
+  };
+  v::set_grid({ p, g_grid_size + 1 });
 }
 
 using namespace lispy;
