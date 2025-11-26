@@ -6,6 +6,8 @@ import fx;
 import hai;
 import hitdefs;
 import inv;
+import jute;
+import silog;
 
 namespace ents {
   export using flags = entdefs::flags;
@@ -104,7 +106,24 @@ namespace ents {
   }
 
   export void read(file::reader * r) {
+    ents.truncate(0);
+
+    auto len = r->read<unsigned>();
+    silog::infof("Reading %d entities", len);
+    for (auto i = 0; i < len; i++) {
+      auto loot = r->read<jute::heap>();
+      auto val = r->read<t>();
+      val.loot = loot;
+      ents.push_back_doubling(val);
+    }
   }
   export void write(file::writer * w) {
+    silog::infof("Storing %d entities", ents.size());
+    w->write(ents.size());
+    for (auto d : ents) {
+      w->write(d.loot);
+      d.loot = {};
+      w->write(d);
+    }
   }
 }

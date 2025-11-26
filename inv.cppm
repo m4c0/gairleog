@@ -3,6 +3,7 @@ import entdefs;
 import file;
 import hai;
 import jute;
+import silog;
 import sv;
 
 namespace inv {
@@ -37,6 +38,7 @@ namespace inv {
     data.truncate(0);
 
     auto len = r->read<unsigned>();
+    silog::infof("Reading %d inventory entries", len);
     for (auto i = 0; i < len; i++) {
       auto loot = r->read<jute::heap>();
       auto val = r->read<t>();
@@ -45,6 +47,7 @@ namespace inv {
     }
   }
   export void write(file::writer * w) {
+    silog::infof("Storing %d inventory entries", data.size());
     w->write(data.size());
     for (auto d : data) {
       w->write(d.loot);
