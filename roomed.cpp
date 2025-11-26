@@ -13,7 +13,7 @@ import v;
 
 static int g_ed = 0;
 static hai::array<hai::cstr> g_table {};
-static int g_grid_size = 0;
+static float g_grid_size = 0;
 
 static void on_frame() {
   auto m = v::map();
@@ -51,7 +51,7 @@ static const node * load_room(const node * n, const node * const * aa, unsigned 
 
     g_table[i] = (aa[i]->atom).cstr();
   }
-  g_grid_size = dotz::max(as, len0) / 2;
+  g_grid_size = static_cast<float>(dotz::max(as, len0)) / 2;
   return n;
 }
 
