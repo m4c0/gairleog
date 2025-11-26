@@ -43,10 +43,11 @@ static void on_frame() {
   ents::foreach([&](const auto & d) {
     auto p = d.pos;
     if (d.size.x < 1) p.x++;
+    auto l = dotz::pow(lights::at(d.pos).current * 3.0, 1.5);
     m->push({
       .pos = p,
       .scale = d.size,
-      .mult = lights::at(d.pos).current,
+      .mult = l,
       .id = d.sprite,
     });
   });
