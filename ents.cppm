@@ -103,8 +103,7 @@ namespace ents {
     return res;
   }
 
-  export bool read(file::reader * r, unsigned id, unsigned sz) {
-    return false;
+  export void read(file::reader * r) {
   }
   export void write(file::writer * w) {
   }

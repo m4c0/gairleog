@@ -23,7 +23,7 @@ namespace lootfx {
 
   export void reset();
 
-  export bool read(file::reader * r, unsigned id, unsigned sz);
+  export void read(file::reader * r);
   export void write(file::writer * w);
 
   export bool has(int s) { return map[s].size() > 0; }

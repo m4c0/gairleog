@@ -65,51 +65,8 @@ namespace lootfx {
     throw to_file_err("lootfx.lsp", e);
   }
 
-  static hai::chain<hai::cstr> strbuf { 128 };
-  static int lfxs_rem = ~0;
-  bool read(file::reader * r, unsigned id, unsigned sz) {
-    switch (id) {
-      case 'LFXS': {
-        r->read('LFXS', &lfxs_rem, sizeof(lfxs_rem));
-        silog::assert(lfxs_rem == map.size(), "Invalid LFXS");
-        rest.truncate(0);
-        return true;
-      }
-      case 'LFXM': {
-        silog::assert(lfxs_rem > 0, "LFXM buffer underrun");
-        silog::assert(lfxs_rem <= map.size(), "LFXM integer overflow or missing LFXS");
-
-        auto idx = map.size() - lfxs_rem--;
-        if (!sz) {
-          map[idx] = {};
-          r->read('LFXM', nullptr, 0);
-          return true;
-        }
-
-        hai::cstr buf { sz };
-        r->read('LFXM', buf.data(), buf.size());
-        map[idx] = buf;
-
-        strbuf.push_back(traits::move(buf));
-        return true;
-      }
-      case 'LFXR': {
-        silog::assert(sz, "LFXR with empty value");
-
-        hai::cstr buf { sz };
-        r->read('LFXR', buf.data(), buf.size());
-        rest.push_back_doubling(buf);
-
-        strbuf.push_back(traits::move(buf));
-        return true;
-      }
-      default: return false;
-    }
+  void read(file::reader * r) {
   }
   void write(file::writer * w) {
-    unsigned i = map.size();
-    w->write('LFXS', &i, sizeof(i));
-    for (auto str : map) w->write('LFXM', str.data(), str.size()); 
-    for (auto str : rest) w->write('LFXR', str.data(), str.size());
   }
 }

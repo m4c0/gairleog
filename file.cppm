@@ -4,7 +4,9 @@ module;
 
 export module file;
 import buoy;
+import hai;
 import hay;
+import jute;
 
 static_assert(sizeof(unsigned) == 4);
 static_assert(__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__);
@@ -34,56 +36,57 @@ namespace file {
     }
   };
 
+  template<typename T>
+  concept pointer = requires (T t) { *t; };
+  template<typename T>
+  concept not_a_pointer = !pointer<T>;
+
   export class reader : public t {
+  public:
+    reader() : t { "rb" } {
+      if (read<unsigned>() != id) throw error {};
+      if (read<unsigned>() != version) throw error {};
+    }
+
     template<typename T>
     void read(T * t) {
       if (fread(t, sizeof(T), 1, m_f) != 1) throw error {};
     }
-  public:
-    reader() : t { "rb" } {
-      unsigned ver = 0;
-      read(id, &ver, sizeof(ver));
-      if (ver != version) throw error {};
-    }
 
-    auto peek() {
-      struct {
-        unsigned id = 0;
-        unsigned size = 0;
-
-        explicit operator bool() const { return id || size; }
-      } res {};
-      if (fread(&res, sizeof(res), 1, m_f) == 1) {
-        if (fseek(m_f, -8, SEEK_CUR) != 0) throw error {};
-        return res;
-      }
-      if (!feof(m_f)) throw error {};
-      res = {};
-      return res;
+    template<typename T> T read();
+    template<not_a_pointer T>
+    T read() {
+      T val {};
+      read(&val);
+      return val;
     }
-    void read(unsigned id, void * data, unsigned size) {
-      unsigned i {};
-      read(&i); if (i != id) throw error {};
-      read(&i); if (i != size) throw error {};
-      if (size == 0) return;
-      if (fread(data, size, 1, m_f) != 1) throw error {};
+    template<>
+    jute::heap read<jute::heap>() {
+      unsigned len = read<unsigned>();
+      hai::cstr str { len };
+      return jute::heap { str };
     }
   };
 
   export class writer : public t {
+  public:
+    writer() : t { "wb" } {
+      write(id);
+      write(version);
+    }
+
     void write(const void * data, unsigned size) {
       if (fwrite(data, size, 1, m_f) != 1) throw error {};
     }
 
-  public:
-    writer() : t { "wb" } {
-      write(id, &version, sizeof(version));
+    template<not_a_pointer T>
+    void write(T val) {
+      write(&val, sizeof(T));
     }
 
-    void write(unsigned id, const void * data, unsigned size) {
-      write(&id, sizeof(id));
-      write(&size, sizeof(size));
-      if (size != 0) write(data, size);
+    void write(jute::view str) {
+      write(str.size());
+      write(str.data(), str.size());
     }
   };
 }

@@ -1,8 +1,9 @@
 export module inv; 
+import entdefs;
 import file;
 import hai;
-
-import entdefs;
+import jute;
+import sv;
 
 namespace inv {
   export struct t : entdefs::t {
@@ -32,15 +33,23 @@ namespace inv {
     data.pop_back();
   }
 
-  export bool read(file::reader * r, unsigned id, unsigned sz) {
-    if (id != 'INVI') return false;
+  export void read(file::reader * r) {
+    data.truncate(0);
 
-    t d {};
-    r->read('INVI', &d, sizeof(t));
-    add(d);
-    return true;
+    auto len = r->read<unsigned>();
+    for (auto i = 0; i < len; i++) {
+      auto loot = r->read<jute::heap>();
+      auto val = r->read<t>();
+      val.loot = loot;
+      data.push_back_doubling(val);
+    }
   }
   export void write(file::writer * w) {
-    for (auto & d : data) w->write('INVI', &d, sizeof(t));
+    w->write(data.size());
+    for (auto d : data) {
+      w->write(d.loot);
+      d.loot = {};
+      w->write(d);
+    }
   }
 }
