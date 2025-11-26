@@ -63,6 +63,7 @@ namespace file {
     template<>
     jute::heap read<jute::heap>() {
       unsigned len = read<unsigned>();
+      if (len == 0) return {};
       hai::cstr str { len };
       return jute::heap { str };
     }
@@ -76,6 +77,7 @@ namespace file {
     }
 
     void write(const void * data, unsigned size) {
+      if (size == 0) return;
       if (fwrite(data, size, 1, m_f) != 1) throw error {};
     }
 
