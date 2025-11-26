@@ -2,6 +2,7 @@
 
 import casein;
 import dotz;
+import entdefs;
 import hai;
 import jute;
 import lispy;
@@ -9,7 +10,11 @@ import res;
 import silog;
 import sires;
 import sprdef;
+import themedefs;
 import v;
+
+using namespace lispy;
+using namespace lispy::experimental;
 
 static int g_ed = 0;
 static hai::array<hai::cstr> g_table {};
@@ -20,6 +25,22 @@ static unsigned font_id(char c) {
   return font + c;
 }
 
+static unsigned theme_id(char c) {
+  basic_context<node> ctx {};
+  themedefs::eval(&ctx);
+
+  jute::view str { &c, 1 };
+  if (!ctx.defs.has(str)) return font_id(c);
+
+  auto n = eval<node>(&ctx, ctx.defs[str]);
+  if (!is_atom(n)) return font_id(c);
+  if (!entdefs::has(n->atom)) return font_id(c);
+
+  return entdefs::get(n->atom).sprite;
+}
+
+static unsigned (*g_spr_id)(char) = font_id;
+
 static void on_frame() {
   auto m = v::map();
 
@@ -28,7 +49,7 @@ static void on_frame() {
     for (auto x = 0; x < row.size(); x++) {
       m->push({
         .pos { x, y },
-        .id = font_id(row.data()[x]),
+        .id = g_spr_id(row.data()[x]),
       });
     }
   }
@@ -39,9 +60,6 @@ static void on_frame() {
   };
   v::set_grid({ p, g_grid_size + 1 });
 }
-
-using namespace lispy;
-using namespace lispy::experimental;
 
 static const node * load_room(const node * n, const node * const * aa, unsigned as) {
   if (as < 2) err(n, "rooms must have at least two rows");
@@ -91,6 +109,9 @@ const int i = [] {
   using namespace casein;
   handle(KEY_DOWN, K_DOWN, [] { g_ed++; on_init(); });
   handle(KEY_DOWN, K_UP,   [] { g_ed--; on_init(); });
+
+  handle(KEY_DOWN, K_TAB, [] { g_spr_id = theme_id; });
+  handle(KEY_UP,   K_TAB, [] { g_spr_id = font_id;  });
 
   res::load_all(on_init);
   return 0;
