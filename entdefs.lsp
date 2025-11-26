@@ -12,7 +12,7 @@
   (atkspr fx/fx_blue_slash))
 
 (entdef exit
-  (light 1)
+  (light 0.3)
   (exit)
   (spr environment/props/door_closed))
 
@@ -46,7 +46,7 @@
   ))
 
 (entdef candles
-  (light 1)
+  (light 0.3)
   (spr environment/props/candles))
 
 (entdef pot

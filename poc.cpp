@@ -13,6 +13,7 @@ import hitdefs;
 import imgui;
 import inv;
 import jute;
+import lights;
 import lootfx;
 import map;
 import save;
@@ -31,14 +32,12 @@ static void reset_keys() {
 }
 
 static void on_frame() {
-  static sitime::stopwatch ms {};
+  lights::tick();
 
   ents::foreach([&](const auto & e) {
     if (!e.flags.player) return;
-    g_map.tick_lights(e.pos, e.light, ms.millis());
     v::set_grid({ e.pos + 0.5f, 6 });
   });
-  ms = {};
 
   auto m = v::map();
   ents::foreach([&](const auto & d) {
@@ -47,7 +46,7 @@ static void on_frame() {
     m->push({
       .pos = p,
       .scale = d.size,
-      .mult = g_map.at(d.pos).clight,
+      .mult = lights::at(d.pos).current,
       .id = d.sprite,
     });
   });
@@ -62,6 +61,7 @@ static void on_exit() try {
   ents::reset();
   g_map.build();
   g_map.foreach(ents::add);
+  lights::reset();
   on_game();
 } catch (const hai::cstr & err) {
   silog::die("%s", err.begin());

@@ -1,19 +1,14 @@
 #pragma leco add_impl map_builder
-#pragma leco add_impl map_lights
 #pragma leco add_impl map_walls
 export module map;
 import dotz;
 import entdefs;
 
-struct tile : entdefs::t {
-  float clight {};
-};
-
 export struct map {
   static constexpr const unsigned w = 32;
   static constexpr const unsigned h = 32;
 
-  tile data[h][w] {};
+  entdefs::t data[h][w] {};
 
   auto & at(dotz::ivec2 p) { return data[p.y][p.x]; }
 
@@ -26,6 +21,4 @@ export struct map {
       }
     }
   }
-
-  void tick_lights(dotz::ivec2 p, float l, float ms);
 };

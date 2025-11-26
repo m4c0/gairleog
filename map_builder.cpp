@@ -7,8 +7,9 @@ import roomdefs;
 import sprdef;
 
 namespace {
-  static constexpr const tile wall {
-    { .flags { .solid = true, .wall = true } },
+  // TODO: move to lisp?
+  static constexpr const entdefs::t wall {
+    .flags { .solid = true, .wall = true },
   };
 
   [[nodiscard]] bool furnish(map & map, dotz::ivec2 aa, dotz::ivec2 bb) {
