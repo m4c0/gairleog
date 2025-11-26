@@ -18,8 +18,8 @@ namespace lootfx {
   };
   export using action_list_t = hai::chain<action>;
 
-  hai::array<jute::view> map { 4096 }; // Sprite ID to FX
-  hai::varray<jute::view> rest { 16 }; // List of available FX
+  hai::array<jute::heap> map { 4096 }; // Sprite ID to FX
+  hai::varray<jute::heap> rest { 16 }; // List of available FX
 
   export void reset();
 

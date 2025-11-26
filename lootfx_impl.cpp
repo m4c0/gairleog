@@ -19,7 +19,7 @@ namespace lootfx {
     for (auto & m : map) m = {};
 
     rest.truncate(0);
-    for (auto k : data.keys) rest.push_back_doubling(k);
+    for (auto k : data.keys) rest.push_back_doubling(jute::heap { k });
   }
 
   void run(jute::view src) try {
@@ -66,7 +66,16 @@ namespace lootfx {
   }
 
   void read(file::reader * r) {
+    for (auto & v : map) v = r->read<jute::heap>();
+
+    rest.truncate(0);
+    auto len = r->read<unsigned>();
+    for (auto i = 0; i < len; i++) rest.push_back_doubling(r->read<jute::heap>());
   }
   void write(file::writer * w) {
+    for (auto v : map) w->write(v);
+
+    w->write<unsigned>(rest.size());
+    for (auto v : rest) w->write(v);
   }
 }
