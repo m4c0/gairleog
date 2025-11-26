@@ -275,6 +275,9 @@ static void on_start() {
   inv::reset();
   v::on_frame = on_exit;
 }
+static void on_continue() {
+  v::on_frame = on_game;
+}
 
 static int g_menu_sel = 0;
 static bool g_menu_clk = false;
@@ -322,7 +325,7 @@ static void do_main_menu() {
           hbox([] {});
         });
         if (menu_item(true,     "New Game")) on_start();
-        if (menu_item(has_cont, "Continue")) on_start();
+        if (menu_item(has_cont, "Continue")) on_continue();
 #ifndef LECO_TARGET_WASM
         if (menu_item(true,     "Exit"))     interrupt(IRQ_QUIT);
 #endif
