@@ -39,7 +39,7 @@ static const node * load_room(const node * n, const node * const * aa, unsigned 
   if (as < 2) err(n, "rooms must have at least two rows");
 
   auto len0 = -1;
-  g_table.set_capacity(as);
+  g_table = hai::array<hai::cstr>{ as };
   for (auto i = 0; i < as; i++) {
     if (!is_atom(aa[i])) err(aa[i], "rooms must only have atoms as rows");
 
