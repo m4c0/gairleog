@@ -21,6 +21,11 @@ static int g_ed = 0;
 static hai::array<hai::cstr> g_table {};
 static float g_grid_size = 0;
 
+static unsigned cursor_id() {
+  static auto id = sprdef::get("fx/fx_orange_bite").id + 4;
+  return id;
+}
+
 static unsigned font_id(char c) {
   static auto font = sprdef::get("font").id;
   return font + c;
@@ -44,6 +49,14 @@ static unsigned (*g_spr_id)(char) = font_id;
 
 static void on_frame() {
   auto m = v::map();
+
+  dotz::ivec2 tbl_sz { g_table[0].size(), g_table.size() };
+  g_cursor = dotz::clamp(g_cursor, { 0 }, tbl_sz - 1);
+  m->push({
+    .pos = g_cursor,
+    .mult = 0.3,
+    .id = cursor_id(),
+  });
 
   for (auto y = 0; y < g_table.size(); y++) {
     auto & row = g_table[y];
@@ -110,6 +123,7 @@ static void on_init() {
 static constexpr auto cursor(int x, int y) {
   return [=] {
     g_cursor = g_cursor + dotz::ivec2 { x, y };
+    v::on_frame = on_frame;
   };
 }
 const int i = [] {
