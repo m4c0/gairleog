@@ -16,9 +16,15 @@ import v;
 using namespace lispy;
 using namespace lispy::experimental;
 
-static int g_ed = 0;
 static hai::array<hai::cstr> g_table {};
 static float g_grid_size = 0;
+
+static auto & ed(int max) {
+  static int i = 0;
+  if (i < 0) i = max - 1;
+  if (i >= max) i = 0;
+  return i;
+}
 
 static auto & cursor() {
   static dotz::ivec2 i {};
@@ -103,11 +109,7 @@ static const node * load_room(const node * n, const node * const * aa, unsigned 
 static const node * load_roomdefs(const node * n, const node * const * aa, unsigned as) {
   context ctx { n->ctx->allocator }; 
   ctx.fns["room"] = load_room;
-
-  if (g_ed < 0) g_ed = as - 1;
-  if (g_ed >= as) g_ed = 0;
-
-  return eval<node>(&ctx, aa[g_ed]);
+  return eval<node>(&ctx, aa[ed(as)]);
 }
 
 static void load(void *, const hai::cstr & src) try {
@@ -132,8 +134,8 @@ static constexpr auto cursor(int x, int y) {
 }
 const int i = [] {
   using namespace casein;
-  handle(KEY_DOWN, K_LBRACKET, [] { g_ed--; on_init(); });
-  handle(KEY_DOWN, K_RBRACKET, [] { g_ed++; on_init(); });
+  handle(KEY_DOWN, K_LBRACKET, [] { ed(0xFFFF)--; on_init(); });
+  handle(KEY_DOWN, K_RBRACKET, [] { ed(0xFFFF)++; on_init(); });
 
   handle(KEY_DOWN, K_UP,    cursor( 0, -1));
   handle(KEY_DOWN, K_DOWN,  cursor( 0, +1));
