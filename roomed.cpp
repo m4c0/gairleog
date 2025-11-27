@@ -59,6 +59,7 @@ static void on_frame() {
     (g_table.size() + 0.5f) / 2.0f,
   };
   v::set_grid({ p, g_grid_size + 1 });
+  v::on_frame = [] {};
 }
 
 static const node * load_room(const node * n, const node * const * aa, unsigned as) {
@@ -110,8 +111,14 @@ const int i = [] {
   handle(KEY_DOWN, K_DOWN, [] { g_ed++; on_init(); });
   handle(KEY_DOWN, K_UP,   [] { g_ed--; on_init(); });
 
-  handle(KEY_DOWN, K_TAB, [] { g_spr_id = theme_id; });
-  handle(KEY_UP,   K_TAB, [] { g_spr_id = font_id;  });
+  handle(KEY_DOWN, K_TAB, [] {
+    g_spr_id = theme_id;
+    if (!casein::keydown_repeating) v::on_frame = on_frame;
+  });
+  handle(KEY_UP, K_TAB, [] {
+    g_spr_id = font_id;
+    v::on_frame = on_frame;
+  });
 
   res::load_all(on_init);
   return 0;
