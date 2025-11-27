@@ -6,6 +6,8 @@ using namespace lispy;
 using namespace lispy::experimental;
 
 namespace entdefs {
+  hashley::fin<t> defs { 127 };
+
   struct cnode : node, t {
     void (*attr)(cnode *, const cnode *);
   };
@@ -66,5 +68,12 @@ namespace entdefs {
     ctx.run(src);
   } catch (const lispy::parser_error & e) {
     throw lispy::to_file_err("entdefs.lsp", e);
+  }
+
+  bool has(jute::view name) {
+    return defs.has(name);
+  }
+  const t & get(jute::view name) {
+    return defs[name];
   }
 }

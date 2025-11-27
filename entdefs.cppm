@@ -70,14 +70,8 @@ namespace entdefs {
     ctx.fns["toad"]    = mem_set<Node, { .toad    = true }>;
   }
 
-  hashley::fin<t> defs { 127 };
-
-  export bool has(jute::view name) {
-    return defs.has(name);
-  }
-  export const auto & get(jute::view name) {
-    return defs[name];
-  }
+  export bool has(jute::view name);
+  export const t & get(jute::view name);
 
   export void run(jute::view src);
 }
