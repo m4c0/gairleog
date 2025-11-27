@@ -16,10 +16,16 @@ import v;
 using namespace lispy;
 using namespace lispy::experimental;
 
-static dotz::ivec2 g_cursor {};
 static int g_ed = 0;
 static hai::array<hai::cstr> g_table {};
 static float g_grid_size = 0;
+
+static auto & cursor() {
+  static dotz::ivec2 i {};
+  dotz::ivec2 tbl_sz { g_table[0].size(), g_table.size() };
+  i = dotz::clamp(i, { 0 }, tbl_sz - 1);
+  return i;
+}
 
 static unsigned cursor_id() {
   static auto id = sprdef::get("fx/fx_orange_bite").id + 4;
@@ -50,10 +56,8 @@ static unsigned (*g_spr_id)(char) = font_id;
 static void on_frame() {
   auto m = v::map();
 
-  dotz::ivec2 tbl_sz { g_table[0].size(), g_table.size() };
-  g_cursor = dotz::clamp(g_cursor, { 0 }, tbl_sz - 1);
   m->push({
-    .pos = g_cursor,
+    .pos = cursor(),
     .mult = 0.3,
     .id = cursor_id(),
   });
@@ -122,7 +126,7 @@ static void on_init() {
 
 static constexpr auto cursor(int x, int y) {
   return [=] {
-    g_cursor = g_cursor + dotz::ivec2 { x, y };
+    cursor() = cursor() + dotz::ivec2 { x, y };
     v::on_frame = on_frame;
   };
 }
@@ -142,6 +146,20 @@ const int i = [] {
   });
   handle(KEY_UP, K_TAB, [] {
     g_spr_id = font_id;
+    v::on_frame = on_frame;
+  });
+
+  handle(KEY_DOWN, [] {
+    basic_context<node> ctx {};
+    themedefs::eval(&ctx);
+
+    char c = casein::last_key;
+    jute::view str { &c, 1 };
+    if (ctx.defs.has(str)) {
+      auto [x, y] = cursor();
+      g_table[y].data()[x] = c;
+    }
+
     v::on_frame = on_frame;
   });
 
