@@ -1,9 +1,12 @@
 #pragma leco app
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
 
 import casein;
 import dotz;
 import entdefs;
 import hai;
+import hay;
 import jute;
 import lispy;
 import print;
@@ -127,35 +130,46 @@ static void on_init() {
   sires::read("roomdefs.lsp", nullptr, load);
 }
 
+struct save_ctx : context {
+  FILE * file;
+};
 static const node * save_room(const node * n, const node * const * aa, unsigned as) {
-  put("  (room");
+  auto f = static_cast<save_ctx *>(n->ctx)->file;
+  fput(f, "  (room");
   for (auto i = 0; i < as; i++) {
     if (!is_atom(aa[i])) err(aa[i], "rooms must only have atoms as rows");
-    put(' ', aa[i]->atom);
+    fput(f, ' ', aa[i]->atom);
   }
-  putln(")");
+  fputln(f, ")");
   return n;
 }
 static const node * save_roomdefs(const node * n, const node * const * aa, unsigned as) {
-  putln("(roomdefs");
+  auto f = static_cast<save_ctx *>(n->ctx)->file;
+  fputln(f, "(roomdefs");
 
-  context ctx { n->ctx->allocator }; 
+  save_ctx ctx {};
+  ctx.allocator = n->ctx->allocator; 
+  ctx.file = f;
   ctx.fns["room"] = save_room;
   for (auto i = 0; i < as; i++) {
     if (i != ed(as)) {
       auto _ = eval<node>(&ctx, aa[i]);
       continue;
     }
-    put("  (room");
-    for (auto & row : g_table) put(" ", row);
-    putln(") ;");
+    fput(f, "  (room");
+    for (auto & row : g_table) fput(f, " ", row);
+    fputln(f, ")");
   }
 
-  putln(")");
+  fputln(f, ")");
   return n;
 }
 static void save(void *, const hai::cstr & src) try {
-  basic_context<node> ctx {}; 
+  hay<FILE *, fopen, fclose> f { "roomdefs.lsp", "wb" };
+
+  save_ctx ctx {};
+  ctx.allocator = allocator<node>();
+  ctx.file = f;
   ctx.fns["roomdefs"] = save_roomdefs;
   run<node>(src, &ctx);
 } catch (const lispy::parser_error & e) {
