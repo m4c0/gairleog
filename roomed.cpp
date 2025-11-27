@@ -126,6 +126,31 @@ static void on_init() {
   sires::read("roomdefs.lsp", nullptr, load);
 }
 
+static const node * save_room(const node * n, const node * const * aa, unsigned as) {
+  return n;
+}
+static const node * save_roomdefs(const node * n, const node * const * aa, unsigned as) {
+  context ctx { n->ctx->allocator }; 
+  ctx.fns["room"] = save_room;
+  for (auto i = 0; i < as; i++) {
+    if (i == ed(as)) {}
+    auto _ = eval<node>(&ctx, aa[i]);
+  }
+  return n;
+}
+static void save(void *, const hai::cstr & src) try {
+  basic_context<node> ctx {}; 
+  ctx.fns["roomdefs"] = save_roomdefs;
+  run<node>(src, &ctx);
+} catch (const lispy::parser_error & e) {
+  silog::error(lispy::to_file_err("roomdefs.lsp", e));
+}
+
+static void on_save() {
+  silog::info("Saving new rooms");
+  sires::read("roomdefs.lsp", nullptr, save);
+}
+
 static constexpr auto cursor(int x, int y) {
   return [=] {
     cursor() = cursor() + dotz::ivec2 { x, y };
@@ -150,6 +175,8 @@ const int i = [] {
     g_spr_id = font_id;
     v::on_frame = on_frame;
   });
+
+  handle(KEY_DOWN, K_ENTER, on_save);
 
   handle(KEY_DOWN, [] {
     basic_context<node> ctx {};
