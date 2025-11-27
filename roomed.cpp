@@ -6,6 +6,7 @@ import entdefs;
 import hai;
 import jute;
 import lispy;
+import print;
 import res;
 import silog;
 import sires;
@@ -127,15 +128,30 @@ static void on_init() {
 }
 
 static const node * save_room(const node * n, const node * const * aa, unsigned as) {
+  put("  (room");
+  for (auto i = 0; i < as; i++) {
+    if (!is_atom(aa[i])) err(aa[i], "rooms must only have atoms as rows");
+    put(' ', aa[i]->atom);
+  }
+  putln(")");
   return n;
 }
 static const node * save_roomdefs(const node * n, const node * const * aa, unsigned as) {
+  putln("(roomdefs");
+
   context ctx { n->ctx->allocator }; 
   ctx.fns["room"] = save_room;
   for (auto i = 0; i < as; i++) {
-    if (i == ed(as)) {}
-    auto _ = eval<node>(&ctx, aa[i]);
+    if (i != ed(as)) {
+      auto _ = eval<node>(&ctx, aa[i]);
+      continue;
+    }
+    put("  (room");
+    for (auto & row : g_table) put(" ", row);
+    putln(") ;");
   }
+
+  putln(")");
   return n;
 }
 static void save(void *, const hai::cstr & src) try {
