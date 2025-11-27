@@ -155,11 +155,10 @@ const int i = [] {
 
     char c = casein::last_key;
     jute::view str { &c, 1 };
-    if (ctx.defs.has(str)) {
-      auto [x, y] = cursor();
-      g_table[y].data()[x] = c;
-    }
+    if (!ctx.defs.has(str)) return;
 
+    auto [x, y] = cursor();
+    g_table[y].data()[x] = c;
     v::on_frame = on_frame;
   });
 
