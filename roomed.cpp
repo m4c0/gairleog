@@ -16,6 +16,7 @@ import v;
 using namespace lispy;
 using namespace lispy::experimental;
 
+static dotz::ivec2 g_cursor {};
 static int g_ed = 0;
 static hai::array<hai::cstr> g_table {};
 static float g_grid_size = 0;
@@ -106,10 +107,20 @@ static void on_init() {
   sires::read("roomdefs.lsp", nullptr, load);
 }
 
+static constexpr auto cursor(int x, int y) {
+  return [=] {
+    g_cursor = g_cursor + dotz::ivec2 { x, y };
+  };
+}
 const int i = [] {
   using namespace casein;
-  handle(KEY_DOWN, K_DOWN, [] { g_ed++; on_init(); });
-  handle(KEY_DOWN, K_UP,   [] { g_ed--; on_init(); });
+  handle(KEY_DOWN, K_LBRACKET, [] { g_ed--; on_init(); });
+  handle(KEY_DOWN, K_RBRACKET, [] { g_ed++; on_init(); });
+
+  handle(KEY_DOWN, K_UP,    cursor( 0, -1));
+  handle(KEY_DOWN, K_DOWN,  cursor( 0, +1));
+  handle(KEY_DOWN, K_LEFT,  cursor(-1,  0));
+  handle(KEY_DOWN, K_RIGHT, cursor(+1,  0));
 
   handle(KEY_DOWN, K_TAB, [] {
     g_spr_id = theme_id;
