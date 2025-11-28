@@ -51,7 +51,7 @@ namespace entdefs {
   }
 
   export bool has(jute::view name);
-  export const t & get(jute::view name);
+  export t get(jute::view name);
 
   export void run(jute::view src);
 }

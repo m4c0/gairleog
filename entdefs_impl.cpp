@@ -1,4 +1,6 @@
 module entdefs;
+import hai;
+import hashley;
 import lispy;
 import sprdef;
 
@@ -6,12 +8,14 @@ using namespace lispy;
 using namespace lispy::experimental;
 
 namespace entdefs {
-  hashley::fin<t> defs { 127 };
+  struct entdef {
+    const node * n;
+    hai::array<const node *> args;
+  };
+  hashley::fin<entdef> defs { 127 };
 
   struct cnode : node, t {
     void (*attr)(cnode *, const cnode *);
-  };
-  struct context : basic_context<cnode> {
   };
 
   static float to_light(const lispy::node * n) {
@@ -67,19 +71,21 @@ namespace entdefs {
     return ctx;
   }();
 
+  basic_context<cnode> src_ctx {};
   void run(jute::view src) try {
-    context ctx {};
+    auto & ctx = src_ctx = {};
     ctx.fns["entdef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as < 1) lispy::err(n, "entdef expects a name and attributes");
       if (!is_atom(aa[0])) lispy::err(aa[0], "expecting an atom as the entdef name");
 
-      basic_context<cnode> ctx {};
-      ctx.parent = &entdef_ctx;
-      auto nn = fill_clone<cnode>(&ctx, n, aa + 1, as - 1);
-      defs[aa[0]->atom] = *nn;
-      return nn;
+      auto & d = defs[aa[0]->atom] = {
+        .n = n,
+        .args = hai::array<const node *>{ as - 1 },
+      };
+      for (auto i = 0; i < as - 1; i++) d.args[i] = aa[i + 1];
+      return n;
     };
-    ctx.run(src);
+    run<cnode>(src, &ctx);
   } catch (const lispy::parser_error & e) {
     throw lispy::to_file_err("entdefs.lsp", e);
   }
@@ -87,7 +93,13 @@ namespace entdefs {
   bool has(jute::view name) {
     return defs.has(name);
   }
-  const t & get(jute::view name) {
-    return defs[name];
+  t get(jute::view name) try {
+    auto & d = defs[name];
+
+    basic_context<cnode> ctx {};
+    ctx.parent = &entdef_ctx;
+    return *fill_clone<cnode>(&ctx, d.n, d.args.begin(), d.args.size());
+  } catch (const lispy::parser_error & e) {
+    throw lispy::to_file_err("entdefs.lsp", e);
   }
 }
