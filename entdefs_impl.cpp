@@ -39,6 +39,13 @@ namespace entdefs {
     return sprdef::get(name->atom);
   }
 
+  template<flags Flags>
+  static constexpr const auto mem_set = lispy::experimental::mem_set<&cnode::attr, [](auto * self, auto * n) {
+    u32flags u {};
+    u.u32 = bit_of(Flags) | bit_of(self->flags);
+    self->flags = u.f;
+  }>;
+
   static const auto entdef_ctx = [] {
     basic_context<cnode> ctx {};
     ctx.fns["atkspr"]   = mem_fn<&cnode::attr, &cnode::attack_sprite, to_spr_pair>;
@@ -49,7 +56,14 @@ namespace entdefs {
     ctx.fns["maxlife"]  = mem_fn<&cnode::attr, &cnode::max_life,      to_life>;
     ctx.fns["spr"]      = mem_fn<&cnode::attr, &cnode::sprite,        to_spr>;
     ctx.fns["strength"] = mem_fn<&cnode::attr, &cnode::strength,      to_i>;
-    entdefs::lispy<cnode>(ctx);
+
+    ctx.fns["ceramic"] = mem_set<{ .ceramic = true }>;
+    ctx.fns["enemy"]   = mem_set<{ .enemy   = true }>;
+    ctx.fns["exit"]    = mem_set<{ .exit    = true }>;
+    ctx.fns["food"]    = mem_set<{ .food    = true }>;
+    ctx.fns["player"]  = mem_set<{ .player  = true }>;
+    ctx.fns["solid"]   = mem_set<{ .solid   = true }>;
+    ctx.fns["toad"]    = mem_set<{ .toad    = true }>;
     return ctx;
   }();
 
