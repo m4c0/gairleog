@@ -72,9 +72,9 @@ namespace entdefs {
   }();
 
   basic_context<cnode> src_ctx {};
-  arena<cnode> src_arena {};
+  auto src_arena = arena<cnode>::make();
   void run(jute::view src) try {
-    auto a = src_arena.use();
+    auto a = src_arena->use();
 
     auto & ctx = src_ctx = {};
     ctx.fns["entdef"] = [](auto n, auto aa, auto as) -> const lispy::node * {

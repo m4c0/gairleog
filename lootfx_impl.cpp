@@ -25,7 +25,7 @@ namespace lootfx {
   void run(jute::view src) try {
     data = {
       .src = jute::heap { src },
-      .arena { new arena<node> {} },
+      .arena = arena<node>::make(),
     };
     auto a = data.arena->use();
 
