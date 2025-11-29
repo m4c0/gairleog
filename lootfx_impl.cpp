@@ -10,9 +10,9 @@ using namespace lispy::experimental;
 namespace lootfx {
   struct {
     jute::heap src {};
-    hai::fn<node *> alloc {};
     hashley::fin<const node *> nodes { 127 };
     hai::varray<jute::view> keys { 128 };
+    hai::uptr<arena<node>> arena {};
   } data {};
 
   void reset() {
@@ -23,11 +23,13 @@ namespace lootfx {
   }
 
   void run(jute::view src) try {
-    data = {};
-    data.alloc = allocator<node>();
-    data.src = jute::heap { src };
+    data = {
+      .src = jute::heap { src },
+      .arena { new arena<node> {} },
+    };
+    auto a = data.arena->use();
 
-    basic_context<node> ctx { data.alloc };
+    basic_context<node> ctx {};
     ctx.fns["fx"] = [](auto n, auto aa, auto as) -> const node * {
       if (as != 2) err(n, "expecting a name and an action");
       if (!is_atom(aa[0])) err(aa[0], "expecting an atom as the name");

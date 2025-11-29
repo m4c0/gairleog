@@ -72,7 +72,10 @@ namespace entdefs {
   }();
 
   basic_context<cnode> src_ctx {};
+  arena<cnode> src_arena {};
   void run(jute::view src) try {
+    auto a = src_arena.use();
+
     auto & ctx = src_ctx = {};
     ctx.fns["entdef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as < 1) lispy::err(n, "entdef expects a name and attributes");
@@ -96,6 +99,7 @@ namespace entdefs {
   t get(jute::view name) try {
     auto & d = defs[name];
 
+    temp_arena<cnode> a {};
     basic_context<cnode> ctx {};
     ctx.parent = &entdef_ctx;
     return *fill_clone<cnode>(&ctx, d.n, d.args.begin(), d.args.size());

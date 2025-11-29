@@ -34,7 +34,7 @@ namespace hitdefs {
   };
 
   const node * eval(const node * n, action_list_t * result) {
-    context ctx { basic_context<node> { n->ctx->allocator }, result };
+    context ctx { {}, result };
     ctx.fns["block"]  = ref<action::block>;
     ctx.fns["exit"]   = ref<action::exit>;
     ctx.fns["hit"]    = ref<action::hit>;
@@ -45,6 +45,8 @@ namespace hitdefs {
   }
 
   export action_list_t check(entdefs::flags from, entdefs::flags to) try {
+    lispy::temp_arena<node> a {};
+
     action_list_t result { 8 };
     struct context : hitdefs::context {
       unsigned from;

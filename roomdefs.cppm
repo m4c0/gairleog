@@ -32,10 +32,8 @@ namespace roomdefs {
   export hai::sptr<t> for_size(unsigned ew, unsigned eh) try {
     using namespace lispy::experimental;
 
-    context ctx {
-      { .allocator = lispy::allocator<node>() },
-      ew, eh,
-    }; 
+    lispy::temp_arena<node> a {};
+    context ctx { {}, ew, eh }; 
     ctx.fns["room"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as < 2) lispy::err(n, "rooms must have at least two rows");
 

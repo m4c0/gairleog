@@ -111,7 +111,8 @@ static const node * load_room(const node * n, const node * const * aa, unsigned 
 }
 
 static const node * load_roomdefs(const node * n, const node * const * aa, unsigned as) {
-  context ctx { n->ctx->allocator }; 
+  temp_arena<node> a {};
+  context ctx {}; 
   ctx.fns["room"] = load_room;
   return eval<node>(&ctx, aa[ed(as)]);
 }
@@ -148,7 +149,6 @@ static const node * save_roomdefs(const node * n, const node * const * aa, unsig
   fputln(f, "(roomdefs");
 
   save_ctx ctx {};
-  ctx.allocator = n->ctx->allocator; 
   ctx.file = f;
   ctx.fns["room"] = save_room;
   for (auto i = 0; i < as; i++) {
@@ -168,7 +168,6 @@ static void save(void *, const hai::cstr & src) try {
   hay<FILE *, fopen, fclose> f { "roomdefs.lsp", "wb" };
 
   save_ctx ctx {};
-  ctx.allocator = allocator<node>();
   ctx.file = f;
   ctx.fns["roomdefs"] = save_roomdefs;
   run<node>(src, &ctx);
