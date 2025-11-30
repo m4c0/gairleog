@@ -28,21 +28,20 @@ struct app_stuff {
   vee::gr_pipeline ppl = vee::create_graphics_pipeline({
     .pipeline_layout = *pl,
     .render_pass = *rp,
+    .topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP,
     .back_face_cull = false,
     .shaders {
       voo::shader("gairleog.vert.spv").pipeline_vert_stage(),
       voo::shader("gairleog.frag.spv").pipeline_frag_stage(),
     },
     .bindings {
-      voo::one_quad::vertex_input_bind(),
       vee::vertex_input_bind_per_instance(sizeof(v::sprite)),
     },
     .attributes {
-      voo::one_quad::vertex_attribute(0),
-      vee::vertex_attribute_vec2(1, traits::offset_of(&v::sprite::pos)),
-      vee::vertex_attribute_vec2(1, traits::offset_of(&v::sprite::scale)),
-      vee::vertex_attribute_uint(1, traits::offset_of(&v::sprite::id)),
-      vee::vertex_attribute_float(1, traits::offset_of(&v::sprite::mult)),
+      vee::vertex_attribute_vec2(0, traits::offset_of(&v::sprite::pos)),
+      vee::vertex_attribute_vec2(0, traits::offset_of(&v::sprite::scale)),
+      vee::vertex_attribute_uint(0, traits::offset_of(&v::sprite::id)),
+      vee::vertex_attribute_float(0, traits::offset_of(&v::sprite::mult)),
     },
   });
   vee::sampler smp = [] {
@@ -52,7 +51,6 @@ struct app_stuff {
     info.unnormalizedCoordinates = wagen::vk_true;
     return vee::create_sampler(info);
   }();
-  voo::one_quad oq { dq };
   voo::bound_buffer buf = voo::bound_buffer::create_from_host(
       dq.physical_device(),
       v::max_sprites * sizeof(v::sprite),
@@ -116,8 +114,8 @@ static void on_frame() try {
     vee::cmd_bind_gr_pipeline(cb, *g_as->ppl);
     vee::cmd_bind_descriptor_set(cb, *g_as->pl, 0, g_as->dset);
     vee::cmd_push_vertex_constants(cb, *g_as->pl, &pc);
-    vee::cmd_bind_vertex_buffers(cb, 1, *g_as->buf.buffer, ofs);
-    g_as->oq.run(cb, 0, g_as->count);
+    vee::cmd_bind_vertex_buffers(cb, 0, *g_as->buf.buffer, ofs);
+    vee::cmd_draw(cb, 4, g_as->count);
   });
   g_es->sw.queue_present();
 } catch (const hai::cstr & msg) {

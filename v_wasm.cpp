@@ -13,8 +13,6 @@ using namespace jute::literals;
 static hai::varray<v::sprite> buffer { 10240 };
 
 namespace v {
-  static constexpr const float quad[] { 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0 };
-
   static hai::cstr vert_shader {};
   static hai::cstr frag_shader {};
 
@@ -33,7 +31,6 @@ namespace v {
   }
 
   static int g_program;
-  static int g_quad_buffer;
   static int g_inst_buffer;
   static int g_uni_buffer;
   static int g_texture;
@@ -66,35 +63,29 @@ namespace v {
     auto u_tex = get_uniform_location(p, "tex");
     uniform1i(u_tex, 0); 
 
-    auto b = g_quad_buffer = create_buffer();
-    bind_buffer(ARRAY_BUFFER, b);
-    buffer_data(ARRAY_BUFFER, quad, sizeof(quad), STATIC_DRAW);
-    enable_vertex_attrib_array(0);
-    vertex_attrib_pointer(0, 2, FLOAT, false, 0, 0);
-
     static constexpr const auto stride = sizeof(sprite);
 
     g_uni_buffer = create_buffer();
     bind_buffer_base(UNIFORM_BUFFER, g_u_uni, g_uni_buffer);
 
-    b = g_inst_buffer = gelo::create_buffer();
+    auto b = g_inst_buffer = gelo::create_buffer();
     bind_buffer(ARRAY_BUFFER, b);
 
+    enable_vertex_attrib_array(0);
+    vertex_attrib_pointer(0, 2, FLOAT, false, stride, traits::offset_of(&v::sprite::pos));
+    vertex_attrib_divisor(0, 1);
+
     enable_vertex_attrib_array(1);
-    vertex_attrib_pointer(1, 2, FLOAT, false, stride, traits::offset_of(&v::sprite::pos));
+    vertex_attrib_pointer(1, 2, FLOAT, false, stride, traits::offset_of(&v::sprite::scale));
     vertex_attrib_divisor(1, 1);
 
     enable_vertex_attrib_array(2);
-    vertex_attrib_pointer(2, 2, FLOAT, false, stride, traits::offset_of(&v::sprite::scale));
+    vertex_attrib_i_pointer(2, 1, UNSIGNED_INT, stride, traits::offset_of(&v::sprite::id));
     vertex_attrib_divisor(2, 1);
 
     enable_vertex_attrib_array(3);
-    vertex_attrib_i_pointer(3, 1, UNSIGNED_INT, stride, traits::offset_of(&v::sprite::id));
+    vertex_attrib_pointer(3, 1, FLOAT, false, stride, traits::offset_of(&v::sprite::mult));
     vertex_attrib_divisor(3, 1);
-
-    enable_vertex_attrib_array(4);
-    vertex_attrib_pointer(4, 1, FLOAT, false, stride, traits::offset_of(&v::sprite::mult));
-    vertex_attrib_divisor(4, 1);
   }
 
   void load_texture(jute::view name) {
