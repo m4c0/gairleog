@@ -17,6 +17,7 @@ import lights;
 import lootfx;
 import map;
 import save;
+import sicfg;
 import silog;
 import sitime;
 import sprdef;
@@ -314,16 +315,22 @@ static void on_options() {
       });
       return clicked;
     };
-    const auto opt_item = [&](sv name, bool * v) -> bool {
-      auto res = menu_item(name);
-      if (res) *v = !*v;
-      return res;
+    const auto opt_item = [&](sv name, bool v) -> bool {
+      return menu_item(name);
     };
 
     start(&*m, {}, [&] {
       vbox([&] {
-        if (opt_item("Fullscreen", &casein::fullscreen)) casein::interrupt(IRQ_FULLSCREEN);
-        if (opt_item("Sounds", &audio::enabled)) audio::interrupt();
+        if (opt_item("Fullscreen", casein::fullscreen)) {
+          casein::fullscreen = !casein::fullscreen;
+          casein::interrupt(IRQ_FULLSCREEN);
+          sicfg::boolean("windowed", !fullscreen);
+        }
+        if (opt_item("Sounds", audio::enabled)) {
+          audio::enabled = !audio::enabled;
+          audio::interrupt();
+          sicfg::boolean("mute", !audio::enabled);
+        }
         if (menu_item("Back")) v::on_frame = do_main_menu;
       });
     });
@@ -419,6 +426,8 @@ static void on_main_menu() {
 }
 
 const int i = [] {
+  audio::enabled = !sicfg::boolean("mute");
+  casein::fullscreen = !sicfg::boolean("windowed");
   save::init(on_init);
   return 0;
 }();
