@@ -18,3 +18,17 @@ export namespace audio {
   void read(file::reader * r);
   void write(file::writer * w);
 }
+
+module : private;
+
+bool g_enabled = true;
+
+bool audio::enabled() { return g_enabled; }
+void audio::enabled(bool e) { g_enabled = e; }
+
+void audio::read(file::reader * r) {
+  enabled(r->read<bool>());
+}
+void audio::write(file::writer * w) {
+  w->write<bool>(enabled());
+}
