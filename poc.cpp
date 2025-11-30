@@ -314,9 +314,16 @@ static void on_options() {
       });
       return clicked;
     };
+    const auto opt_item = [&](sv name, bool * v) -> bool {
+      auto res = menu_item(name);
+      if (res) *v = !*v;
+      return res;
+    };
 
     start(&*m, {}, [&] {
       vbox([&] {
+        if (opt_item("Fullscreen", &casein::fullscreen)) casein::interrupt(IRQ_FULLSCREEN);
+        if (opt_item("Sounds", &audio::enabled)) audio::interrupt();
         if (menu_item("Back")) v::on_frame = do_main_menu;
       });
     });

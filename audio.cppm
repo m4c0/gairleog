@@ -12,8 +12,8 @@ export namespace audio {
   };
   void play(source);
 
-  bool enabled();
-  void enabled(bool);
+  extern bool enabled;
+  void interrupt();
 
   void read(file::reader * r);
   void write(file::writer * w);
@@ -21,14 +21,12 @@ export namespace audio {
 
 module : private;
 
-bool g_enabled = true;
-
-bool audio::enabled() { return g_enabled; }
-void audio::enabled(bool e) { g_enabled = e; }
+bool audio::enabled = true;
+void audio::interrupt() {}
 
 void audio::read(file::reader * r) {
-  enabled(r->read<bool>());
+  enabled = r->read<bool>();
 }
 void audio::write(file::writer * w) {
-  w->write<bool>(enabled());
+  w->write<bool>(enabled);
 }
