@@ -304,34 +304,40 @@ static void on_options() {
 
     using namespace imgui;
 
-    const auto menu_item = [&](sv name) -> bool {
+    const auto menu_item = [&](sv name, auto && extra) -> bool {
       bool clicked = false;
       hbox([&] {
         if (g_opt_clk && g_opt_sel == id) clicked = true;;
         sprite(g_opt_sel == id ? mark : 0);
         space({ 0.5f });
         text(font, name);
+        extra();
         id++;
       });
       return clicked;
     };
     const auto opt_item = [&](sv name, bool v) -> bool {
-      return menu_item(name);
+      return menu_item(name, [&] {
+        text(font, v ? "on"_sv : "off"_sv);
+      });
     };
 
     start(&*m, {}, [&] {
       vbox([&] {
-        if (opt_item("Fullscreen", casein::fullscreen)) {
+        scale({ 4.0f }, [&] {
+          hbox([&] {});
+        });
+        if (opt_item("Fullscreen ", casein::fullscreen)) {
           casein::fullscreen = !casein::fullscreen;
           casein::interrupt(IRQ_FULLSCREEN);
           sicfg::boolean("windowed", !fullscreen);
         }
-        if (opt_item("Sounds", audio::enabled)) {
+        if (opt_item("Sounds     ", audio::enabled)) {
           audio::enabled = !audio::enabled;
           audio::interrupt();
           sicfg::boolean("mute", !audio::enabled);
         }
-        if (menu_item("Back")) v::on_frame = do_main_menu;
+        if (menu_item("Back", [] {})) v::on_frame = do_main_menu;
       });
     });
 
