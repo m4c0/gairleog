@@ -15,22 +15,12 @@ export namespace audio {
 
   extern bool enabled;
   void interrupt();
-
-  void read(file::reader * r);
-  void write(file::writer * w);
 }
 
 module : private;
 
 bool audio::enabled = true;
 void audio::interrupt() {}
-
-void audio::read(file::reader * r) {
-  enabled = r->read<bool>();
-}
-void audio::write(file::writer * w) {
-  w->write<bool>(enabled);
-}
 
 static constexpr const auto rate = 44100;
 static void fill_buffer(float * data, unsigned samples) {
