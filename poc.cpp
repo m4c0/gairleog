@@ -280,6 +280,53 @@ static void on_continue() {
   v::on_frame = on_game;
 }
 
+static void do_main_menu();
+
+static int g_opt_sel = 0;
+static bool g_opt_clk = false;
+static void on_options() {
+  using namespace casein;
+  reset_k(KEY_DOWN);
+  reset_k(KEY_UP);
+
+  handle(KEY_DOWN, K_UP,   [] { g_opt_sel--; });
+  handle(KEY_DOWN, K_DOWN, [] { g_opt_sel++; });
+  handle(KEY_DOWN, K_ENTER, [] { g_opt_clk = true; });
+
+  v::on_frame = [] {
+    auto m = v::map();
+
+    auto font = sprdef::get("font").id;
+    auto mark = entdefs::get("player").sprite;
+
+    int id = 0;
+
+    using namespace imgui;
+
+    const auto menu_item = [&](sv name) -> bool {
+      bool clicked = false;
+      hbox([&] {
+        if (g_opt_clk && g_opt_sel == id) clicked = true;;
+        sprite(g_opt_sel == id ? mark : 0);
+        space({ 0.5f });
+        text(font, name);
+        id++;
+      });
+      return clicked;
+    };
+
+    start(&*m, {}, [&] {
+      vbox([&] {
+        if (menu_item("Back")) v::on_frame = do_main_menu;
+      });
+    });
+
+    if (g_opt_sel < 0) g_opt_sel = id - 1;
+    if (g_opt_sel >= id) g_opt_sel = 0;
+    if (g_opt_clk) g_opt_clk = false;
+  };
+}
+
 static int g_menu_sel = 0;
 static bool g_menu_clk = false;
 static void do_main_menu() {
@@ -327,6 +374,7 @@ static void do_main_menu() {
         });
         if (menu_item(true,     "New Game")) on_start();
         if (menu_item(has_cont, "Continue")) on_continue();
+        if (menu_item(true,     "Options"))  on_options();
 #ifndef LECO_TARGET_WASM
         if (menu_item(true,     "Exit"))     interrupt(IRQ_QUIT);
 #endif
