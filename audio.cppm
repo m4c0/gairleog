@@ -34,7 +34,7 @@ static void fill_buffer(float * data, unsigned samples) {
 
   float volume = audio::enabled ? 1 : 0;
   for (auto i = 0; i < samples; i++) {
-    *data++ = g_ptr > g_playing.size() ? 0 : volume * g_playing[g_ptr++];
+    *data++ = g_ptr >= g_playing.size() ? 0 : volume * g_playing[g_ptr++];
   }
 }
 const int i = [] {
