@@ -9,6 +9,7 @@ module;
 
 export module res;
 import entdefs;
+import errs;
 import hai;
 import hitdefs;
 import jojo;
@@ -21,10 +22,8 @@ import sprdef;
 import themedefs;
 
 namespace res {
-  export struct jid {} jid {};
-
   static void safe_load(jute::view file, hai::fn<void, jute::view> cb) {
-    sires::read(file, &jid, [=](auto ptr, hai::cstr & src) mutable {
+    sires::read(file, &errs::jid, [=](auto ptr, hai::cstr & src) mutable {
       cb(src);
     });
   }

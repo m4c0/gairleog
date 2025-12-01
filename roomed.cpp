@@ -164,7 +164,7 @@ static const node * save_roomdefs(const node * n, const node * const * aa, unsig
   fputln(f, ")");
   return n;
 }
-static void save(void *, const hai::cstr & src) try {
+static void save_(void *, const hai::cstr & src) try {
   hay<FILE *, fopen, fclose> f { "roomdefs.lsp", "wb" };
 
   save_ctx ctx {};
@@ -177,7 +177,7 @@ static void save(void *, const hai::cstr & src) try {
 
 static void on_save() {
   silog::info("Saving new rooms");
-  sires::read("roomdefs.lsp", nullptr, save);
+  sires::read("roomdefs.lsp", nullptr, save_);
 }
 
 static constexpr auto cursor(int x, int y) {

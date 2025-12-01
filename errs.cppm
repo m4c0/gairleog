@@ -1,12 +1,15 @@
 export module errs;
 import jojo;
 import jute;
-import res;
 import save;
+
+namespace errs {
+  export struct jid {} jid;
+};
 
 const int i = [] {
   jojo::on_error([](void * ptr, jute::view msg) {
-    if (ptr == &res::jid) throw msg.cstr();
+    if (ptr == &errs::jid) throw msg.cstr();
   });
 
   return 0;
