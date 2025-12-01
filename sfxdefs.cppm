@@ -7,23 +7,28 @@ import hai;
 import lispy;
 import sires;
 import sv;
+import wav;
 
 namespace sfxdefs {
   struct t {
-    int id;
+    int id {};
+    hai::array<float> samples {};
   };
   hashley::fin<t> ids { 127 };
 
-  static void load_wav(void * ptr, hai::cstr & buf) {
+  static void load_wav(void * ptr, hai::cstr & buf) try {
+    static_cast<t *>(ptr)->samples = wav::load(buf);
+  } catch (const wav::error & e) {
+    silog::error(e.msg);
   }
 
+  static auto g_arena = lispy::arena<lispy::node>::make();
+  static lispy::context g_ctx {};
   static void run(sv src) try {
     using namespace lispy;
     using namespace lispy::experimental;
 
-    temp_arena<node> a {};
-    context ctx {};
-    ctx.fns["sfxdef"] = [](auto n, auto aa, auto as) -> const node * {
+    g_ctx.fns["sfxdef"] = [](auto n, auto aa, auto as) -> const node * {
       if (as != 2) erred(n, "sfxdef requires name and an index");
       if (!is_atom(aa[0])) erred(n, "expecting an atom as the name");
       auto name = aa[0]->atom;
@@ -33,7 +38,9 @@ namespace sfxdefs {
       sires::read(aa[0]->atom, &tt, load_wav);
       return n;
     };
-    run<node>(src, &ctx);
+
+    auto a = g_arena->use();
+    run<node>(src, &g_ctx);
   } catch (const lispy::parser_error & e) {
     throw lispy::to_file_err("sfxdefs.lsp", e);
   }
