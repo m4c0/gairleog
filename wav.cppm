@@ -1,5 +1,6 @@
 export module wav;
 import jute;
+import hai;
 import sv;
 
 namespace wav {
@@ -71,7 +72,31 @@ static sv run(sv data) {
   return { p, sz };
 }
 
+struct sample {
+  unsigned char left[3];
+  unsigned char right[3];
+};
+static_assert(sizeof(sample) == 6);
+
+// Ref on changing frequencies and stereo-to-mono conversion:
+// https://dsp.stackexchange.com/questions/2484/converting-from-stereo-to-mono-by-averaging
+static hai::array<float> convert(sv data) {
+  auto p = reinterpret_cast<const sample *>(data.begin());
+  hai::array<float> res { static_cast<unsigned>(data.size() / (3 * 2)) };
+  for (auto & s : res) {
+    auto [l, r] = *p++;
+    unsigned ll = (l[0] << 16) | (l[1] << 8) | l[2];
+    unsigned rr = (r[0] << 16) | (r[1] << 8) | r[2];
+    float lf = 2.0f * ll / static_cast<float>(0xFFFFFF) - 1.0f;
+    float rf = 2.0f * rr / static_cast<float>(0xFFFFFF) - 1.0f;
+    s = (lf + rf) / 2.0f;
+  }
+  return res;
+}
+
 namespace wav {
-  export sv run(sv data) { return ::run(data); }
+  export hai::array<float> load(sv wave_file) {
+    return convert(run(wave_file));
+  }
 }
 
