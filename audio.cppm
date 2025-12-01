@@ -1,6 +1,7 @@
 export module audio;
 import file;
 import hai;
+import mtx;
 import siaudio;
 import silog;
 
@@ -16,10 +17,12 @@ module : private;
 bool audio::enabled = true;
 void audio::interrupt() {}
 
+static mtx::mutex g_mtx {};
 static hai::array<float> g_playing {};
-static volatile unsigned g_ptr = 0;
+static unsigned g_ptr = 0;
 void audio::play(const hai::array<float> & samples) {
-  g_ptr = ~0;
+  mtx::lock l { &g_mtx };
+
   g_playing.set_capacity(samples.size());
   for (auto i = 0; i < samples.size(); i++) g_playing[i] = samples[i];
   g_ptr = 0;
@@ -27,14 +30,11 @@ void audio::play(const hai::array<float> & samples) {
 
 static constexpr const auto rate = 44100;
 static void fill_buffer(float * data, unsigned samples) {
+  mtx::lock l { &g_mtx };
+
   float volume = audio::enabled ? 1 : 0;
   for (auto i = 0; i < samples; i++) {
-    if (g_ptr > g_playing.size()) {
-      *data++ = 0;
-      continue;
-    }
-    *data++ = volume * g_playing[g_ptr];
-    g_ptr = g_ptr + 1;
+    *data++ = g_ptr > g_playing.size() ? 0 : volume * g_playing[g_ptr++];
   }
 }
 const int i = [] {
