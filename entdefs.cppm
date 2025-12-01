@@ -21,9 +21,17 @@ namespace entdefs {
     flags f;
   };
 
+  export struct sfx {
+    jute::heap attack {};
+    jute::heap block {};
+    jute::heap miss {};
+    jute::heap pick {};
+    jute::heap walk {};
+  };
+
   export struct t {
     jute::heap loot {};
-    jute::heap attack_sfx {};
+    sfx sfx {};
 
     float        light         {};
     unsigned     life          {};

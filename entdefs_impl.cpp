@@ -18,6 +18,9 @@ namespace entdefs {
   struct cnode : node, t {
     void (*attr)(cnode *, const cnode *);
   };
+  struct snode : node, sfx {
+    void (*attr)(snode *, const snode *);
+  };
 
   static float to_light(const lispy::node * n) {
     auto i = lispy::to_f(n);
@@ -55,9 +58,26 @@ namespace entdefs {
     self->flags = u.f;
   }>;
 
+  static const auto sfx_ctx = [] {
+    basic_context<snode> ctx {};
+    ctx.fns["attack"] = mem_fn<&snode::attr, &snode::attack, to_sfx>;
+    ctx.fns["block"]  = mem_fn<&snode::attr, &snode::block,  to_sfx>;
+    ctx.fns["miss"]   = mem_fn<&snode::attr, &snode::miss,   to_sfx>;
+    ctx.fns["pick"]   = mem_fn<&snode::attr, &snode::pick,   to_sfx>;
+    ctx.fns["walk"]   = mem_fn<&snode::attr, &snode::walk,   to_sfx>;
+    return ctx;
+  }();
+
   static const auto entdef_ctx = [] {
     basic_context<cnode> ctx {};
-    ctx.fns["atksfx"]   = mem_fn<&cnode::attr, &cnode::attack_sfx,    to_sfx>;
+    ctx.fns["sfx"] = [](auto n, auto aa, auto as) -> const node * {
+      auto nn = clone<cnode>(n);
+      temp_arena<snode> a {};
+      context ctx { .parent = &sfx_ctx };
+      nn->sfx = *fill_clone<snode>(&ctx, n, aa, as);
+      return nn;
+    };
+
     ctx.fns["atkspr"]   = mem_fn<&cnode::attr, &cnode::attack_sprite, to_spr_pair>;
     ctx.fns["defense"]  = mem_fn<&cnode::attr, &cnode::defense,       to_i>;
     ctx.fns["life"]     = mem_fn<&cnode::attr, &cnode::life,          to_life>;

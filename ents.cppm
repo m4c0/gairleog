@@ -7,6 +7,7 @@ import hai;
 import hitdefs;
 import inv;
 import jute;
+import sfxdefs;
 import silog;
 
 namespace ents {
@@ -82,6 +83,7 @@ namespace ents {
             break;
           case hit:
             fx::add(d.pos, ent->attack_sprite);
+            sfxdefs::play(ent->sfx.attack);
             p_pos = ent->pos;
             take_hit(&d);
             break;
@@ -111,11 +113,17 @@ namespace ents {
     auto len = r->read<unsigned>();
     silog::infof("Reading %d entities", len);
     for (auto i = 0; i < len; i++) {
-      auto loot       = r->read<jute::heap>();
-      auto attack_sfx = r->read<jute::heap>();
+      auto loot = r->read<jute::heap>();
+      entdefs::sfx sfx {
+        .attack = r->read<jute::heap>(),
+        .block  = r->read<jute::heap>(),
+        .miss   = r->read<jute::heap>(),
+        .pick   = r->read<jute::heap>(),
+        .walk   = r->read<jute::heap>(),
+      };
       auto val = r->read<t>();
       val.loot = loot;
-      val.attack_sfx = attack_sfx;
+      val.sfx = sfx;
       ents.push_back_doubling(val);
     }
   }
@@ -123,8 +131,15 @@ namespace ents {
     silog::infof("Storing %d entities", ents.size());
     w->write(ents.size());
     for (auto d : ents) {
-      w->write(d.loot);       d.loot = {};
-      w->write(d.attack_sfx); d.attack_sfx = {};
+      w->write(d.loot);
+      w->write(d.sfx.attack);
+      w->write(d.sfx.block);
+      w->write(d.sfx.miss);
+      w->write(d.sfx.pick);
+      w->write(d.sfx.walk);
+
+      d.loot = {};
+      d.sfx = {};
       w->write(d);
     }
   }
