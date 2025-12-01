@@ -23,6 +23,7 @@ import sitime;
 import sprdef;
 import sv;
 import v;
+import wav;
 
 static map g_map {};
 
@@ -281,18 +282,47 @@ static void on_continue() {
   v::on_frame = on_game;
 }
 
+static auto menu_click_wav = [] {
+  try {
+    return wav::load("01_human_atk_sword_1.wav");
+  } catch (const wav::error & err) {
+    silog::error("Could not load menu sound file");
+    return hai::array<float> {};
+  }
+}();
+static auto menu_change_wav = [] {
+  try {
+    return wav::load("20_human_walk_stone_1.wav");
+  } catch (const wav::error & err) {
+    silog::error("Could not load menu sound file");
+    return hai::array<float> {};
+  }
+}();
+static void menu(int * opt, bool * clk) {
+  using namespace casein;
+  reset_k(KEY_DOWN);
+  reset_k(KEY_UP);
+
+  handle(KEY_DOWN, K_UP, [opt] {
+    (*opt)--;
+    audio::play(menu_change_wav);
+  });
+  handle(KEY_DOWN, K_DOWN, [opt] {
+    (*opt)++;
+    audio::play(menu_change_wav);
+  });
+  handle(KEY_DOWN, K_ENTER, [clk] {
+    *clk = true;
+    audio::play(menu_click_wav);
+  });
+}
+
 static void do_main_menu();
 
 static int g_opt_sel = 0;
 static bool g_opt_clk = false;
 static void on_options() {
-  using namespace casein;
-  reset_k(KEY_DOWN);
-  reset_k(KEY_UP);
-
-  handle(KEY_DOWN, K_UP,   [] { g_opt_sel--; });
-  handle(KEY_DOWN, K_DOWN, [] { g_opt_sel++; });
-  handle(KEY_DOWN, K_ENTER, [] { g_opt_clk = true; });
+  menu(&g_opt_sel, &g_opt_clk);
 
   v::on_frame = [] {
     auto m = v::map();
@@ -329,8 +359,8 @@ static void on_options() {
         });
         if (opt_item("Fullscreen ", casein::fullscreen)) {
           casein::fullscreen = !casein::fullscreen;
-          casein::interrupt(IRQ_FULLSCREEN);
-          sicfg::boolean("windowed", !fullscreen);
+          casein::interrupt(casein::IRQ_FULLSCREEN);
+          sicfg::boolean("windowed", !casein::fullscreen);
         }
         if (opt_item("Sounds     ", audio::enabled)) {
           audio::enabled = !audio::enabled;
@@ -350,14 +380,7 @@ static void on_options() {
 static int g_menu_sel = 0;
 static bool g_menu_clk = false;
 static void do_main_menu() {
-  using namespace casein;
-  reset_k(KEY_DOWN);
-  reset_k(KEY_UP);
-
-  handle(KEY_DOWN, K_UP,   [] { g_menu_sel--; });
-  handle(KEY_DOWN, K_DOWN, [] { g_menu_sel++; });
-
-  handle(KEY_DOWN, K_ENTER, [] { g_menu_clk = true; });
+  menu(&g_menu_sel, &g_menu_clk);
 
   v::on_frame = [] {
     auto m = v::map();
@@ -396,6 +419,7 @@ static void do_main_menu() {
         if (menu_item(has_cont, "Continue")) on_continue();
         if (menu_item(true,     "Options"))  on_options();
 #ifndef LECO_TARGET_WASM
+        using namespace casein;
         if (menu_item(true,     "Exit"))     interrupt(IRQ_QUIT);
 #endif
       });

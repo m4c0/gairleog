@@ -1,17 +1,11 @@
 export module audio;
 import file;
+import hai;
 import siaudio;
 import silog;
 
 export namespace audio {
-  enum class source {
-    eat,
-    hit,
-    miss,
-    pick,
-    walk,
-  };
-  void play(source);
+  void play(const hai::array<float> & samples);
 
   extern bool enabled;
   void interrupt();
@@ -22,13 +16,25 @@ module : private;
 bool audio::enabled = true;
 void audio::interrupt() {}
 
+static hai::array<float> g_playing {};
+static volatile unsigned g_ptr = 0;
+void audio::play(const hai::array<float> & samples) {
+  g_ptr = ~0;
+  g_playing.set_capacity(samples.size());
+  for (auto i = 0; i < samples.size(); i++) g_playing[i] = samples[i];
+  g_ptr = 0;
+}
+
 static constexpr const auto rate = 44100;
 static void fill_buffer(float * data, unsigned samples) {
-  static unsigned xxx = 0;
   float volume = audio::enabled ? 1 : 0;
-  for (auto i = 0; i < samples; i++, xxx++) {
-    float sample = 0.3 * (xxx % 1000) / 1000.0f;
-    data[i] = volume * sample;
+  for (auto i = 0; i < samples; i++) {
+    if (g_ptr > g_playing.size()) {
+      *data++ = 0;
+      continue;
+    }
+    *data++ = volume * g_playing[g_ptr];
+    g_ptr = g_ptr + 1;
   }
 }
 const int i = [] {
