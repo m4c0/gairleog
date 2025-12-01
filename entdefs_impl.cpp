@@ -64,6 +64,7 @@ namespace entdefs {
     ctx.fns["block"]  = mem_fn<&snode::attr, &snode::block,  to_sfx>;
     ctx.fns["miss"]   = mem_fn<&snode::attr, &snode::miss,   to_sfx>;
     ctx.fns["pick"]   = mem_fn<&snode::attr, &snode::pick,   to_sfx>;
+    ctx.fns["poison"] = mem_fn<&snode::attr, &snode::poison, to_sfx>;
     ctx.fns["walk"]   = mem_fn<&snode::attr, &snode::walk,   to_sfx>;
     return ctx;
   }();

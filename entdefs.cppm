@@ -26,6 +26,7 @@ namespace entdefs {
     jute::heap block {};
     jute::heap miss {};
     jute::heap pick {};
+    jute::heap poison {};
     jute::heap walk {};
   };
 
