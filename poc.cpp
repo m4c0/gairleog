@@ -19,12 +19,11 @@ import map;
 import save;
 import sicfg;
 import silog;
-import sires;
 import sitime;
 import sprdef;
+import sfxdefs;
 import sv;
 import v;
-import wav;
 
 static map g_map {};
 
@@ -283,8 +282,6 @@ static void on_continue() {
   v::on_frame = on_game;
 }
 
-static hai::array<float> g_menu_click_wav = {};
-static hai::array<float> g_menu_change_wav = {};
 static void menu(int * opt, bool * clk) {
   using namespace casein;
   reset_k(KEY_DOWN);
@@ -292,15 +289,15 @@ static void menu(int * opt, bool * clk) {
 
   handle(KEY_DOWN, K_UP, [opt] {
     (*opt)--;
-    audio::play(g_menu_change_wav);
+    sfxdefs::play("menu_selection");
   });
   handle(KEY_DOWN, K_DOWN, [opt] {
     (*opt)++;
-    audio::play(g_menu_change_wav);
+    sfxdefs::play("menu_selection");
   });
   handle(KEY_DOWN, K_ENTER, [clk] {
     *clk = true;
-    audio::play(g_menu_click_wav);
+    sfxdefs::play("menu_click");
   });
 }
 
@@ -447,20 +444,5 @@ const int i = [] {
   audio::enabled = !sicfg::boolean("mute");
   casein::fullscreen = !sicfg::boolean("windowed");
   save::init(on_init);
-
-  sires::read("01_human_atk_sword_1.wav", nullptr, [](auto, auto & data) {
-    try {
-      g_menu_click_wav = wav::load(data);
-    } catch (const wav::error & err) {
-      silog::error(err.msg);
-    }
-  });
-  sires::read("20_human_walk_stone_1.wav", nullptr, [](auto, auto & data) {
-    try {
-      g_menu_change_wav = wav::load(data);
-    } catch (const wav::error & err) {
-      silog::error(err.msg);
-    }
-  });
   return 0;
 }();

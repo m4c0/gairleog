@@ -1,6 +1,7 @@
 #pragma leco add_resource_dir sfx
 #pragma leco add_resource "sfxdefs.lsp"
 export module sfxdefs;
+import audio;
 import errs;
 import hashley;
 import hai;
@@ -63,5 +64,9 @@ namespace sfxdefs {
     auto nn = eval<node>(&ctx, n);
     if (!is_atom(nn)) return dummy;
     return cache[nn->atom];
+  }
+
+  export void play(sv name) {
+    audio::play(get(name).samples);
   }
 }
