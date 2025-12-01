@@ -76,6 +76,7 @@ namespace ents {
         switch (act) {
           using enum hitdefs::action;
           case block:
+            sfxdefs::play(ent->sfx.block);
             p_pos = ent->pos;
             break;
           case exit:
@@ -90,12 +91,15 @@ namespace ents {
           case miss:
             // TODO: attack anim
             p_pos = ent->pos;
+            sfxdefs::play(ent->sfx.miss);
             break;
           case pick:
             inv::add(d);
+            sfxdefs::play(ent->sfx.pick);
             d = {}; 
             break;
           case poison:
+            sfxdefs::play(ent->sfx.poison);
             p_pos = ent->pos;
             d.poison++;
             break;
