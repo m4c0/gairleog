@@ -5,16 +5,16 @@ import errs;
 import hashley;
 import hai;
 import lispy;
+import silog;
 import sires;
 import sv;
 import wav;
 
 namespace sfxdefs {
   struct t {
-    int id {};
     hai::array<float> samples {};
   };
-  hashley::fin<t> ids { 127 };
+  hashley::fin<t> cache { 127 };
 
   static void load_wav(void * ptr, hai::cstr & buf) try {
     static_cast<t *>(ptr)->samples = wav::load(buf);
@@ -29,13 +29,12 @@ namespace sfxdefs {
     using namespace lispy::experimental;
 
     g_ctx.fns["sfxdef"] = [](auto n, auto aa, auto as) -> const node * {
-      if (as != 2) erred(n, "sfxdef requires name and an index");
-      if (!is_atom(aa[0])) erred(n, "expecting an atom as the name");
+      if (as != 1) erred(n, "sfxdef requires a single atom with the file name");
+      if (!is_atom(aa[0])) erred(n, "expecting an atom as the file name");
       auto name = aa[0]->atom;
-      auto id = to_i(aa[1]);
-      auto & tt = ids[name];
-      tt.id = id;
+      auto & tt = cache[name];
       sires::read(aa[0]->atom, &tt, load_wav);
+      n->ctx->defs[aa[0]->atom] = aa[0];
       return n;
     };
 
@@ -50,5 +49,19 @@ namespace sfxdefs {
       run(src);
       callback();
     });
+  }
+
+  static const t dummy {};
+  export const t & get(sv name) {
+    auto n = g_ctx.defs[name];
+    if (!n) return dummy;
+
+    using namespace lispy;
+
+    temp_arena<node> a {};
+    context ctx { .parent = &g_ctx };
+    auto nn = eval<node>(&ctx, n);
+    if (!is_atom(nn)) return dummy;
+    return cache[nn->atom];
   }
 }
