@@ -67,6 +67,7 @@ static sv run(sv data) {
   auto sz = r.read<unsigned>();
   auto p = r.ptr();
   if (p + sz > data.end()) erred("Data in WAV overflows");
+  if (sz % (3 * 2)) erred("Data in WAV is misaligned");
   return { p, sz };
 }
 
