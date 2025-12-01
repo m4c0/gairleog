@@ -75,6 +75,7 @@ namespace entdefs {
       auto nn = clone<cnode>(n);
       temp_arena<snode> a {};
       context ctx { .parent = &sfx_ctx };
+      nn->attr = [](auto * self, auto * n) { self->sfx = n->sfx; };
       nn->sfx = *fill_clone<snode>(&ctx, n, aa, as);
       return nn;
     };
