@@ -66,6 +66,9 @@ namespace sfxdefs {
     return cache[nn->atom];
   }
 
+  export bool has(sv name) {
+    return g_ctx.defs.has(name);
+  }
   export void play(sv name) {
     audio::play(get(name).samples);
   }

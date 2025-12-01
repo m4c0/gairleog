@@ -2,6 +2,7 @@ module entdefs;
 import hai;
 import hashley;
 import lispy;
+import sfxdefs;
 import sprdef;
 
 using namespace lispy;
@@ -32,6 +33,10 @@ namespace entdefs {
     if (!entdefs::has(n->atom)) lispy::erred(n, "unknown entdef");
     return jute::heap { n->atom };
   }
+  static jute::heap to_sfx(const lispy::node * n) {
+    if (!sfxdefs::has(n->atom)) lispy::erred(n, "unknown sfxdef");
+    return jute::heap { n->atom };
+  }
   static unsigned to_spr(const lispy::node * name) {
     if (!lispy::is_atom(name)) lispy::erred(name, "spr expects atom as name");
     if (!sprdef::has(name->atom)) lispy::erred(name, "invalid sprite name");
@@ -52,6 +57,7 @@ namespace entdefs {
 
   static const auto entdef_ctx = [] {
     basic_context<cnode> ctx {};
+    ctx.fns["atksfx"]   = mem_fn<&cnode::attr, &cnode::attack_sfx,    to_sfx>;
     ctx.fns["atkspr"]   = mem_fn<&cnode::attr, &cnode::attack_sprite, to_spr_pair>;
     ctx.fns["defense"]  = mem_fn<&cnode::attr, &cnode::defense,       to_i>;
     ctx.fns["life"]     = mem_fn<&cnode::attr, &cnode::life,          to_life>;

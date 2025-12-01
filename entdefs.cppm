@@ -23,6 +23,7 @@ namespace entdefs {
 
   export struct t {
     jute::heap loot {};
+    jute::heap attack_sfx {};
 
     float        light         {};
     unsigned     life          {};

@@ -9,6 +9,7 @@
   (player)
   (solid)
   (spr characters/human_knight)
+  (atksfx player_attack)
   (atkspr fx/fx_blue_slash))
 
 (entdef exit

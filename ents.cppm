@@ -111,9 +111,11 @@ namespace ents {
     auto len = r->read<unsigned>();
     silog::infof("Reading %d entities", len);
     for (auto i = 0; i < len; i++) {
-      auto loot = r->read<jute::heap>();
+      auto loot       = r->read<jute::heap>();
+      auto attack_sfx = r->read<jute::heap>();
       auto val = r->read<t>();
       val.loot = loot;
+      val.attack_sfx = attack_sfx;
       ents.push_back_doubling(val);
     }
   }
@@ -121,8 +123,8 @@ namespace ents {
     silog::infof("Storing %d entities", ents.size());
     w->write(ents.size());
     for (auto d : ents) {
-      w->write(d.loot);
-      d.loot = {};
+      w->write(d.loot);       d.loot = {};
+      w->write(d.attack_sfx); d.attack_sfx = {};
       w->write(d);
     }
   }
