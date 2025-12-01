@@ -9,7 +9,13 @@ import sires;
 import sv;
 
 namespace sfxdefs {
-  hashley::niamh ids { 127 };
+  struct t {
+    int id;
+  };
+  hashley::fin<t> ids { 127 };
+
+  static void load_wav(void * ptr, hai::cstr & buf) {
+  }
 
   static void run(sv src) try {
     using namespace lispy;
@@ -20,8 +26,11 @@ namespace sfxdefs {
     ctx.fns["sfxdef"] = [](auto n, auto aa, auto as) -> const node * {
       if (as != 2) err(n, "sfxdef requires name and an index");
       if (!is_atom(aa[0])) err(n, "expecting an atom as the name");
+      auto name = aa[0]->atom;
       auto id = to_i(aa[1]);
-      ids[aa[0]->atom] = id;
+      auto & tt = ids[name];
+      tt.id = id;
+      sires::read(aa[0]->atom, &tt, load_wav);
       return n;
     };
     run<node>(src, &ctx);
