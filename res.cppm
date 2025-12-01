@@ -17,6 +17,7 @@ import jute;
 import lispy;
 import lootfx;
 import roomdefs;
+import sfxdefs;
 import sires;
 import sprdef;
 import themedefs;
@@ -32,22 +33,24 @@ namespace res {
     safe_load(sprdef_file, [=](auto src) mutable {
       sprdef::run(sprdef_file, src);
 
-      safe_load("entdefs.lsp", [=](auto src) mutable {
-        entdefs::run(src);
+      sfxdefs::load([=] mutable {
+        safe_load("entdefs.lsp", [=](auto src) mutable {
+          entdefs::run(src);
 
-        safe_load("themedefs.lsp", [=](auto src) mutable {
-          themedefs::run(src);
+          safe_load("themedefs.lsp", [=](auto src) mutable {
+            themedefs::run(src);
 
-          safe_load("roomdefs.lsp", [=](auto src) mutable {
-            roomdefs::run(src);
+            safe_load("roomdefs.lsp", [=](auto src) mutable {
+              roomdefs::run(src);
 
-            safe_load("hitdefs.lsp", [=](auto src) mutable {
-              hitdefs::run(src);
+              safe_load("hitdefs.lsp", [=](auto src) mutable {
+                hitdefs::run(src);
 
-              safe_load("lootfx.lsp", [=](auto src) mutable {
-                lootfx::run(src);
+                safe_load("lootfx.lsp", [=](auto src) mutable {
+                  lootfx::run(src);
 
-                cb();
+                  cb();
+                });
               });
             });
           });
