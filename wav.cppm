@@ -85,10 +85,10 @@ static hai::array<float> convert(sv data) {
   hai::array<float> res { static_cast<unsigned>(data.size() / (3 * 2)) };
   for (auto & s : res) {
     auto [l, r] = *p++;
-    unsigned ll = (l[0] << 16) | (l[1] << 8) | l[2];
-    unsigned rr = (r[0] << 16) | (r[1] << 8) | r[2];
-    float lf = 2.0f * ll / static_cast<float>(0xFFFFFF) - 1.0f;
-    float rf = 2.0f * rr / static_cast<float>(0xFFFFFF) - 1.0f;
+    signed ll = (l[2] << 24) | (l[1] << 16) | (l[0] << 8);
+    signed rr = (r[2] << 24) | (r[1] << 16) | (r[0] << 8);
+    float lf = ll / static_cast<float>(0xFFFFFF00);
+    float rf = rr / static_cast<float>(0xFFFFFF00);
     s = (lf + rf) / 2.0f;
   }
   return res;

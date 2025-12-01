@@ -1,4 +1,4 @@
-#pragma leco test
+#pragma leco tool
 
 import jojo;
 import print;
@@ -14,7 +14,7 @@ int main() try {
 
   siaudio::filler([](float * data, unsigned samples) {
     for (auto i = 0; i < samples; i++) {
-      *data++ = wav[ptr++];
+      *data++ = ptr >= wav.size() ? 0 : wav[ptr++];
     }
   });
   siaudio::rate(44100);
