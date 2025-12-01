@@ -34,6 +34,13 @@ public:
   template<typename T> void skip() {
     auto _ = read<T>();
   }
+  void skip(unsigned size) {
+    auto s = static_cast<const char *>(m_ptr);
+    auto e = static_cast<const char *>(m_end);
+    auto n = s + size;
+    if (n > e) erred("Premature EOF");
+    m_ptr = n;
+  }
 };
 
 static void run(sv data) {
@@ -50,6 +57,14 @@ static void run(sv data) {
   if (r.read<unsigned>() != 44100) erred("Expecting WAV with sample rate of 44100");
   r.skip<unsigned>(); // dwAvgBytesPerSec
   r.skip<short>(); // wBlockAlign
+  if (r.read<short>() != 24) erred("Only 24 bits per sample is supported");
+
+  while (r.read<unsigned>() != 'atad') {
+    r.skip(r.read<unsigned>());
+  }
+
+  auto sz = r.read<unsigned>();
+  putln("Data with size ", sz);
 }
 
 int main() try {
