@@ -64,7 +64,10 @@ static void run(sv data) {
   }
 
   auto sz = r.read<unsigned>();
+  auto smps = sz / (3 * 2);
   putln("Data with size ", sz);
+  putln("Num samples = ", smps);
+  putln("Length = ", smps / 44100.f);
 }
 
 int main() try {
