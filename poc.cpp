@@ -443,6 +443,7 @@ static void on_main_menu() {
 }
 
 const int i = [] {
+  audio::init();
   audio::enabled = !sicfg::boolean("mute");
   casein::fullscreen = !sicfg::boolean("windowed");
   save::init(on_init);

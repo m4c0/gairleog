@@ -6,6 +6,7 @@ import siaudio;
 import silog;
 
 export namespace audio {
+  void init();
   void play(const hai::array<float> & samples);
 
   extern bool enabled;
@@ -37,9 +38,8 @@ static void fill_buffer(float * data, unsigned samples) {
     *data++ = g_ptr >= g_playing.size() ? 0 : volume * g_playing[g_ptr++];
   }
 }
-const int i = [] {
+void audio::init() {
   silog::info("Starting audio");
   siaudio::filler(fill_buffer);
   siaudio::rate(rate);
-  return 0;
-}();
+}
