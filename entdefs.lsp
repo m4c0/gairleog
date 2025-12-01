@@ -11,7 +11,12 @@
   (spr characters/human_knight)
   (atkspr fx/fx_blue_slash)
   (sfx
-    (attack player_attack)))
+    (attack player_attack)
+    (block player_block)
+    (miss player_miss)
+    (pick player_pick)
+    (poison player_poison)
+    (walk player_walk)))
 
 (entdef exit
   (light 0.3)
