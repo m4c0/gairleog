@@ -28,7 +28,7 @@ namespace hitdefs {
 
   template<action Fn>
   static inline constexpr const auto ref = [](auto n, auto aa, auto as) -> const lispy::node * {
-    if (as != 0) lispy::err(n, "actions do not take arguments");
+    if (as != 0) lispy::erred(n, "actions do not take arguments");
     static_cast<context *>(n->ctx)->result->push_back(Fn);
     return n;
   };
@@ -57,15 +57,15 @@ namespace hitdefs {
     ctx.to   = entdefs::bit_of(to);
     ctx.result = &result;
     ctx.fns["hitdef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      if (as != 3) lispy::err(n, "hitdef requires source, target and action");
-      if (!is_atom(aa[0])) lispy::err(aa[0], "source must be an atom");
-      if (!is_atom(aa[1])) lispy::err(aa[1], "target must be an atom");
+      if (as != 3) lispy::erred(n, "hitdef requires source, target and action");
+      if (!is_atom(aa[0])) lispy::erred(aa[0], "source must be an atom");
+      if (!is_atom(aa[1])) lispy::erred(aa[1], "target must be an atom");
 
       auto from = entdefs::bit_of(aa[0]->atom);
       auto to   = entdefs::bit_of(aa[1]->atom);
 
-      if (!from) lispy::err(aa[0], "unknown component");
-      if (!to)   lispy::err(aa[1], "unknown component");
+      if (!from) lispy::erred(aa[0], "unknown component");
+      if (!to)   lispy::erred(aa[1], "unknown component");
 
       auto ctx = static_cast<context *>(n->ctx);
       if ((ctx->from & from) && (ctx->to & to)) eval(aa[2], ctx->result);

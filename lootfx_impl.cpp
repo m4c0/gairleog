@@ -31,8 +31,8 @@ namespace lootfx {
 
     basic_context<node> ctx {};
     ctx.fns["fx"] = [](auto n, auto aa, auto as) -> const node * {
-      if (as != 2) err(n, "expecting a name and an action");
-      if (!is_atom(aa[0])) err(aa[0], "expecting an atom as the name");
+      if (as != 2) erred(n, "expecting a name and an action");
+      if (!is_atom(aa[0])) erred(aa[0], "expecting an atom as the name");
       data.nodes[aa[0]->atom] = aa[1];
       data.keys.push_back_doubling(aa[0]->atom);
       return n;
@@ -45,7 +45,7 @@ namespace lootfx {
   static action_list_t * current;
   template<action A>
   static const node * act(const node * n, const node * const * aa, unsigned as) {
-    if (as != 0) err(n, "expecting no parameter");
+    if (as != 0) erred(n, "expecting no parameter");
     current->push_back(A);
     return n;
   }

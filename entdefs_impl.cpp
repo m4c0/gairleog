@@ -20,26 +20,26 @@ namespace entdefs {
 
   static float to_light(const lispy::node * n) {
     auto i = lispy::to_f(n);
-    if (i < 0 || i > 1) lispy::err(n, "light intensity should be between 0 and 1");
+    if (i < 0 || i > 1) lispy::erred(n, "light intensity should be between 0 and 1");
     return i;
   }
   static float to_life(const lispy::node * n) {
     auto i = lispy::to_i(n);
-    if (i < 1) lispy::err(n, "life should be greater than 0");
+    if (i < 1) lispy::erred(n, "life should be greater than 0");
     return i;
   }
   static jute::heap to_loot(const lispy::node * n) {
-    if (!entdefs::has(n->atom)) lispy::err(n, "unknown entdef");
+    if (!entdefs::has(n->atom)) lispy::erred(n, "unknown entdef");
     return jute::heap { n->atom };
   }
   static unsigned to_spr(const lispy::node * name) {
-    if (!lispy::is_atom(name)) lispy::err(name, "spr expects atom as name");
-    if (!sprdef::has(name->atom)) lispy::err(name, "invalid sprite name");
+    if (!lispy::is_atom(name)) lispy::erred(name, "spr expects atom as name");
+    if (!sprdef::has(name->atom)) lispy::erred(name, "invalid sprite name");
     return sprdef::get(name->atom).id;
   }
   static auto to_spr_pair(const lispy::node * name) {
-    if (!lispy::is_atom(name)) lispy::err(name, "spr expects atom as name");
-    if (!sprdef::has(name->atom)) lispy::err(name, "invalid sprite name");
+    if (!lispy::is_atom(name)) lispy::erred(name, "spr expects atom as name");
+    if (!sprdef::has(name->atom)) lispy::erred(name, "invalid sprite name");
     return sprdef::get(name->atom);
   }
 
@@ -78,8 +78,8 @@ namespace entdefs {
 
     auto & ctx = src_ctx = {};
     ctx.fns["entdef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
-      if (as < 1) lispy::err(n, "entdef expects a name and attributes");
-      if (!is_atom(aa[0])) lispy::err(aa[0], "expecting an atom as the entdef name");
+      if (as < 1) lispy::erred(n, "entdef expects a name and attributes");
+      if (!is_atom(aa[0])) lispy::erred(aa[0], "expecting an atom as the entdef name");
 
       auto & d = defs[aa[0]->atom] = {
         .n = n,

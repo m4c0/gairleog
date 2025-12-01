@@ -24,8 +24,8 @@ namespace sfxdefs {
     temp_arena<node> a {};
     context ctx {};
     ctx.fns["sfxdef"] = [](auto n, auto aa, auto as) -> const node * {
-      if (as != 2) err(n, "sfxdef requires name and an index");
-      if (!is_atom(aa[0])) err(n, "expecting an atom as the name");
+      if (as != 2) erred(n, "sfxdef requires name and an index");
+      if (!is_atom(aa[0])) erred(n, "expecting an atom as the name");
       auto name = aa[0]->atom;
       auto id = to_i(aa[1]);
       auto & tt = ids[name];
