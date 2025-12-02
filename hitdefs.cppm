@@ -18,7 +18,7 @@ namespace hitdefs {
   };
   export using action_list_t = hai::chain<action>;
 
-  struct context : basic_context<node> {
+  struct context : lispy::context {
     action_list_t * result;
   };
 
@@ -41,7 +41,7 @@ namespace hitdefs {
     ctx.fns["miss"]   = ref<action::miss>;
     ctx.fns["pick"]   = ref<action::pick>;
     ctx.fns["poison"] = ref<action::poison>;
-    return ctx.eval(n);
+    return eval<node>(&ctx, n);
   }
 
   export action_list_t check(entdefs::flags from, entdefs::flags to) try {
@@ -71,7 +71,7 @@ namespace hitdefs {
       if ((ctx->from & from) && (ctx->to & to)) eval(aa[2], ctx->result);
       return n;
     };
-    ctx.run(g_source);
+    run<node>(g_source, &ctx);
     return result;
   } catch (const lispy::parser_error & e) {
     throw lispy::to_file_err("hitdefs.lsp", e);

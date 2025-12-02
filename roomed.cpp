@@ -48,7 +48,7 @@ static unsigned font_id(char c) {
 }
 
 static unsigned theme_id(char c) {
-  basic_context<node> ctx {};
+  context ctx {};
   themedefs::eval(&ctx);
 
   jute::view str { &c, 1 };
@@ -118,7 +118,7 @@ static const node * load_roomdefs(const node * n, const node * const * aa, unsig
 }
 
 static void load(void *, const hai::cstr & src) try {
-  basic_context<node> ctx {}; 
+  context ctx {}; 
   ctx.fns["roomdefs"] = load_roomdefs;
   run<node>(src, &ctx);
 
@@ -208,7 +208,7 @@ const int i = [] {
   handle(KEY_DOWN, K_ENTER, on_save);
 
   handle(KEY_DOWN, [] {
-    basic_context<node> ctx {};
+    context ctx {};
     themedefs::eval(&ctx);
 
     char c = casein::last_key;

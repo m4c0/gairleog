@@ -59,7 +59,7 @@ namespace entdefs {
   }>;
 
   static const auto sfx_ctx = [] {
-    basic_context<snode> ctx {};
+    context ctx {};
     ctx.fns["attack"] = mem_fn<&snode::attr, &snode::attack, to_sfx>;
     ctx.fns["block"]  = mem_fn<&snode::attr, &snode::block,  to_sfx>;
     ctx.fns["miss"]   = mem_fn<&snode::attr, &snode::miss,   to_sfx>;
@@ -70,7 +70,7 @@ namespace entdefs {
   }();
 
   static const auto entdef_ctx = [] {
-    basic_context<cnode> ctx {};
+    context ctx {};
     ctx.fns["sfx"] = [](auto n, auto aa, auto as) -> const node * {
       auto nn = clone<cnode>(n);
       temp_arena<snode> a {};
@@ -99,7 +99,7 @@ namespace entdefs {
     return ctx;
   }();
 
-  basic_context<cnode> src_ctx {};
+  context src_ctx {};
   auto src_arena = arena<cnode>::make();
   void run(jute::view src) try {
     auto a = src_arena->use();
@@ -128,7 +128,7 @@ namespace entdefs {
     auto & d = defs[name];
 
     temp_arena<cnode> a {};
-    basic_context<cnode> ctx {};
+    context ctx {};
     ctx.parent = &entdef_ctx;
     return *fill_clone<cnode>(&ctx, d.n, d.args.begin(), d.args.size());
   } catch (const lispy::parser_error & e) {

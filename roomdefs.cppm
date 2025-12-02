@@ -44,7 +44,7 @@ namespace roomdefs {
       if (!(as == ctx->h && cols == ctx->w) &&
           !(as == ctx->w && cols == ctx->h)) return {};
 
-      basic_context<node> tctx {};
+      context tctx {};
       tctx.parent = n->ctx;
       themedefs::eval(&tctx);
 

@@ -29,7 +29,7 @@ namespace lootfx {
     };
     auto a = data.arena->use();
 
-    basic_context<node> ctx {};
+    context ctx {};
     ctx.fns["fx"] = [](auto n, auto aa, auto as) -> const node * {
       if (as != 2) erred(n, "expecting a name and an action");
       if (!is_atom(aa[0])) erred(aa[0], "expecting an atom as the name");
@@ -37,7 +37,7 @@ namespace lootfx {
       data.keys.push_back_doubling(aa[0]->atom);
       return n;
     };
-    ctx.run(data.src);
+    run<node>(data.src, &ctx);
   } catch (const parser_error & e) {
     throw to_file_err("lootfx.lsp", e);
   }
@@ -53,7 +53,7 @@ namespace lootfx {
     if (!data.nodes.has(key)) return;
     current = r;
 
-    basic_context<node> ctx {};
+    context ctx {};
     ctx.fns["damage"]   = act<action::damage>;
     ctx.fns["defence"]  = act<action::defence>;
     ctx.fns["heal"]     = act<action::heal>;
@@ -62,7 +62,7 @@ namespace lootfx {
     ctx.fns["strength"] = act<action::strength>;
     ctx.fns["weakness"] = act<action::weakness>;
     ctx.fns["wither"]   = act<action::wither>;
-    ctx.eval(data.nodes[key]);
+    auto _ = eval<node>(&ctx, data.nodes[key]);
   } catch (const parser_error & e) {
     throw to_file_err("lootfx.lsp", e);
   }
