@@ -16,14 +16,6 @@ static constexpr const auto src = R"(
   ))
 )"_sv;
 
-static auto eval_table_var(const node * n) {
-  context ctx {};
-  glispy::setup_game_context(&ctx);
-
-  auto nn = clone<node>(n);
-  nn->ctx = &ctx;
-  return to_i(eval<node>(&ctx, nn));
-}
 static const node * eval_range_table(unsigned val, const node * const * aa, unsigned as) {
   struct c : context {
     unsigned val;
@@ -64,7 +56,7 @@ int main() try {
   context ctx { .parent = &src_ctx };
   ctx.fns["range-table"] = [](auto n, auto aa, auto as) -> const node * {
     if (as < 2) erred(n, "random-table expects at least a variable and the fallback value");
-    auto val = eval_table_var(aa[0]);
+    auto val = to_i(glispy::eval(aa[0]));
     auto res = eval_range_table(val, aa + 1, as - 1);
     return eval<node>(n->ctx, res);
   };
