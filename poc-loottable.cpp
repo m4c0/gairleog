@@ -16,36 +16,6 @@ static constexpr const auto src = R"(
   ))
 )"_sv;
 
-static const node * eval_range_table(unsigned val, const node * const * aa, unsigned as) {
-  struct c : context {
-    unsigned val;
-  } ctx;
-  ctx.fns["lte"] = [](auto n, auto aa, auto as) -> const node * {
-    if (as != 2) erred(n, "expecting two atoms (random threshold and picking value)");
-
-    auto thr = to_i(aa[0]); auto val = static_cast<c *>(n->ctx)->val;
-    return val <= thr ? aa[1] : nullptr;
-  };
-
-  for (auto i = 0; i < as - 1; i++) {
-    c sctx {};
-    sctx.parent = &ctx;
-    sctx.val = val;
-
-    auto ai = clone<node>(aa[i]);
-    ai->ctx = &sctx;
-
-    auto n = eval<node>(&sctx, ai);
-    if (n) return n;
-  }
-  c sctx {};
-  sctx.parent = &ctx;
-  sctx.val = val;
-  auto ai = clone<node>(aa[as - 1]);
-  ai->ctx = &sctx;
-  return eval<node>(&sctx, ai);
-}
-
 int main() try {
   temp_arena<node> a {};
 
@@ -54,26 +24,21 @@ int main() try {
   if (!src_ctx.defs.has("this")) die("missing this");
 
   context ctx { .parent = &src_ctx };
-  ctx.fns["range-table"] = [](auto n, auto aa, auto as) -> const node * {
-    if (as < 2) erred(n, "random-table expects at least a variable and the fallback value");
-    auto val = to_i(glispy::eval(aa[0]));
-    auto res = eval_range_table(val, aa + 1, as - 1);
-    return eval<node>(n->ctx, res);
-  };
+  glispy::setup(&ctx);
 
-  glispy::game_values.level = "3";
+  glispy::game_values().level = "3";
 
   auto n = clone<node>(src_ctx.defs["this"]);
   n->ctx = &ctx;
   assert(eval<node>(&ctx, n)->atom == "B"_sv, "failed on at-range test");
 
-  glispy::game_values.level = "4";
+  glispy::game_values().level = "4";
 
   n = clone<node>(src_ctx.defs["this"]);
   n->ctx = &ctx;
   assert(eval<node>(&ctx, n)->atom == "C"_sv, "failed on range test");
 
-  glispy::game_values.level = "8";
+  glispy::game_values().level = "8";
 
   n = clone<node>(src_ctx.defs["this"]);
   n->ctx = &ctx;
