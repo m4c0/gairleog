@@ -48,13 +48,14 @@ static unsigned font_id(char c) {
 }
 
 static unsigned theme_id(char c) {
-  context ctx {};
-  themedefs::eval(&ctx);
+  temp_frame ctx {};
+  themedefs::eval();
 
   jute::view str { &c, 1 };
-  if (!ctx.defs.has(str)) return font_id(c);
+  auto d = ctx.def(str);
+  if (!d) return font_id(c);
 
-  auto n = eval<node>(&ctx, ctx.defs[str]);
+  auto n = eval<node>(d);
   if (!is_atom(n)) return font_id(c);
   if (!entdefs::has(n->atom)) return font_id(c);
 
@@ -112,30 +113,29 @@ static const node * load_room(const node * n, const node * const * aa, unsigned 
 
 static const node * load_roomdefs(const node * n, const node * const * aa, unsigned as) {
   temp_arena<node> a {};
-  context ctx {}; 
+  temp_frame ctx {}; 
   ctx.fns["room"] = load_room;
-  return eval<node>(&ctx, aa[ed(as)]);
+  return eval<node>(aa[ed(as)]);
 }
 
 static void load(void *, const hai::cstr & src) try {
-  context ctx {}; 
+  temp_frame ctx {}; 
   ctx.fns["roomdefs"] = load_roomdefs;
-  run<node>(src, &ctx);
+  run<node>(src);
 
   v::on_frame = on_frame;
 } catch (const lispy::parser_error & e) {
   silog::error(lispy::to_file_err("roomdefs.lsp", e));
 }
 
+static auto mem = arena<node>::make();
 static void on_init() {
+  auto a = mem->use();
   sires::read("roomdefs.lsp", nullptr, load);
 }
 
-struct save_ctx : context {
-  FILE * file;
-};
 static const node * save_room(const node * n, const node * const * aa, unsigned as) {
-  auto f = static_cast<save_ctx *>(n->ctx)->file;
+  auto f = static_cast<FILE *>(context()->ptr("file"));
   fput(f, "  (room");
   for (auto i = 0; i < as; i++) {
     if (!is_atom(aa[i])) err(aa[i], "rooms must only have atoms as rows");
@@ -145,15 +145,14 @@ static const node * save_room(const node * n, const node * const * aa, unsigned 
   return n;
 }
 static const node * save_roomdefs(const node * n, const node * const * aa, unsigned as) {
-  auto f = static_cast<save_ctx *>(n->ctx)->file;
+  auto f = static_cast<FILE *>(context()->ptr("file"));
   fputln(f, "(roomdefs");
 
-  save_ctx ctx {};
-  ctx.file = f;
+  temp_frame ctx {};
   ctx.fns["room"] = save_room;
   for (auto i = 0; i < as; i++) {
     if (i != ed(as)) {
-      auto _ = eval<node>(&ctx, aa[i]);
+      auto _ = eval<node>(aa[i]);
       continue;
     }
     fput(f, "  (room");
@@ -167,15 +166,16 @@ static const node * save_roomdefs(const node * n, const node * const * aa, unsig
 static void save_(void *, const hai::cstr & src) try {
   hay<FILE *, fopen, fclose> f { "roomdefs.lsp", "wb" };
 
-  save_ctx ctx {};
-  ctx.file = f;
+  temp_frame ctx {};
+  ctx.ptrs["file"] = static_cast<FILE *>(f);
   ctx.fns["roomdefs"] = save_roomdefs;
-  run<node>(src, &ctx);
+  run<node>(src);
 } catch (const lispy::parser_error & e) {
   silog::error(lispy::to_file_err("roomdefs.lsp", e));
 }
 
 static void on_save() {
+  temp_arena<node> a {};
   silog::info("Saving new rooms");
   sires::read("roomdefs.lsp", nullptr, save_);
 }
@@ -208,8 +208,9 @@ const int i = [] {
   handle(KEY_DOWN, K_ENTER, on_save);
 
   handle(KEY_DOWN, [] {
-    context ctx {};
-    themedefs::eval(&ctx);
+    temp_arena<node> a {};
+    temp_frame ctx {};
+    themedefs::eval();
 
     char c = casein::last_key;
     jute::view str { &c, 1 };
