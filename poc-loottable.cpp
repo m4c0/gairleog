@@ -1,5 +1,6 @@
 #pragma leco test
 
+import jute;
 import lispy;
 import print;
 import sv;
@@ -15,18 +16,24 @@ static constexpr const auto src = R"(
   ))
 )"_sv;
 
-static auto table_var_ctx = [] {
-  context ctx {};
+struct var_context : context {
+  jute::heap value {};
+};
+static const auto table_var_ctx = [] {
+  var_context ctx {};
   ctx.fns["level"] = [](auto n, auto aa, auto as) -> const node * {
     auto nn = clone<node>(n);
-    nn->atom = "8";
+    nn->atom = static_cast<var_context *>(n->ctx)->value;
     return nn;
   };
   return ctx;
 }();
 
 static auto eval_table_var(const node * n) {
-  context ctx { .parent = &table_var_ctx };
+  var_context ctx {};
+  ctx.parent = &table_var_ctx;
+  ctx.value = "8";
+
   auto nn = clone<node>(n);
   nn->ctx = &ctx;
   return to_i(eval<node>(&ctx, nn));
