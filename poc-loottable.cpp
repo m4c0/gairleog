@@ -16,23 +16,22 @@ static constexpr const auto src = R"(
   ))
 )"_sv;
 
-struct var_context : context {
-  jute::heap value {};
-};
+static struct {
+  jute::heap level;
+} table_values;
 static const auto table_var_ctx = [] {
-  var_context ctx {};
+  context ctx {};
   ctx.fns["level"] = [](auto n, auto aa, auto as) -> const node * {
     auto nn = clone<node>(n);
-    nn->atom = static_cast<var_context *>(n->ctx)->value;
+    nn->atom = table_values.level;
     return nn;
   };
   return ctx;
 }();
 
 static auto eval_table_var(const node * n) {
-  var_context ctx {};
+  context ctx {};
   ctx.parent = &table_var_ctx;
-  ctx.value = "8";
 
   auto nn = clone<node>(n);
   nn->ctx = &ctx;
@@ -83,7 +82,21 @@ int main() try {
     return eval<node>(n->ctx, res);
   };
 
+  table_values.level = "3";
+
   auto n = clone<node>(src_ctx.defs["this"]);
+  n->ctx = &ctx;
+  assert(eval<node>(&ctx, n)->atom == "B"_sv, "failed on at-range test");
+
+  table_values.level = "4";
+
+  n = clone<node>(src_ctx.defs["this"]);
+  n->ctx = &ctx;
+  assert(eval<node>(&ctx, n)->atom == "C"_sv, "failed on range test");
+
+  table_values.level = "8";
+
+  n = clone<node>(src_ctx.defs["this"]);
   n->ctx = &ctx;
   assert(eval<node>(&ctx, n)->atom == "D"_sv, "failed on fallback test");
 } catch (const lispy::parser_error & e) {
