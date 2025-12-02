@@ -24,23 +24,24 @@ namespace sfxdefs {
   }
 
   static auto g_arena = lispy::arena<lispy::node>::make();
-  static lispy::context g_ctx {};
+  static auto g_ctx = lispy::frame::make();
   static void run(sv src) try {
     using namespace lispy;
     using namespace lispy::experimental;
 
-    g_ctx.fns["sfxdef"] = [](auto n, auto aa, auto as) -> const node * {
+    g_ctx->fns["sfxdef"] = [](auto n, auto aa, auto as) -> const node * {
       if (as != 1) erred(n, "sfxdef requires a single atom with the file name");
       if (!is_atom(aa[0])) erred(n, "expecting an atom as the file name");
       auto name = aa[0]->atom;
       auto & tt = cache[name];
       sires::read(aa[0]->atom, &tt, load_wav);
-      n->ctx->defs[aa[0]->atom] = aa[0];
+      lispy::context()->defs[aa[0]->atom] = aa[0];
       return n;
     };
 
     auto a = g_arena->use();
-    run<node>(src, &g_ctx);
+    auto c = g_ctx->use();
+    lispy::run<node>(src);
   } catch (const lispy::parser_error & e) {
     throw lispy::to_file_err("sfxdefs.lsp", e);
   }
@@ -67,7 +68,7 @@ namespace sfxdefs {
   }
 
   export bool has(sv name) {
-    return g_ctx.defs.has(name);
+    return g_ctx->def(name);
   }
   export void play(sv name) {
     audio::play(get(name).samples);

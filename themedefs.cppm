@@ -10,8 +10,8 @@ namespace themedefs {
   hai::cstr g_src {};
   export void run(jute::view src) { g_src = src.cstr(); }
 
-  export void eval(lispy::context * ctx) try {
-    lispy::run<node>(g_src, ctx);
+  export void eval() try {
+    lispy::run<node>(g_src);
   } catch (const lispy::parser_error & e) {
     throw lispy::to_file_err("themedefs.lsp", e);
   }

@@ -18,10 +18,6 @@ namespace hitdefs {
   };
   export using action_list_t = hai::chain<action>;
 
-  struct context : lispy::context {
-    action_list_t * result;
-  };
-
   hai::cstr g_source {};
 
   export void run(jute::view src) { g_source = src.cstr(); }
@@ -29,33 +25,31 @@ namespace hitdefs {
   template<action Fn>
   static inline constexpr const auto ref = [](auto n, auto aa, auto as) -> const lispy::node * {
     if (as != 0) lispy::erred(n, "actions do not take arguments");
-    static_cast<context *>(n->ctx)->result->push_back(Fn);
+    static_cast<action_list_t *>(lispy::context()->ptr("result"))->push_back(Fn);
     return n;
   };
 
-  const node * eval(const node * n, action_list_t * result) {
-    context ctx { {}, result };
+  const node * eval(const node * n) {
+    temp_frame ctx {};
     ctx.fns["block"]  = ref<action::block>;
     ctx.fns["exit"]   = ref<action::exit>;
     ctx.fns["hit"]    = ref<action::hit>;
     ctx.fns["miss"]   = ref<action::miss>;
     ctx.fns["pick"]   = ref<action::pick>;
     ctx.fns["poison"] = ref<action::poison>;
-    return eval<node>(&ctx, n);
+    return eval<node>(n);
   }
 
   export action_list_t check(entdefs::flags from, entdefs::flags to) try {
     lispy::temp_arena<node> a {};
 
     action_list_t result { 8 };
-    struct context : hitdefs::context {
-      unsigned from;
-      unsigned to;
-    } ctx {};
 
-    ctx.from = entdefs::bit_of(from);
-    ctx.to   = entdefs::bit_of(to);
-    ctx.result = &result;
+    temp_frame ctx {};
+    ctx.ptrs["from"]   = &from;
+    ctx.ptrs["to"]     = &to;
+    ctx.ptrs["result"] = &result;
+
     ctx.fns["hitdef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as != 3) lispy::erred(n, "hitdef requires source, target and action");
       if (!is_atom(aa[0])) lispy::erred(aa[0], "source must be an atom");
@@ -67,11 +61,12 @@ namespace hitdefs {
       if (!from) lispy::erred(aa[0], "unknown component");
       if (!to)   lispy::erred(aa[1], "unknown component");
 
-      auto ctx = static_cast<context *>(n->ctx);
-      if ((ctx->from & from) && (ctx->to & to)) eval(aa[2], ctx->result);
+      auto efrom = *static_cast<entdefs::flags *>(context()->ptr("from"));
+      auto eto   = *static_cast<entdefs::flags *>(context()->ptr("to"));
+      if ((entdefs::bit_of(efrom) & from) && (entdefs::bit_of(eto) & to)) eval(aa[2]);
       return n;
     };
-    run<node>(g_source, &ctx);
+    lispy::run<node>(g_source);
     return result;
   } catch (const lispy::parser_error & e) {
     throw lispy::to_file_err("hitdefs.lsp", e);
