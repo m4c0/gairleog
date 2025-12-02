@@ -1,7 +1,7 @@
 #pragma leco test
 
 import jute;
-import lispy;
+import glispy;
 import print;
 import sv;
 
@@ -16,22 +16,9 @@ static constexpr const auto src = R"(
   ))
 )"_sv;
 
-static struct {
-  jute::heap level;
-} table_values;
-static const auto table_var_ctx = [] {
-  context ctx {};
-  ctx.fns["level"] = [](auto n, auto aa, auto as) -> const node * {
-    auto nn = clone<node>(n);
-    nn->atom = table_values.level;
-    return nn;
-  };
-  return ctx;
-}();
-
 static auto eval_table_var(const node * n) {
   context ctx {};
-  ctx.parent = &table_var_ctx;
+  glispy::setup_game_context(&ctx);
 
   auto nn = clone<node>(n);
   nn->ctx = &ctx;
@@ -82,19 +69,19 @@ int main() try {
     return eval<node>(n->ctx, res);
   };
 
-  table_values.level = "3";
+  glispy::game_values.level = "3";
 
   auto n = clone<node>(src_ctx.defs["this"]);
   n->ctx = &ctx;
   assert(eval<node>(&ctx, n)->atom == "B"_sv, "failed on at-range test");
 
-  table_values.level = "4";
+  glispy::game_values.level = "4";
 
   n = clone<node>(src_ctx.defs["this"]);
   n->ctx = &ctx;
   assert(eval<node>(&ctx, n)->atom == "C"_sv, "failed on range test");
 
-  table_values.level = "8";
+  glispy::game_values.level = "8";
 
   n = clone<node>(src_ctx.defs["this"]);
   n->ctx = &ctx;
