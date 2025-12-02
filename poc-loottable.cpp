@@ -15,14 +15,21 @@ static constexpr const auto src = R"(
   ))
 )"_sv;
 
-static auto eval_table_var(const node * n) {
+static auto table_var_ctx = [] {
   context ctx {};
   ctx.fns["level"] = [](auto n, auto aa, auto as) -> const node * {
     auto nn = clone<node>(n);
     nn->atom = "8";
     return nn;
   };
-  return to_i(eval<node>(&ctx, n));
+  return ctx;
+}();
+
+static auto eval_table_var(const node * n) {
+  context ctx { .parent = &table_var_ctx };
+  auto nn = clone<node>(n);
+  nn->ctx = &ctx;
+  return to_i(eval<node>(&ctx, nn));
 }
 static const node * eval_range_table(unsigned val, const node * const * aa, unsigned as) {
   struct c : context {
@@ -31,8 +38,7 @@ static const node * eval_range_table(unsigned val, const node * const * aa, unsi
   ctx.fns["lte"] = [](auto n, auto aa, auto as) -> const node * {
     if (as != 2) erred(n, "expecting two atoms (random threshold and picking value)");
 
-    auto thr = to_i(aa[0]);
-    auto val = static_cast<c *>(n->ctx)->val;
+    auto thr = to_i(aa[0]); auto val = static_cast<c *>(n->ctx)->val;
     return val <= thr ? aa[1] : nullptr;
   };
 
@@ -72,8 +78,7 @@ int main() try {
 
   auto n = clone<node>(src_ctx.defs["this"]);
   n->ctx = &ctx;
-  auto e = eval<node>(&ctx, n);
-  putln(e ? e->atom : "nullptr");
+  assert(eval<node>(&ctx, n)->atom == "D"_sv, "failed on fallback test");
 } catch (const lispy::parser_error & e) {
   putln("line ", e.line, " col ", e.col, " -- ", e.msg);
 }
