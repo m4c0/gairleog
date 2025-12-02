@@ -55,14 +55,16 @@ namespace sfxdefs {
 
   static const t dummy {};
   export const t & get(sv name) {
-    auto n = g_ctx.defs[name];
+    auto n = g_ctx->defs[name];
     if (!n) return dummy;
 
     using namespace lispy;
+    
+    auto c = g_ctx->use();
 
     temp_arena<node> a {};
-    context ctx { .parent = &g_ctx };
-    auto nn = eval<node>(&ctx, n);
+    temp_frame ctx {};
+    auto nn = eval<node>(n);
     if (!is_atom(nn)) return dummy;
     return cache[nn->atom];
   }

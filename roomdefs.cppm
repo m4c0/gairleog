@@ -34,12 +34,13 @@ namespace roomdefs {
     ctx.fns["room"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as < 2) lispy::erred(n, "rooms must have at least two rows");
 
-      auto ctx = static_cast<context *>(n->ctx);
+      auto ew = *static_cast<unsigned *>(lispy::context()->ptr("ew"));
+      auto eh = *static_cast<unsigned *>(lispy::context()->ptr("eh"));
 
       unsigned cols = aa[0]->atom.size();
 
-      if (!(as == ctx->h && cols == ctx->w) &&
-          !(as == ctx->w && cols == ctx->h)) return {};
+      if (!(as == eh && cols == ew) &&
+          !(as == ew && cols == eh)) return {};
 
       lispy::temp_frame tctx {};
       themedefs::eval();
@@ -53,7 +54,7 @@ namespace roomdefs {
           auto c = a.subview(idx, 1).middle;
           if (!tctx.defs.has(c)) lispy::erred(aa[i], "unknown def", idx);
 
-          auto cell = lispy::eval<node>(&tctx, tctx.defs[c]);
+          auto cell = lispy::eval<node>(tctx.defs[c]);
           if (!lispy::is_atom(cell)) lispy::erred(aa[i], "cell must be a sprite name", idx);
           if (!entdefs::has(cell->atom)) lispy::erred(cell, "unknown entdef");
           data[i * cols + idx] = entdefs::get(cell->atom);
@@ -65,7 +66,7 @@ namespace roomdefs {
         .h = as,
         .d = traits::move(data),
       }}; 
-      if (ctx->w == r->w) {
+      if (ew == r->w) {
         switch (rng::rand(3)) {
           case 0:
             r->fn = [](auto t, auto x, auto y) {
@@ -121,14 +122,14 @@ namespace roomdefs {
 
       hai::varray<const node *> opts { as };
       for (auto i = 0; i < as; i++) {
-        auto a = lispy::eval<node>(n->ctx, aa[i]);
+        auto a = lispy::eval<node>(aa[i]);
         if (a) opts.push_back(a);
       }
       if (opts.size() == 0) return {};
       return opts[rng::rand(opts.size())];
     };
     
-    auto n = lispy::run<node>(g_src, &ctx);
+    auto n = lispy::run<node>(g_src);
     return (n && n->room) ? n->room : hai::sptr<t> {};
   } catch (const lispy::parser_error & e) {
     throw lispy::to_file_err("roomdefs.lsp", e);

@@ -58,54 +58,51 @@ namespace entdefs {
     self->flags = u.f;
   }>;
 
-  static const auto sfx_ctx = [] {
-    context ctx {};
-    ctx.fns["attack"] = mem_fn<&snode::attr, &snode::attack, to_sfx>;
-    ctx.fns["block"]  = mem_fn<&snode::attr, &snode::block,  to_sfx>;
-    ctx.fns["miss"]   = mem_fn<&snode::attr, &snode::miss,   to_sfx>;
-    ctx.fns["pick"]   = mem_fn<&snode::attr, &snode::pick,   to_sfx>;
-    ctx.fns["poison"] = mem_fn<&snode::attr, &snode::poison, to_sfx>;
-    ctx.fns["walk"]   = mem_fn<&snode::attr, &snode::walk,   to_sfx>;
+  static auto sfx_ctx = [] {
+    auto ctx = frame::make();
+    ctx->fns["attack"] = mem_fn<&snode::attr, &snode::attack, to_sfx>;
+    ctx->fns["block"]  = mem_fn<&snode::attr, &snode::block,  to_sfx>;
+    ctx->fns["miss"]   = mem_fn<&snode::attr, &snode::miss,   to_sfx>;
+    ctx->fns["pick"]   = mem_fn<&snode::attr, &snode::pick,   to_sfx>;
+    ctx->fns["poison"] = mem_fn<&snode::attr, &snode::poison, to_sfx>;
+    ctx->fns["walk"]   = mem_fn<&snode::attr, &snode::walk,   to_sfx>;
     return ctx;
   }();
 
-  static const auto entdef_ctx = [] {
-    context ctx {};
-    ctx.fns["sfx"] = [](auto n, auto aa, auto as) -> const node * {
+  static auto entdef_ctx = [] {
+    auto ctx = frame::make();
+    ctx->fns["sfx"] = [](auto n, auto aa, auto as) -> const node * {
       auto nn = clone<cnode>(n);
       temp_arena<snode> a {};
-      context ctx { .parent = &sfx_ctx };
+      auto c = sfx_ctx->use();
       nn->attr = [](auto * self, auto * n) { self->sfx = n->sfx; };
-      nn->sfx = *fill_clone<snode>(&ctx, n, aa, as);
+      nn->sfx = *fill_clone<snode>(n, aa, as);
       return nn;
     };
 
-    ctx.fns["atkspr"]   = mem_fn<&cnode::attr, &cnode::attack_sprite, to_spr_pair>;
-    ctx.fns["defense"]  = mem_fn<&cnode::attr, &cnode::defense,       to_i>;
-    ctx.fns["life"]     = mem_fn<&cnode::attr, &cnode::life,          to_life>;
-    ctx.fns["light"]    = mem_fn<&cnode::attr, &cnode::light,         to_light>;
-    ctx.fns["loot"]     = mem_fn<&cnode::attr, &cnode::loot,          to_loot>;
-    ctx.fns["maxlife"]  = mem_fn<&cnode::attr, &cnode::max_life,      to_life>;
-    ctx.fns["spr"]      = mem_fn<&cnode::attr, &cnode::sprite,        to_spr>;
-    ctx.fns["strength"] = mem_fn<&cnode::attr, &cnode::strength,      to_i>;
+    ctx->fns["atkspr"]   = mem_fn<&cnode::attr, &cnode::attack_sprite, to_spr_pair>;
+    ctx->fns["defense"]  = mem_fn<&cnode::attr, &cnode::defense,       to_i>;
+    ctx->fns["life"]     = mem_fn<&cnode::attr, &cnode::life,          to_life>;
+    ctx->fns["light"]    = mem_fn<&cnode::attr, &cnode::light,         to_light>;
+    ctx->fns["loot"]     = mem_fn<&cnode::attr, &cnode::loot,          to_loot>;
+    ctx->fns["maxlife"]  = mem_fn<&cnode::attr, &cnode::max_life,      to_life>;
+    ctx->fns["spr"]      = mem_fn<&cnode::attr, &cnode::sprite,        to_spr>;
+    ctx->fns["strength"] = mem_fn<&cnode::attr, &cnode::strength,      to_i>;
 
-    ctx.fns["ceramic"] = mem_set<{ .ceramic = true }>;
-    ctx.fns["enemy"]   = mem_set<{ .enemy   = true }>;
-    ctx.fns["exit"]    = mem_set<{ .exit    = true }>;
-    ctx.fns["food"]    = mem_set<{ .food    = true }>;
-    ctx.fns["player"]  = mem_set<{ .player  = true }>;
-    ctx.fns["solid"]   = mem_set<{ .solid   = true }>;
-    ctx.fns["toad"]    = mem_set<{ .toad    = true }>;
+    ctx->fns["ceramic"] = mem_set<{ .ceramic = true }>;
+    ctx->fns["enemy"]   = mem_set<{ .enemy   = true }>;
+    ctx->fns["exit"]    = mem_set<{ .exit    = true }>;
+    ctx->fns["food"]    = mem_set<{ .food    = true }>;
+    ctx->fns["player"]  = mem_set<{ .player  = true }>;
+    ctx->fns["solid"]   = mem_set<{ .solid   = true }>;
+    ctx->fns["toad"]    = mem_set<{ .toad    = true }>;
     return ctx;
   }();
 
-  context src_ctx {};
-  auto src_arena = arena<cnode>::make();
-  void run(jute::view src) try {
-    auto a = src_arena->use();
-
-    auto & ctx = src_ctx = {};
-    ctx.fns["entdef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
+  static auto src_arena = arena<cnode>::make();
+  static auto src_ctx = [] {
+    auto ctx = frame::make();
+    ctx->fns["entdef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as < 1) lispy::erred(n, "entdef expects a name and attributes");
       if (!is_atom(aa[0])) lispy::erred(aa[0], "expecting an atom as the entdef name");
 
@@ -116,7 +113,13 @@ namespace entdefs {
       for (auto i = 0; i < as - 1; i++) d.args[i] = aa[i + 1];
       return n;
     };
-    run<cnode>(src, &ctx);
+    return ctx;
+  }();
+
+  void run(jute::view src) try {
+    auto a = src_arena->use();
+    auto c = src_ctx->use();
+    lispy::run<cnode>(src);
   } catch (const lispy::parser_error & e) {
     throw lispy::to_file_err("entdefs.lsp", e);
   }
@@ -128,9 +131,8 @@ namespace entdefs {
     auto & d = defs[name];
 
     temp_arena<cnode> a {};
-    context ctx {};
-    ctx.parent = &entdef_ctx;
-    return *fill_clone<cnode>(&ctx, d.n, d.args.begin(), d.args.size());
+    auto c = entdef_ctx->use();
+    return *fill_clone<cnode>(d.n, d.args.begin(), d.args.size());
   } catch (const lispy::parser_error & e) {
     throw lispy::to_file_err("entdefs.lsp", e);
   }

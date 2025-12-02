@@ -13,54 +13,40 @@ namespace glispy {
   }
 
   export auto eval(const node * n) {
-    context ctx {};
+    temp_frame ctx {};
     ctx.fns["level"] = [](auto n, auto aa, auto as) -> const node * {
       auto nn = clone<node>(n);
       nn->atom = game_values().level;
       return nn;
     };
-
-    auto nn = clone<node>(n);
-    nn->ctx = &ctx;
-    return eval<node>(&ctx, nn);
+    return eval<node>(n);
   }
 
   static const node * eval_range_table(unsigned val, const node * const * aa, unsigned as) {
-    struct c : context {
-      unsigned val;
-    } ctx;
+    temp_frame ctx {};
+    ctx.ptrs["val"] = &val;
     ctx.fns["lte"] = [](auto n, auto aa, auto as) -> const node * {
       if (as != 2) erred(n, "expecting two atoms (random threshold and picking value)");
 
-      auto thr = to_i(aa[0]); auto val = static_cast<c *>(n->ctx)->val;
+      auto thr = to_i(aa[0]);
+      auto val = *static_cast<unsigned *>(context()->ptr("val"));
       return val <= thr ? aa[1] : nullptr;
     };
 
     for (auto i = 0; i < as - 1; i++) {
-      c sctx {};
-      sctx.parent = &ctx;
-      sctx.val = val;
-
-      auto ai = clone<node>(aa[i]);
-      ai->ctx = &sctx;
-
-      auto n = eval<node>(&sctx, ai);
+      temp_frame ctx {};
+      auto n = eval<node>(aa[i]);
       if (n) return n;
     }
-    c sctx {};
-    sctx.parent = &ctx;
-    sctx.val = val;
-    auto ai = clone<node>(aa[as - 1]);
-    ai->ctx = &sctx;
-    return eval<node>(&sctx, ai);
+    return eval<node>(aa[as - 1]);
   }
 
-  export void setup(context * ctx) {
+  export void setup(frame * ctx) {
     ctx->fns["range-table"] = [](auto n, auto aa, auto as) -> const node * {
       if (as < 2) erred(n, "range-table expects at least a variable and the fallback value");
       auto val = to_i(glispy::eval(aa[0]));
       auto res = eval_range_table(val, aa + 1, as - 1);
-      return eval<node>(n->ctx, res);
+      return eval<node>(res);
     };
   }
 }
