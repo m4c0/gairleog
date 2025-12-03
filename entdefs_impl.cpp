@@ -1,7 +1,7 @@
 module entdefs;
+import glispy;
 import hai;
 import hashley;
-import lispy;
 import sfxdefs;
 import sprdef;
 
@@ -59,7 +59,7 @@ namespace entdefs {
   }>;
 
   static auto sfx_ctx = [] {
-    auto ctx = frame::make();
+    auto ctx = glispy::frame::make();
     ctx->fns["attack"] = mem_fn<&snode::attr, &snode::attack, to_sfx>;
     ctx->fns["block"]  = mem_fn<&snode::attr, &snode::block,  to_sfx>;
     ctx->fns["miss"]   = mem_fn<&snode::attr, &snode::miss,   to_sfx>;
@@ -70,7 +70,7 @@ namespace entdefs {
   }();
 
   static auto entdef_ctx = [] {
-    auto ctx = frame::make();
+    auto ctx = glispy::frame::make();
     ctx->fns["sfx"] = [](auto n, auto aa, auto as) -> const node * {
       auto nn = clone<cnode>(n);
       temp_arena<snode> a {};
@@ -101,7 +101,7 @@ namespace entdefs {
 
   static auto src_arena = arena<cnode>::make();
   static auto src_ctx = [] {
-    auto ctx = frame::make();
+    auto ctx = glispy::frame::make();
     ctx->fns["entdef"] = [](auto n, auto aa, auto as) -> const lispy::node * {
       if (as < 1) lispy::erred(n, "entdef expects a name and attributes");
       if (!is_atom(aa[0])) lispy::erred(aa[0], "expecting an atom as the entdef name");

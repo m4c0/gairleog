@@ -24,7 +24,7 @@ namespace sfxdefs {
   }
 
   static auto g_arena = lispy::arena<lispy::node>::make();
-  static auto g_ctx = lispy::frame::make();
+  static auto g_ctx = glispy::frame::make();
   static void run(sv src) try {
     using namespace lispy;
     using namespace lispy::experimental;
@@ -63,8 +63,7 @@ namespace sfxdefs {
     auto c = g_ctx->use();
 
     temp_arena<node> a {};
-    temp_frame ctx {};
-    glispy::setup(&ctx);
+    glispy::temp_frame ctx {};
     auto nn = eval<node>(n);
     if (!is_atom(nn)) return dummy;
     return cache[nn->atom];

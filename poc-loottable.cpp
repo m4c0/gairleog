@@ -23,8 +23,7 @@ int main() try {
   run<node>(src);
   if (!src_ctx.defs.has("this")) die("missing this");
 
-  temp_frame ctx {};
-  glispy::setup(&ctx);
+  glispy::temp_frame ctx {};
 
   glispy::game_values().level = "3";
   auto n = eval<node>(context()->def("this"));

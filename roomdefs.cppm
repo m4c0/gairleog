@@ -29,8 +29,7 @@ namespace roomdefs {
     using namespace lispy::experimental;
 
     lispy::temp_arena<node> a {};
-    lispy::temp_frame ctx {};
-    glispy::setup(&ctx);
+    glispy::temp_frame ctx {};
     ctx.ptrs["ew"] = &ew;
     ctx.ptrs["eh"] = &eh;
     ctx.fns["room"] = [](auto n, auto aa, auto as) -> const lispy::node * {
@@ -44,8 +43,7 @@ namespace roomdefs {
       if (!(as == eh && cols == ew) &&
           !(as == ew && cols == eh)) return {};
 
-      lispy::temp_frame tctx {};
-      glispy::setup(&tctx);
+      glispy::temp_frame tctx {};
       themedefs::eval();
 
       hai::array<entdefs::t> data { as * cols };

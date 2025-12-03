@@ -30,8 +30,7 @@ namespace hitdefs {
   };
 
   const node * eval(const node * n) {
-    temp_frame ctx {};
-    glispy::setup(&ctx);
+    glispy::temp_frame ctx {};
     ctx.fns["block"]  = ref<action::block>;
     ctx.fns["exit"]   = ref<action::exit>;
     ctx.fns["hit"]    = ref<action::hit>;
@@ -46,8 +45,7 @@ namespace hitdefs {
 
     action_list_t result { 8 };
 
-    temp_frame ctx {};
-    glispy::setup(&ctx);
+    glispy::temp_frame ctx {};
     ctx.ptrs["from"]   = &from;
     ctx.ptrs["to"]     = &to;
     ctx.ptrs["result"] = &result;

@@ -29,8 +29,7 @@ namespace lootfx {
     };
     auto a = data.arena->use();
 
-    temp_frame ctx {};
-    glispy::setup(&ctx);
+    glispy::temp_frame ctx {};
     ctx.fns["fx"] = [](auto n, auto aa, auto as) -> const node * {
       if (as != 2) erred(n, "expecting a name and an action");
       if (!is_atom(aa[0])) erred(aa[0], "expecting an atom as the name");
@@ -54,8 +53,7 @@ namespace lootfx {
     if (!data.nodes.has(key)) return;
     current = r;
 
-    temp_frame ctx {};
-    glispy::setup(&ctx);
+    glispy::temp_frame ctx {};
     ctx.fns["damage"]   = act<action::damage>;
     ctx.fns["defence"]  = act<action::defence>;
     ctx.fns["heal"]     = act<action::heal>;

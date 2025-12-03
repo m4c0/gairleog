@@ -49,8 +49,7 @@ static unsigned font_id(char c) {
 
 static unsigned theme_id(char c) {
   temp_arena<node> a {};
-  temp_frame ctx {};
-  glispy::setup(&ctx);
+  glispy::temp_frame ctx {};
   themedefs::eval();
 
   jute::view str { &c, 1 };
@@ -211,8 +210,7 @@ const int i = [] {
 
   handle(KEY_DOWN, [] {
     temp_arena<node> a {};
-    temp_frame ctx {};
-    glispy::setup(&ctx);
+    glispy::temp_frame ctx {};
     themedefs::eval();
 
     char c = casein::last_key;

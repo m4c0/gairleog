@@ -32,8 +32,7 @@ namespace sprdef {
   }
   export void run(jute::view fname, jute::view src) try {
     lispy::temp_arena<custom_node> a {};
-    lispy::temp_frame ctx {};
-    glispy::setup(&ctx);
+    glispy::temp_frame ctx {};
     ctx.fns["sprdef"] = lispy::experimental::wrap<custom_node, sprdef>;
     lispy::run<custom_node>(src);
   } catch (const lispy::parser_error & e) {
