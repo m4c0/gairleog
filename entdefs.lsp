@@ -29,6 +29,100 @@
 (entdef potato  (food) (spr items/food/potato_orange))
 (entdef turnip  (food) (spr items/food/radishturnip_brown))
 
+; =====================================================================
+; Enemies
+; =====================================================================
+
+(entdef bat
+  (solid)
+  (enemy)
+  (strength 1)
+  (defense 0)
+  (loot (random apple empty))
+  (atkspr fx/themed/fx_frost_bite)
+  (spr characters/beast_bat))
+
+(entdef beholder
+  (solid)
+  (enemy)
+  (strength 1)
+  (defense 0)
+  (loot (random apple empty))
+  (atkspr fx/themed/fx_frost_bite)
+  (spr characters/beast_beholder))
+
+(entdef demon
+  (solid)
+  (enemy)
+  (strength 1)
+  (defense 0)
+  (loot (random apple empty))
+  (atkspr fx/themed/fx_frost_bite)
+  (spr characters/demon_knight))
+
+(entdef dragon-drake
+  (solid)
+  (enemy)
+  (strength 1)
+  (defense 0)
+  (loot (random apple empty))
+  (atkspr fx/themed/fx_frost_bite)
+  (spr characters/dragon_drake))
+
+(entdef dragon-hydra
+  (solid)
+  (enemy)
+  (strength 1)
+  (defense 0)
+  (loot (random apple empty))
+  (atkspr fx/themed/fx_frost_bite)
+  (spr characters/dragon_hydra))
+
+(entdef dragon-wyrm
+  (solid)
+  (enemy)
+  (strength 1)
+  (defense 0)
+  (loot (random apple empty))
+  (atkspr fx/themed/fx_frost_bite)
+  (spr characters/dragon_wyrm))
+
+(entdef leech
+  (solid)
+  (enemy)
+  (strength 1)
+  (defense 0)
+  (loot (random apple empty))
+  (atkspr fx/themed/fx_frost_bite)
+  (spr characters/beast_leech))
+
+(entdef ooze
+  (solid)
+  (enemy)
+  (strength 1)
+  (defense 0)
+  (loot (random apple empty))
+  (atkspr fx/themed/fx_frost_bite)
+  (spr characters/beast_ooze))
+
+(entdef slime
+  (solid)
+  (enemy)
+  (strength 1)
+  (defense 0)
+  (loot (random apple empty))
+  (atkspr fx/themed/fx_frost_bite)
+  (spr characters/beast_slime_green))
+
+(entdef slime-big
+  (solid)
+  (enemy)
+  (strength 1)
+  (defense 0)
+  (loot (random apple empty))
+  (atkspr fx/themed/fx_frost_bite)
+  (spr characters/beast_slime_green_large))
+
 (entdef snake
   (solid)
   (enemy)
@@ -55,6 +149,17 @@
   (loot (random berry empty))
   (atkspr fx/fx_red_impact)
   (spr characters/spirit_faerie))
+
+(entdef wolf
+  (solid)
+  (enemy)
+  (strength 1)
+  (defense 0)
+  (loot (random apple empty))
+  (atkspr fx/themed/fx_frost_bite)
+  (spr characters/beast_wolf_brown))
+
+; =====================================================================
 
 (entdef boulder
   (solid)
