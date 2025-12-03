@@ -5,10 +5,10 @@
 import casein;
 import dotz;
 import entdefs;
+import glispy;
 import hai;
 import hay;
 import jute;
-import lispy;
 import print;
 import res;
 import silog;
@@ -48,7 +48,9 @@ static unsigned font_id(char c) {
 }
 
 static unsigned theme_id(char c) {
+  temp_arena<node> a {};
   temp_frame ctx {};
+  glispy::setup(&ctx);
   themedefs::eval();
 
   jute::view str { &c, 1 };
@@ -210,6 +212,7 @@ const int i = [] {
   handle(KEY_DOWN, [] {
     temp_arena<node> a {};
     temp_frame ctx {};
+    glispy::setup(&ctx);
     themedefs::eval();
 
     char c = casein::last_key;
