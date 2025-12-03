@@ -38,7 +38,7 @@
   (atkspr fx/themed/fx_frost_bite)
   (spr characters/beast_snake))
 
-(entdef spirit
+(entdef spirit_wotw
   (solid)
   (enemy)
   (strength 1)
@@ -46,6 +46,15 @@
   (loot (random berry empty))
   (atkspr fx/themed/fx_frost_bite)
   (spr characters/spirit_will_o_the_wisp))
+
+(entdef spirit_faerie
+  (solid)
+  (enemy)
+  (strength 1)
+  (defense 0)
+  (loot (random berry empty))
+  (atkspr fx/fx_red_impact)
+  (spr characters/spirit_faerie))
 
 (entdef boulder
   (solid)

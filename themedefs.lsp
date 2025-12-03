@@ -1,9 +1,14 @@
-(def easy-enemy (random snake spirit));
+(def easy-enemy (random snake))
+(def medium-enemy (random spirit-wotw spirit-faerie))
 
 (def per-level-enemy (first-of
   (lte (level) 1 (random (easy-enemy) empty empty))
-  (lte (level) 3 (random (easy-enemy) (easy-enemy) empty))
-  (easy-enemy)
+  (lte (level) 2 (random (easy-enemy) (easy-enemy) empty))
+  (lte (level) 3 (easy-enemy))
+  (lte (level) 4 (random (easy-enemy) (easy-enemy) (medium-enemy)))
+  (lte (level) 5 (random (easy-enemy) (medium-enemy) (medium-enemy)))
+  (lte (level) 6 (medium-enemy))
+  (medium-enemy)
 ))
 
 (def x (random pot candles grass empty empty))
