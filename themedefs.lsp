@@ -1,5 +1,13 @@
+(def easy-enemy (random snake spirit));
+
+(def per-level-enemy (first-of
+  (lte (level) 1 (random (easy-enemy) empty empty))
+  (lte (level) 3 (random (easy-enemy) (easy-enemy) empty))
+  (easy-enemy)
+))
+
 (def x (random pot candles grass empty empty))
-(def e (random enemy empty empty))
+(def e (per-level-enemy))
 (random
   (do
     (def . (random grass empty empty))

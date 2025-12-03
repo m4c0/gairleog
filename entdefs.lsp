@@ -29,17 +29,23 @@
 (entdef potato  (food) (spr items/food/potato_orange))
 (entdef turnip  (food) (spr items/food/radishturnip_brown))
 
-(entdef enemy
+(entdef snake
   (solid)
   (enemy)
   (strength 1)
   (defense 0)
-  (loot apple)
+  (loot (random apple empty))
   (atkspr fx/themed/fx_frost_bite)
-  (random
-    (spr characters/beast_snake)
-    (spr characters/spirit_will_o_the_wisp)
-  ))
+  (spr characters/beast_snake))
+
+(entdef spirit
+  (solid)
+  (enemy)
+  (strength 1)
+  (defense 0)
+  (loot (random berry empty))
+  (atkspr fx/themed/fx_frost_bite)
+  (spr characters/spirit_will_o_the_wisp))
 
 (entdef boulder
   (solid)
