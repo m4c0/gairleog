@@ -3,9 +3,9 @@
 export module sfxdefs;
 import audio;
 import errs;
+import glispy;
 import hashley;
 import hai;
-import lispy;
 import silog;
 import sires;
 import sv;
@@ -64,6 +64,7 @@ namespace sfxdefs {
 
     temp_arena<node> a {};
     temp_frame ctx {};
+    glispy::setup(&ctx);
     auto nn = eval<node>(n);
     if (!is_atom(nn)) return dummy;
     return cache[nn->atom];

@@ -1,8 +1,8 @@
 export module sprdef;
+import glispy;
 import hai;
 import hashley;
 import jute;
-import lispy;
 import sires;
 import traits;
 
@@ -33,6 +33,7 @@ namespace sprdef {
   export void run(jute::view fname, jute::view src) try {
     lispy::temp_arena<custom_node> a {};
     lispy::temp_frame ctx {};
+    glispy::setup(&ctx);
     ctx.fns["sprdef"] = lispy::experimental::wrap<custom_node, sprdef>;
     lispy::run<custom_node>(src);
   } catch (const lispy::parser_error & e) {

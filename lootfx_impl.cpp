@@ -1,7 +1,7 @@
 module lootfx;
+import glispy;
 import hai;
 import hashley;
-import lispy;
 import silog;
 
 using namespace lispy;
@@ -30,6 +30,7 @@ namespace lootfx {
     auto a = data.arena->use();
 
     temp_frame ctx {};
+    glispy::setup(&ctx);
     ctx.fns["fx"] = [](auto n, auto aa, auto as) -> const node * {
       if (as != 2) erred(n, "expecting a name and an action");
       if (!is_atom(aa[0])) erred(aa[0], "expecting an atom as the name");
@@ -54,6 +55,7 @@ namespace lootfx {
     current = r;
 
     temp_frame ctx {};
+    glispy::setup(&ctx);
     ctx.fns["damage"]   = act<action::damage>;
     ctx.fns["defence"]  = act<action::defence>;
     ctx.fns["heal"]     = act<action::heal>;

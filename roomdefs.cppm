@@ -45,6 +45,7 @@ namespace roomdefs {
           !(as == ew && cols == eh)) return {};
 
       lispy::temp_frame tctx {};
+      glispy::setup(&tctx);
       themedefs::eval();
 
       hai::array<entdefs::t> data { as * cols };

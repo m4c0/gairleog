@@ -1,8 +1,8 @@
 export module hitdefs;
 import entdefs;
-import jute;
+import glispy;
 import hai;
-import lispy;
+import jute;
 
 using namespace lispy;
 using namespace lispy::experimental;
@@ -31,6 +31,7 @@ namespace hitdefs {
 
   const node * eval(const node * n) {
     temp_frame ctx {};
+    glispy::setup(&ctx);
     ctx.fns["block"]  = ref<action::block>;
     ctx.fns["exit"]   = ref<action::exit>;
     ctx.fns["hit"]    = ref<action::hit>;
@@ -46,6 +47,7 @@ namespace hitdefs {
     action_list_t result { 8 };
 
     temp_frame ctx {};
+    glispy::setup(&ctx);
     ctx.ptrs["from"]   = &from;
     ctx.ptrs["to"]     = &to;
     ctx.ptrs["result"] = &result;
