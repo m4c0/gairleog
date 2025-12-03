@@ -16,7 +16,7 @@ namespace glispy {
     ctx->fns["first-of"] = [](auto n, auto aa, auto as) -> const node * {
       for (auto i = 0; i < as; i++) {
         auto nn = eval<node>(aa[i]);
-        if (nn) return n;
+        if (nn) return nn;
       }
       return nullptr;
     };
