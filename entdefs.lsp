@@ -160,6 +160,49 @@
   (spr characters/beast_wolf_brown))
 
 ; =====================================================================
+; Breakables
+; =====================================================================
+
+(entdef pot-red
+  (solid)
+  (ceramic)
+  (random
+    (loot apple)
+    (loot potato)
+  )
+  (random
+    (spr environment/props/pot_yellow)
+    (spr environment/props/pot_orange)
+    (spr environment/props/pot_red)
+  ))
+
+(entdef pot-blue
+  (solid)
+  (ceramic)
+  (random
+    (loot apple)
+    (loot potato)
+  )
+  (random
+    (spr environment/props/pot_blue)
+    (spr environment/props/pot_purple)
+    (spr environment/props/pot_indigo)
+  ))
+
+(entdef pot-other
+  (solid)
+  (ceramic)
+  (random
+    (loot apple)
+    (loot potato)
+  )
+  (random
+    (spr environment/props/pot_black)
+    (spr environment/props/pot_brown)
+    (spr environment/props/pot_gray)
+  ))
+
+; =====================================================================
 
 (entdef boulder
   (solid)
@@ -175,26 +218,6 @@
 (entdef candles
   (light 0.3)
   (spr environment/props/candles))
-
-(entdef pot
-  (solid)
-  (ceramic)
-  (random
-    (loot apple)
-    (loot potato)
-  )
-  (random
-    (spr environment/props/pot_yellow)
-    (spr environment/props/pot_black)
-    (spr environment/props/pot_blue)
-    (spr environment/props/pot_green)
-    (spr environment/props/pot_purple)
-    (spr environment/props/pot_orange)
-    (spr environment/props/pot_red)
-    (spr environment/props/pot_indigo)
-    (spr environment/props/pot_brown)
-    (spr environment/props/pot_gray)
-  ))
 
 (entdef grass
   (random

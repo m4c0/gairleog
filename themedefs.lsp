@@ -17,8 +17,16 @@
   (lte (level) 11 (random (hard-enemy) (super-enemy) (super-enemy)))
   (super-enemy)
 ))
+(def per-level-pot (first-of
+  (lte (level) 3 (pot-red))
+  (lte (level) 6 (random pot-red pot-blue))
+  (lte (level) 9 (pot-blue))
+  (lte (level) 12 (random pot-blue pot-other))
+  (lte (level) 15 (pot-other))
+  (random pot-blue pot-other)
+))
 
-(def x (random pot candles grass empty empty))
+(def x (random (per-level-pot) candles grass empty empty))
 (def e (per-level-enemy))
 (random
   (do
