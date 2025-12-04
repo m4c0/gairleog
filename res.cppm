@@ -10,11 +10,11 @@ module;
 export module res;
 import entdefs;
 import errs;
+import glispy;
 import hai;
 import hitdefs;
 import jojo;
 import jute;
-import lispy;
 import lootfx;
 import roomdefs;
 import sfxdefs;
@@ -30,6 +30,8 @@ namespace res {
   }
 
   static void load(jute::view sprdef_file, hai::fn<void> cb) {
+    glispy::init();
+
     safe_load(sprdef_file, [=](auto src) mutable {
       sprdef::run(sprdef_file, src);
 

@@ -17,13 +17,15 @@ static constexpr const auto src = R"(
 )"_sv;
 
 int main() try {
+  glispy::init();
+
   temp_arena<node> a {};
 
   temp_frame src_ctx {};
   run<node>(src);
   if (!src_ctx.defs.has("this")) die("missing this");
 
-  glispy::temp_frame ctx {};
+  lispy::temp_frame ctx {};
 
   glispy::game_values().level = "3";
   auto n = eval<node>(context()->def("this"));

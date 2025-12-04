@@ -12,7 +12,9 @@ namespace glispy {
     return i;
   }
 
-  static void setup(frame * ctx) {
+  export void init() {
+    static auto ctx = frame::make();
+    static auto u = ctx->use();
     ctx->fns["first-of"] = [](auto n, auto aa, auto as) -> const node * {
       for (auto i = 0; i < as; i++) {
         auto nn = eval<node>(aa[i]);
@@ -37,17 +39,5 @@ namespace glispy {
       auto rhs = to_i(eval<node>(aa[1]));
       return lhs >= rhs ? eval<node>(aa[2]) : nullptr;
     };
-  }
-
-  export class temp_frame : public lispy::temp_frame {
-  public:
-    temp_frame() : lispy::temp_frame {} { setup(this); }
-  };
-  export namespace frame {
-    auto make() {
-      auto ctx = lispy::frame::make();
-      setup(&*ctx);
-      return ctx;
-    }
   }
 }
