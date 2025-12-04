@@ -220,6 +220,9 @@
 
 (entdef candles
   (light 0.3)
+  (solid)
+  (ceramic)
+  (life 3)
   (spr environment/props/candles))
 
 (entdef grass
