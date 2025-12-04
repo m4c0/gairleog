@@ -5,14 +5,14 @@ import sprdef;
 
 namespace entdefs {
   export struct flags {
-    bool ceramic : 1 = false;
-    bool enemy   : 1 = false;
-    bool exit    : 1 = false;
-    bool food    : 1 = false;
-    bool player  : 1 = false;
-    bool solid   : 1 = false;
-    bool toad    : 1 = false;
-    bool wall    : 1 = false;
+    bool ceramic     : 1 = false;
+    bool enemy       : 1 = false;
+    bool exit        : 1 = false;
+    bool fluorescent : 1 = false;
+    bool food        : 1 = false;
+    bool player      : 1 = false;
+    bool solid       : 1 = false;
+    bool wall        : 1 = false;
   };
   static_assert(sizeof(flags) == 1);
 
@@ -50,13 +50,13 @@ namespace entdefs {
     return u.u32;
   }
   export unsigned bit_of(jute::view atom) {
-    if (atom == "ceramic") return bit_of({ .ceramic = true });
-    if (atom == "enemy")   return bit_of({ .enemy   = true });
-    if (atom == "exit")    return bit_of({ .exit    = true });
-    if (atom == "food")    return bit_of({ .food    = true });
-    if (atom == "player")  return bit_of({ .player  = true });
-    if (atom == "solid")   return bit_of({ .solid   = true });
-    if (atom == "toad")    return bit_of({ .toad    = true });
+    if (atom == "ceramic")     return bit_of({ .ceramic        = true });
+    if (atom == "enemy")       return bit_of({ .enemy          = true });
+    if (atom == "exit")        return bit_of({ .exit           = true });
+    if (atom == "fluorescent") return bit_of({ .fluorescent    = true });
+    if (atom == "food")        return bit_of({ .food           = true });
+    if (atom == "player")      return bit_of({ .player         = true });
+    if (atom == "solid")       return bit_of({ .solid          = true });
     return 0U; // Should only happen whilst parsing
   }
 

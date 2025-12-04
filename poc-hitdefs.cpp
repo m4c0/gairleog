@@ -14,8 +14,8 @@ void run() {
   };
   entdefs::flags tgt_compos {
     .enemy = true,
+    .fluorescent = true,
     .solid = true,
-    .toad  = true,
   };
 
   for (auto action : hitdefs::check(src_compos, tgt_compos)) {

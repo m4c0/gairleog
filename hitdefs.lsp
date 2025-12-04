@@ -19,11 +19,3 @@
     (miss)
     (hit)))
 
-(hitdef toad player
-  (random
-    (miss)
-    (miss)
-    (miss)
-    (miss)
-    (miss)
-    (poison)))

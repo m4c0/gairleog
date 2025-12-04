@@ -7,9 +7,9 @@ import roomdefs;
 import sprdef;
 
 namespace {
-  // TODO: move to lisp?
+  // TODO: move to lisp
   static constexpr const entdefs::t wall {
-    .flags { .solid = true, .wall = true },
+    .flags { .solid = true, .wall = true, .fluorescent = true },
   };
 
   [[nodiscard]] bool furnish(map & map, dotz::ivec2 aa, dotz::ivec2 bb) {

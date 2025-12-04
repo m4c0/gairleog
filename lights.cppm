@@ -59,7 +59,7 @@ namespace lights {
 
     ents::foreach([](auto & e) {
       auto l = dotz::max(at(e.pos).current, e.light);
-      if (e.flags.wall || e.flags.ceramic) e.light = dotz::clamp(l, 0.0f, 0.1f);
+      if (e.flags.fluorescent) e.light = dotz::clamp(l, 0.0f, 0.1f);
     });
   }
 }

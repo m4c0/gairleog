@@ -89,13 +89,13 @@ namespace entdefs {
     ctx->fns["spr"]      = mem_fn<&cnode::attr, &cnode::sprite,        to_spr>;
     ctx->fns["strength"] = mem_fn<&cnode::attr, &cnode::strength,      to_i>;
 
-    ctx->fns["ceramic"] = mem_set<{ .ceramic = true }>;
-    ctx->fns["enemy"]   = mem_set<{ .enemy   = true }>;
-    ctx->fns["exit"]    = mem_set<{ .exit    = true }>;
-    ctx->fns["food"]    = mem_set<{ .food    = true }>;
-    ctx->fns["player"]  = mem_set<{ .player  = true }>;
-    ctx->fns["solid"]   = mem_set<{ .solid   = true }>;
-    ctx->fns["toad"]    = mem_set<{ .toad    = true }>;
+    ctx->fns["ceramic"]     = mem_set<{ .ceramic     = true }>;
+    ctx->fns["enemy"]       = mem_set<{ .enemy       = true }>;
+    ctx->fns["exit"]        = mem_set<{ .exit        = true }>;
+    ctx->fns["fluorescent"] = mem_set<{ .fluorescent = true }>;
+    ctx->fns["food"]        = mem_set<{ .food        = true }>;
+    ctx->fns["player"]      = mem_set<{ .player      = true }>;
+    ctx->fns["solid"]       = mem_set<{ .solid       = true }>;
     return ctx;
   }();
 
