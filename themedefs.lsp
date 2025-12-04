@@ -18,11 +18,11 @@
   (super-enemy)
 ))
 (def per-level-pot (first-of
-  (lte (level) 3 (pot-red))
+  (lte (level) 3 pot-red)
   (lte (level) 6 (random pot-red pot-blue))
-  (lte (level) 9 (pot-blue))
+  (lte (level) 9 pot-blue)
   (lte (level) 12 (random pot-blue pot-other))
-  (lte (level) 15 (pot-other))
+  (lte (level) 15 pot-other)
   (random pot-blue pot-other)
 ))
 
