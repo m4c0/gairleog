@@ -46,7 +46,9 @@ namespace lights {
         c.emission = 0;
 
     ents::foreach([](const auto & e) {
-      if (e.light) at(e.pos).emission = e.light * 1.0;
+      if (!e.light) return;
+      auto & cur = at(e.pos).emission;
+      cur = dotz::max(cur, e.light * 1.0);
     });
 
     for (dotz::ivec2 p {}; p.y < map::h; p.y++) {
