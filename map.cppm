@@ -13,12 +13,4 @@ export struct map {
   auto & at(dotz::ivec2 p) { return data[p.y][p.x]; }
 
   void build();
-
-  void foreach(auto && fn) {
-    for (auto y = 0; y < h; y++) {
-      for (auto x = 0; x < w; x++) {
-        fn(dotz::ivec2 { x, y }, data[y][x]);
-      }
-    }
-  }
 };

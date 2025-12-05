@@ -25,8 +25,6 @@ import sfxdefs;
 import sv;
 import v;
 
-static map g_map {};
-
 static void reset_keys() {
   using namespace casein;
   reset_k(KEY_DOWN);
@@ -62,8 +60,7 @@ static void on_main_menu();
 // TODO: drop a random item on level change
 static void on_exit() try {
   ents::reset();
-  g_map.build();
-  g_map.foreach(ents::add);
+  map {}.build();
   lights::reset();
   on_game();
 } catch (const hai::cstr & err) {

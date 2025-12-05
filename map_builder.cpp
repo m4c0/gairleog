@@ -1,5 +1,6 @@
 module map;
 import dotz;
+import ents;
 import entdefs;
 import perlin;
 import rng;
@@ -119,4 +120,10 @@ void map::build() {
 
   data[1][1] = { entdefs::get("player") };
   data[h - 2][w - 2] = { entdefs::get("exit") };
+
+  for (auto y = 0; y < h; y++) {
+    for (auto x = 0; x < w; x++) {
+      ents::add(dotz::ivec2 { x, y }, data[y][x]);
+    }
+  }
 }
