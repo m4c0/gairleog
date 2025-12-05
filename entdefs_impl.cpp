@@ -116,26 +116,20 @@ namespace entdefs {
     return ctx;
   }();
 
-  void run(jute::view src) try {
+  void run(jute::view src) {
     auto a = src_arena->use();
     auto c = src_ctx->use();
     lispy::run<cnode>("entdefs.lsp", src);
-  } catch (const lispy::parser_error & e) {
-    // TODO: remove try/catch
-    throw lispy::to_file_err(e);
   }
 
   bool has(jute::view name) {
     return defs.has(name);
   }
-  t get(jute::view name) try {
+  t get(jute::view name) {
     auto & d = defs[name];
 
     temp_arena<cnode> a {};
     auto c = entdef_ctx->use();
     return *fill_clone<cnode>(d.n, d.args.begin(), d.args.size());
-  } catch (const lispy::parser_error & e) {
-    // TODO: remove try/catch
-    throw lispy::to_file_err(e);
   }
 }

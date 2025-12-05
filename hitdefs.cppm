@@ -40,7 +40,7 @@ namespace hitdefs {
     return eval<node>(n);
   }
 
-  export action_list_t check(entdefs::flags from, entdefs::flags to) try {
+  export action_list_t check(entdefs::flags from, entdefs::flags to) {
     lispy::temp_arena<node> a {};
 
     action_list_t result { 8 };
@@ -68,8 +68,5 @@ namespace hitdefs {
     };
     lispy::run<node>("hitdefs.lsp", g_source);
     return result;
-  } catch (const lispy::parser_error & e) {
-    // TODO: Remove try/catch
-    throw lispy::to_file_err(e);
   }
 }

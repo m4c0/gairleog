@@ -22,7 +22,7 @@ namespace lootfx {
     for (auto k : data.keys) rest.push_back_doubling(jute::heap { k });
   }
 
-  void run(jute::view src) try {
+  void run(jute::view src) {
     data = {
       .src = jute::heap { src },
       .arena = arena<node>::make(),
@@ -38,9 +38,6 @@ namespace lootfx {
       return n;
     };
     lispy::run<node>("lootfx.lsp", data.src);
-  } catch (const parser_error & e) {
-    // TODO: remove try/catch
-    throw to_file_err(e);
   }
 
   static action_list_t * current;
@@ -50,7 +47,7 @@ namespace lootfx {
     current->push_back(A);
     return n;
   }
-  void apply(jute::view key, action_list_t * r) try {
+  void apply(jute::view key, action_list_t * r) {
     if (!data.nodes.has(key)) return;
     current = r;
 
@@ -64,9 +61,6 @@ namespace lootfx {
     ctx.fns["weakness"] = act<action::weakness>;
     ctx.fns["wither"]   = act<action::wither>;
     auto _ = eval<node>(data.nodes[key]);
-  } catch (const parser_error & e) {
-    // TODO: remove try/catch
-    throw to_file_err(e);
   }
 
   void read(file::reader * r) {

@@ -58,11 +58,3 @@ void save::store(hai::fn<void> callback) {
   g_exists = true;
   callback();
 }
-
-void save::init(hai::fn<void> callback) try {
-  res::load_all(callback);
-} catch (const lispy::parser_error & e) {
-  silog::die("%s", lispy::to_file_err(e).begin());
-} catch (const hai::cstr & e) {
-  silog::die("Failure loading resource: %s", e.begin());
-}

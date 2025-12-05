@@ -8,7 +8,6 @@ namespace save {
 
   export bool exists();
 
-  export void init(hai::fn<void> callback);
   export void prefetch(hai::fn<void> callback);
   export void store(hai::fn<void> callback);
 }

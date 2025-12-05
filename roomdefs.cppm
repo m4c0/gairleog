@@ -25,7 +25,7 @@ namespace roomdefs {
     hai::sptr<roomdefs::t> room {};
   };
 
-  export hai::sptr<t> for_size(unsigned ew, unsigned eh) try {
+  export hai::sptr<t> for_size(unsigned ew, unsigned eh) {
     using namespace lispy::experimental;
 
     lispy::temp_arena<node> a {};
@@ -132,8 +132,5 @@ namespace roomdefs {
     
     auto n = lispy::run<node>("roomdefs.lsp", g_src);
     return (n && n->room) ? n->room : hai::sptr<t> {};
-  } catch (const lispy::parser_error & e) {
-    // TODO: remove try/catch
-    throw lispy::to_file_err(e);
   }
 }

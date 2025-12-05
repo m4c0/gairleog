@@ -17,6 +17,7 @@ import lights;
 import lispy;
 import lootfx;
 import map;
+import res;
 import save;
 import sicfg;
 import silog;
@@ -444,9 +445,15 @@ static void on_main_menu() {
 }
 
 const int i = [] {
-  audio::init();
-  audio::enabled = !sicfg::boolean("mute");
-  casein::fullscreen = !sicfg::boolean("windowed");
-  save::init(on_init);
-  return 0;
+  try {
+    audio::init();
+    audio::enabled = !sicfg::boolean("mute");
+    casein::fullscreen = !sicfg::boolean("windowed");
+    res::load_all(on_init);
+    return 0;
+  } catch (const lispy::parser_error & e) {
+    silog::die("%s", lispy::to_file_err(e).begin());
+  } catch (const hai::cstr & e) {
+    silog::die("Failure loading resource: %s", e.begin());
+  }
 }();
