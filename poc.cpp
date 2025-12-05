@@ -14,6 +14,7 @@ import imgui;
 import inv;
 import jute;
 import lights;
+import lispy;
 import lootfx;
 import map;
 import save;
@@ -63,6 +64,8 @@ static void on_exit() try {
   map::build();
   lights::reset();
   on_game();
+} catch (const lispy::parser_error & e) {
+  silog::die("%s", lispy::to_file_err(e).begin());
 } catch (const hai::cstr & err) {
   silog::die("%s", err.begin());
 }
@@ -105,6 +108,8 @@ static void on_inv_use() try {
     g_tgt_sel = g_sel;
     g_sel -= 1;
   }
+} catch (const lispy::parser_error & e) {
+  silog::die("%s", lispy::to_file_err(e).begin());
 } catch (const hai::cstr & msg) {
   silog::die("Error: %s", msg.begin());
 }
@@ -248,6 +253,8 @@ static constexpr const auto move(int dx, int dy) {
           case exit: v::on_frame = on_exit; break;
         }
       });
+    } catch (const lispy::parser_error & e) {
+      silog::die("%s", lispy::to_file_err(e).begin());
     } catch (const hai::cstr & msg) {
       silog::die("Error: %s", msg.begin());
     }

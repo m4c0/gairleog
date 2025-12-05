@@ -3,6 +3,7 @@ import entdefs;
 import errs;
 import hai;
 import hitdefs;
+import lispy;
 import print;
 import res;
 import rng;
@@ -31,6 +32,9 @@ void run() {
 int main() try {
   rng::seed();
   res::load_locally(&run);
+} catch (const lispy::parser_error & err) {
+  errln(lispy::to_file_err(err));
+  return 1;
 } catch (const hai::cstr & msg) {
   errln(msg);
   return 1;

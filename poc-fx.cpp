@@ -4,6 +4,7 @@ import casein;
 import errs;
 import fx;
 import hai;
+import lispy;
 import res;
 import rng;
 import silog;
@@ -31,9 +32,10 @@ const int i = [] {
 
       v::on_frame = on_frame;
     });
+  } catch (const lispy::parser_error & err) {
+    silog::die("%s", lispy::to_file_err(err).begin());
   } catch (const hai::cstr & e) {
-    silog::die("Failure loading resource: %s", e.begin());
-    throw;
+    silog::die("%s", e.begin());
   }
   return 0;
 }();

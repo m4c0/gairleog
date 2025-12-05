@@ -5,6 +5,7 @@ import enemies;
 import ents;
 import errs;
 import hai;
+import lispy;
 import map;
 import res;
 import silog;
@@ -49,6 +50,8 @@ static void on_frame() try {
   handle(KEY_DOWN, K_DOWN,  move(0, +1));
   handle(KEY_DOWN, K_LEFT,  move(-1, 0));
   handle(KEY_DOWN, K_RIGHT, move(+1, 0));
+} catch (const lispy::parser_error & err) {
+  silog::die("%s", lispy::to_file_err(err).begin());
 } catch (const hai::cstr & err) {
   silog::die("%s", err.begin());
 }
@@ -58,9 +61,10 @@ const int i = [] {
     res::load_all([] {
       v::on_frame = on_frame;
     });
+  } catch (const lispy::parser_error & err) {
+    silog::die("%s", lispy::to_file_err(err).begin());
   } catch (const hai::cstr & e) {
-    silog::die("Failure loading resource: %s", e.begin());
-    throw;
+    silog::die("%s", e.begin());
   }
   return 0;
 }();

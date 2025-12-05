@@ -2,6 +2,7 @@ module v;
 import casein;
 import dotz;
 import hai;
+import lispy;
 import silog;
 import sires;
 import traits;
@@ -88,6 +89,8 @@ static void on_start() try {
   voo::load_image("pixelite2.png", g_as->dq.physical_device(), &g_as->img, [](auto) {
     vee::update_descriptor_set(g_as->dset, 0, 0, *g_as->img.iv, *g_as->smp);
   });
+} catch (const lispy::parser_error & e) {
+  silog::die("%s", lispy::to_file_err(e).begin());
 } catch (const hai::cstr & msg) {
   silog::die("Error starting: %s", msg.begin());
 }
@@ -118,6 +121,8 @@ static void on_frame() try {
     vee::cmd_draw(cb, 4, g_as->count);
   });
   g_es->sw.queue_present();
+} catch (const lispy::parser_error & e) {
+  silog::die("%s", lispy::to_file_err(e).begin());
 } catch (const hai::cstr & msg) {
   silog::die("Error: %s", msg.begin());
 }

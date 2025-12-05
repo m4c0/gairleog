@@ -3,6 +3,7 @@ import ents;
 import file;
 import fx;
 import inv;
+import lispy;
 import lootfx;
 import res;
 import silog;
@@ -60,6 +61,8 @@ void save::store(hai::fn<void> callback) {
 
 void save::init(hai::fn<void> callback) try {
   res::load_all(callback);
+} catch (const lispy::parser_error & e) {
+  silog::die("%s", lispy::to_file_err(e).begin());
 } catch (const hai::cstr & e) {
   silog::die("Failure loading resource: %s", e.begin());
 }

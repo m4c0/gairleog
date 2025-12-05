@@ -4,6 +4,7 @@ import dotz;
 import errs;
 import hai;
 import imgui;
+import lispy;
 import res;
 import silog;
 import sprdef;
@@ -54,6 +55,8 @@ const auto i = [] {
     res::load_all([] {
       v::on_frame = on_frame;
     });
+  } catch (const lispy::parser_error & e) {
+    silog::die("%s", lispy::to_file_err(e).begin());
   } catch (const hai::cstr & err) {
     silog::die("Failed to load resource: %s", err.begin());
   }
