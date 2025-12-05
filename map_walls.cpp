@@ -12,25 +12,25 @@ static constexpr auto rnd_rl() {
   }
 }
 
-static constexpr bool wall(const map & map, unsigned x, unsigned y) {
+static constexpr bool wall(const map::t & map, unsigned x, unsigned y) {
   return map.data[y][x].flags.wall;
 }
 
-void make_walls(perlin & pln, map & map) {
+void make_walls(perlin & pln, map::t & map) {
   const auto pr = [&](auto x, auto y) {
     dotz::vec2 p { static_cast<float>(x) / map::w, static_cast<float>(y) / map::h };
     return static_cast<unsigned>(pln(p) * 2.5 + 2.5);
   };
 
-  for (auto y = 0; y < map.h; y++) {
-    for (auto x = 0; x < map.w; x++) {
+  for (auto y = 0; y < map::h; y++) {
+    for (auto x = 0; x < map::w; x++) {
       if (!wall(map, x, y)) continue;
       auto p = pr(x, y);
 
-      bool l = x > 0       && wall(map, x - 1, y) && (p == pr(x - 1, y));
-      bool r = x < map.w-1 && wall(map, x + 1, y) && (p == pr(x + 1, y));
-      bool u = y > 0       && wall(map, x, y - 1) && (p == pr(x, y - 1));
-      bool d = y < map.h-1 && wall(map, x, y + 1) && (p == pr(x, y + 1));
+      bool l = x > 0        && wall(map, x - 1, y) && (p == pr(x - 1, y));
+      bool r = x < map::w-1 && wall(map, x + 1, y) && (p == pr(x + 1, y));
+      bool u = y > 0        && wall(map, x, y - 1) && (p == pr(x, y - 1));
+      bool d = y < map::h-1 && wall(map, x, y + 1) && (p == pr(x, y + 1));
       unsigned n =
         l && r && u && d ? 19 :
         l && r && u ? rnd_rl() :

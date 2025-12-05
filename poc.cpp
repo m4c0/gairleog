@@ -60,7 +60,7 @@ static void on_main_menu();
 // TODO: drop a random item on level change
 static void on_exit() try {
   ents::reset();
-  map {}.build();
+  map::build();
   lights::reset();
   on_game();
 } catch (const hai::cstr & err) {

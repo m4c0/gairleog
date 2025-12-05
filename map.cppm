@@ -4,13 +4,18 @@ export module map;
 import dotz;
 import entdefs;
 
-export struct map {
-  static constexpr const unsigned w = 32;
-  static constexpr const unsigned h = 32;
+namespace map {
+  export constexpr const unsigned w = 32;
+  export constexpr const unsigned h = 32;
 
-  entdefs::t data[h][w] {};
+  struct t {
+    entdefs::t data[h][w] {};
 
-  auto & at(dotz::ivec2 p) { return data[p.y][p.x]; }
+    auto & at(dotz::ivec2 p) { return data[p.y][p.x]; }
 
-  void build();
+    void build();
+  };
+  export void build() {
+    t {}.build();
+  }
 };

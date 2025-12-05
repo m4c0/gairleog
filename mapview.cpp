@@ -34,8 +34,7 @@ static constexpr const auto move(int dx, int dy) {
 }
 static void on_frame() try {
   ents::reset();
-
-  map {}.build();
+  map::build();
 
   load();
   v::set_grid({ 16, 16 });

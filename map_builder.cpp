@@ -17,7 +17,7 @@ namespace {
     },
   };
 
-  [[nodiscard]] bool furnish(map & map, dotz::ivec2 aa, dotz::ivec2 bb) {
+  [[nodiscard]] bool furnish(map::t & map, dotz::ivec2 aa, dotz::ivec2 bb) {
     auto ab = bb - aa + 1;
     auto n = roomdefs::for_size(ab.x, ab.y);
     if (!n) return false;
@@ -30,9 +30,9 @@ namespace {
     return true;
   }
 
-  void vsplit(map & map, dotz::ivec2 aa, dotz::ivec2 bb);
+  void vsplit(map::t & map, dotz::ivec2 aa, dotz::ivec2 bb);
 
-  void hsplit(map & map, dotz::ivec2 aa, dotz::ivec2 bb) {
+  void hsplit(map::t & map, dotz::ivec2 aa, dotz::ivec2 bb) {
     if (furnish(map, aa, bb)) return;
     if (bb.x - aa.x + 1 <= 2) return;
 
@@ -59,7 +59,7 @@ namespace {
     map.data[y][x+1] = {};
   }
 
-  void vsplit(map & map, dotz::ivec2 aa, dotz::ivec2 bb) {
+  void vsplit(map::t & map, dotz::ivec2 aa, dotz::ivec2 bb) {
     if (furnish(map, aa, bb)) return;
     if (bb.y - aa.y + 1 <= 2) return;
 
@@ -87,9 +87,9 @@ namespace {
   }
 }
 
-void make_walls(perlin & pln, map & map);
+void make_walls(perlin & pln, map::t & map);
 
-void map::build() {
+void map::t::build() {
   for (auto y = 0; y < h; y++) {
     for (auto x = 0; x < w; x++) {
       data[y][x] = {};
