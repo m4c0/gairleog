@@ -37,9 +37,10 @@ namespace lootfx {
       data.keys.push_back_doubling(aa[0]->atom);
       return n;
     };
-    lispy::run<node>(data.src);
+    lispy::run<node>("lootfx.lsp", data.src);
   } catch (const parser_error & e) {
-    throw to_file_err("lootfx.lsp", e);
+    // TODO: remove try/catch
+    throw to_file_err(e);
   }
 
   static action_list_t * current;
@@ -64,7 +65,8 @@ namespace lootfx {
     ctx.fns["wither"]   = act<action::wither>;
     auto _ = eval<node>(data.nodes[key]);
   } catch (const parser_error & e) {
-    throw to_file_err("lootfx.lsp", e);
+    // TODO: remove try/catch
+    throw to_file_err(e);
   }
 
   void read(file::reader * r) {

@@ -22,7 +22,7 @@ int main() try {
   temp_arena<node> a {};
 
   temp_frame src_ctx {};
-  run<node>(src);
+  run<node>("loot-table-example", src);
   if (!src_ctx.defs.has("this")) die("missing this");
 
   lispy::temp_frame ctx {};

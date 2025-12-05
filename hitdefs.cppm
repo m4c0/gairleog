@@ -66,9 +66,10 @@ namespace hitdefs {
       if ((entdefs::bit_of(efrom) & from) && (entdefs::bit_of(eto) & to)) eval(aa[2]);
       return n;
     };
-    lispy::run<node>(g_source);
+    lispy::run<node>("hitdefs.lsp", g_source);
     return result;
   } catch (const lispy::parser_error & e) {
-    throw lispy::to_file_err("hitdefs.lsp", e);
+    // TODO: Remove try/catch
+    throw lispy::to_file_err(e);
   }
 }

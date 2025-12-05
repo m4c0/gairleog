@@ -30,12 +30,13 @@ namespace sprdef {
     };
     return n;
   }
+  // TODO: remove try/catch
   export void run(jute::view fname, jute::view src) try {
     lispy::temp_arena<custom_node> a {};
     lispy::temp_frame ctx {};
     ctx.fns["sprdef"] = lispy::experimental::wrap<custom_node, sprdef>;
-    lispy::run<custom_node>(src);
+    lispy::run<custom_node>(fname, src);
   } catch (const lispy::parser_error & e) {
-    throw lispy::to_file_err(fname, e);
+    throw lispy::to_file_err(e);
   }
 }

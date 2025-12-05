@@ -130,9 +130,10 @@ namespace roomdefs {
       return opts[rng::rand(opts.size())];
     };
     
-    auto n = lispy::run<node>(g_src);
+    auto n = lispy::run<node>("roomdefs.lsp", g_src);
     return (n && n->room) ? n->room : hai::sptr<t> {};
   } catch (const lispy::parser_error & e) {
-    throw lispy::to_file_err("roomdefs.lsp", e);
+    // TODO: remove try/catch
+    throw lispy::to_file_err(e);
   }
 }

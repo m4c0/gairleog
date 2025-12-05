@@ -25,6 +25,7 @@ namespace sfxdefs {
 
   static auto g_arena = lispy::arena<lispy::node>::make();
   static auto g_ctx = lispy::frame::make();
+  // TODO: remove try/catch
   static void run(sv src) try {
     using namespace lispy;
     using namespace lispy::experimental;
@@ -41,9 +42,9 @@ namespace sfxdefs {
 
     auto a = g_arena->use();
     auto c = g_ctx->use();
-    lispy::run<node>(src);
+    lispy::run<node>("sfxdefs.lsp", src);
   } catch (const lispy::parser_error & e) {
-    throw lispy::to_file_err("sfxdefs.lsp", e);
+    throw lispy::to_file_err(e);
   }
 
   export void load(hai::fn<void> && callback) {

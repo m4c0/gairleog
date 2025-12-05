@@ -122,11 +122,11 @@ static const node * load_roomdefs(const node * n, const node * const * aa, unsig
 static void load(void *, const hai::cstr & src) try {
   temp_frame ctx {}; 
   ctx.fns["roomdefs"] = load_roomdefs;
-  run<node>(src);
+  run<node>("roomdefs.lsp", src);
 
   v::on_frame = on_frame;
 } catch (const lispy::parser_error & e) {
-  silog::error(lispy::to_file_err("roomdefs.lsp", e));
+  silog::error(lispy::to_file_err(e));
 }
 
 static auto mem = arena<node>::make();
@@ -170,9 +170,9 @@ static void save_(void *, const hai::cstr & src) try {
   temp_frame ctx {};
   ctx.ptrs["file"] = static_cast<FILE *>(f);
   ctx.fns["roomdefs"] = save_roomdefs;
-  run<node>(src);
+  run<node>("roomdefs.lsp", src);
 } catch (const lispy::parser_error & e) {
-  silog::error(lispy::to_file_err("roomdefs.lsp", e));
+  silog::error(lispy::to_file_err(e));
 }
 
 static void on_save() {

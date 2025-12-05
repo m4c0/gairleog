@@ -119,9 +119,10 @@ namespace entdefs {
   void run(jute::view src) try {
     auto a = src_arena->use();
     auto c = src_ctx->use();
-    lispy::run<cnode>(src);
+    lispy::run<cnode>("entdefs.lsp", src);
   } catch (const lispy::parser_error & e) {
-    throw lispy::to_file_err("entdefs.lsp", e);
+    // TODO: remove try/catch
+    throw lispy::to_file_err(e);
   }
 
   bool has(jute::view name) {
@@ -134,6 +135,7 @@ namespace entdefs {
     auto c = entdef_ctx->use();
     return *fill_clone<cnode>(d.n, d.args.begin(), d.args.size());
   } catch (const lispy::parser_error & e) {
-    throw lispy::to_file_err("entdefs.lsp", e);
+    // TODO: remove try/catch
+    throw lispy::to_file_err(e);
   }
 }
