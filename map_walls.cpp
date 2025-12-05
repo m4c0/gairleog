@@ -1,4 +1,5 @@
 module map;
+import dotz;
 import perlin;
 import rng;
 
@@ -13,7 +14,7 @@ static constexpr auto rnd_rl() {
 }
 
 static constexpr bool wall(const map::t & map, unsigned x, unsigned y) {
-  return map.data[y][x].flags.wall;
+  return map[y][x].flags.wall;
 }
 
 void make_walls(perlin & pln, map::t & map) {
@@ -48,7 +49,7 @@ void make_walls(perlin & pln, map::t & map) {
         u ? 25 :
         d ? 3 :
         36;
-      map.data[y][x].sprite = n;
+      map[y][x].sprite = n;
     }
   }
 }
