@@ -25,7 +25,6 @@ namespace sfxdefs {
 
   static auto g_arena = lispy::arena<lispy::node>::make();
   static auto g_ctx = lispy::frame::make();
-  // TODO: remove try/catch
   static void run(sv src) {
     using namespace lispy;
     using namespace lispy::experimental;
