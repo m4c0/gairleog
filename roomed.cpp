@@ -53,7 +53,7 @@ static unsigned theme_id(char c) {
   themedefs::eval();
 
   jute::view str { &c, 1 };
-  auto d = ctx.def(str);
+  auto d = context()->def(str);
   if (!d) return font_id(c);
 
   auto n = eval<node>(d);

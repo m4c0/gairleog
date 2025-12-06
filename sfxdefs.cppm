@@ -25,7 +25,6 @@ namespace sfxdefs {
 
   static auto g_arena = lispy::arena<lispy::node>::make();
   static auto g_ctx = lispy::frame::make();
-  // TODO: remove try/catch
   static void run(sv src) {
     using namespace lispy;
     using namespace lispy::experimental;
@@ -36,12 +35,12 @@ namespace sfxdefs {
       auto name = aa[0]->atom;
       auto & tt = cache[name];
       sires::read(aa[0]->atom, &tt, load_wav);
-      lispy::context()->defs[aa[0]->atom] = aa[0];
+      lispy::context()->def(aa[0]->atom, aa[0]);
       return n;
     };
 
     auto a = g_arena->use();
-    auto c = g_ctx->use();
+    frame_guard c { g_ctx };
     lispy::run<node>("sfxdefs.lsp", src);
   }
 
@@ -59,9 +58,8 @@ namespace sfxdefs {
 
     using namespace lispy;
     
-    auto c = g_ctx->use();
-
     temp_arena<node> a {};
+    frame_guard c { g_ctx };
     temp_frame ctx {};
     auto nn = eval<node>(n);
     if (!is_atom(nn)) return dummy;
@@ -69,7 +67,7 @@ namespace sfxdefs {
   }
 
   export bool has(sv name) {
-    return g_ctx->def(name);
+    return g_ctx->defs[name];
   }
   export void play(sv name) {
     audio::play(get(name).samples);

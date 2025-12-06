@@ -14,7 +14,7 @@ namespace glispy {
 
   export void init() {
     static auto ctx = frame::make();
-    static auto u = ctx->use();
+    static frame_guard u { ctx };
     ctx->fns["first-of"] = [](auto n, auto aa, auto as) -> const node * {
       for (auto i = 0; i < as; i++) {
         auto nn = eval<node>(aa[i]);

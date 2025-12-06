@@ -74,7 +74,7 @@ namespace entdefs {
     ctx->fns["sfx"] = [](auto n, auto aa, auto as) -> const node * {
       auto nn = clone<cnode>(n);
       temp_arena<snode> a {};
-      auto c = sfx_ctx->use();
+      frame_guard c { sfx_ctx };
       nn->attr = [](auto * self, auto * n) { self->sfx = n->sfx; };
       nn->sfx = *fill_clone<snode>(n, aa, as);
       return nn;
@@ -118,7 +118,7 @@ namespace entdefs {
 
   void run(jute::view src) {
     auto a = src_arena->use();
-    auto c = src_ctx->use();
+    frame_guard c { src_ctx };
     lispy::run<cnode>("entdefs.lsp", src);
   }
 
@@ -129,7 +129,7 @@ namespace entdefs {
     auto & d = defs[name];
 
     temp_arena<cnode> a {};
-    auto c = entdef_ctx->use();
+    frame_guard c { entdef_ctx };
     return *fill_clone<cnode>(d.n, d.args.begin(), d.args.size());
   }
 }
