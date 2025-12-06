@@ -49,8 +49,8 @@ static unsigned font_id(char c) {
 
 static unsigned theme_id(char c) {
   temp_arena<node> a {};
-  auto tc = themedefs::use();
-  lispy::temp_frame ctx {};
+  temp_frame ctx {};
+  themedefs::eval();
 
   jute::view str { &c, 1 };
   auto d = ctx.def(str);
@@ -210,8 +210,8 @@ const int i = [] {
 
   handle(KEY_DOWN, [] {
     temp_arena<node> a {};
-    auto tc = themedefs::use();
-    lispy::temp_frame ctx {};
+    temp_frame ctx {};
+    themedefs::eval();
 
     char c = casein::last_key;
     jute::view str { &c, 1 };

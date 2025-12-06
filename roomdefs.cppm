@@ -43,8 +43,8 @@ namespace roomdefs {
       if (!(as == eh && cols == ew) &&
           !(as == ew && cols == eh)) return {};
 
-      auto tc = themedefs::use();
       lispy::temp_frame tctx {};
+      themedefs::eval();
 
       hai::array<entdefs::t> data { as * cols };
       for (auto i = 0; i < as; i++) {
