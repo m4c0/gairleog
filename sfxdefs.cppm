@@ -23,11 +23,10 @@ namespace sfxdefs {
     silog::error(e.msg);
   }
 
-  static auto g_arena = lispy::arena<lispy::node>::make();
-  static auto g_ctx = lispy::frame::make();
+  auto g_arena = lispy::arena<lispy::node>::make();
+  auto g_ctx = lispy::frame::make();
   static void run(sv src) {
     using namespace lispy;
-    using namespace lispy::experimental;
 
     g_ctx->fns["sfxdef"] = [](auto n, auto aa, auto as) -> const node * {
       if (as != 1) erred(n, "sfxdef requires a single atom with the file name");
