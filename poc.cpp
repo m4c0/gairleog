@@ -403,8 +403,16 @@ static void do_main_menu() {
           hbox([&] {
             text(font, "Gairleog");
           });
-          hbox([] {});
         });
+        hbox([&] {
+          scale({ 3.f }, [&] {
+            space({ 1 });
+          });
+          scale({ 0.75f }, [&] {
+            text(font, "Swamp of doom");
+          });
+        });
+        hbox([&] {});
         if (menu_item(true,     "New Game")) on_start();
         if (menu_item(has_cont, "Continue")) on_continue();
         if (menu_item(true,     "Options"))  on_options();
