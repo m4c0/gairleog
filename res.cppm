@@ -30,7 +30,7 @@ namespace res {
   }
 
   static void load(jute::view sprdef_file, hai::fn<void> cb) {
-    glispy::init();
+    auto g = glispy::frame_guard();
 
     safe_load(sprdef_file, [=](auto src) mutable {
       sprdef::run(sprdef_file, src);

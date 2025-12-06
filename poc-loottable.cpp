@@ -17,11 +17,11 @@ static constexpr const auto src = R"(
 )"_sv;
 
 int main() try {
-  glispy::init();
-
   temp_arena<node> a {};
 
+  auto g = glispy::frame_guard();
   temp_frame src_ctx {};
+
   run<node>("loot-table-example", src);
   if (!src_ctx.defs.has("this")) die("missing this");
 

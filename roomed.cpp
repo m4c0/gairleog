@@ -5,10 +5,10 @@
 import casein;
 import dotz;
 import entdefs;
-import glispy;
 import hai;
 import hay;
 import jute;
+import lispy;
 import print;
 import res;
 import silog;

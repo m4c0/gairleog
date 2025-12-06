@@ -9,7 +9,9 @@
 
 export module v;
 import dotz;
+import glispy;
 import hai;
+import silog;
 
 namespace v {
   constexpr const auto max_sprites = 10240;
@@ -34,4 +36,15 @@ namespace v {
   export hai::uptr<mapper> map();
 
   export hai::fn<void> on_frame = [] {};
+
+  void call_on_frame() {
+    auto g = glispy::frame_guard();
+    try {
+      on_frame();
+    } catch (const lispy::parser_error & err) {
+      silog::die("%s", lispy::to_file_err(err).begin());
+    } catch (const hai::cstr & err) {
+      silog::die("%s", err.begin());
+    }
+  }
 }

@@ -33,7 +33,7 @@ static constexpr const auto move(int dx, int dy) {
     });
   };
 }
-static void on_frame() try {
+static void on_frame() {
   ents::reset();
   map::build();
 
@@ -44,16 +44,14 @@ static void on_frame() try {
   using namespace casein;
 
   handle(KEY_DOWN, K_TAB,   tick);
-  handle(KEY_DOWN, K_SPACE, on_frame);
+  handle(KEY_DOWN, K_SPACE, [] {
+    v::on_frame = on_frame;
+  });
 
   handle(KEY_DOWN, K_UP,    move(0, -1));
   handle(KEY_DOWN, K_DOWN,  move(0, +1));
   handle(KEY_DOWN, K_LEFT,  move(-1, 0));
   handle(KEY_DOWN, K_RIGHT, move(+1, 0));
-} catch (const lispy::parser_error & err) {
-  silog::die("%s", lispy::to_file_err(err).begin());
-} catch (const hai::cstr & err) {
-  silog::die("%s", err.begin());
 }
 
 const int i = [] {

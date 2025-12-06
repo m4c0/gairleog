@@ -12,9 +12,8 @@ namespace glispy {
     return i;
   }
 
-  export void init() {
-    static auto ctx = frame::make();
-    static frame_guard u { ctx };
+  static auto g_ctx = [] {
+    auto ctx = frame::make();
     ctx->fns["first-of"] = [](auto n, auto aa, auto as) -> const node * {
       for (auto i = 0; i < as; i++) {
         auto nn = eval<node>(aa[i]);
@@ -39,5 +38,10 @@ namespace glispy {
       auto rhs = to_i(eval<node>(aa[1]));
       return lhs >= rhs ? eval<node>(aa[2]) : nullptr;
     };
+    return ctx;
+  }();
+
+  export auto frame_guard() {
+    return lispy::frame_guard { g_ctx };
   }
 }

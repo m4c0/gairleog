@@ -166,7 +166,7 @@ hai::uptr<v::mapper> v::map() {
 }
 
 void v::frame(void *) {
-  v::on_frame();
+  v::call_on_frame();
   v::render();
   vaselin::request_animation_frame(frame, nullptr);
 }

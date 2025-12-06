@@ -99,7 +99,7 @@ static void on_frame() try {
 
   g_es->sw.acquire_next_image();
   g_es->sw.queue_one_time_submit([] {
-    v::on_frame();
+    v::call_on_frame();
 
     auto cb = g_es->sw.command_buffer();
     auto ext = g_es->sw.extent();
