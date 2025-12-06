@@ -249,6 +249,45 @@
     (spr environment/floor_tiles/stone4)
   ))
 
+(entdef lilypad
+  (random
+    (spr environment/props/lilypad1)
+    (spr environment/props/lilypad2)
+    (spr environment/props/lilypad3)
+    (spr environment/props/lilypad4)
+  ))
+
+(entdef mannequin
+  (solid)
+  (ceramic)
+  (life 3)
+  (spr environment/props/mannequin))
+
+(entdef mushroom
+  (solid)
+  (ceramic)
+  (life 5)
+  (random
+    (spr environment/props/mushroom1)
+    (spr environment/props/mushroom2)
+    (spr environment/props/mushroom3)
+    (spr environment/props/mushroom4)
+  ))
+
+(entdef pillar
+  (solid)
+  (ceramic)
+  (life 10)
+  (spr environment/props/pillar))
+
+(entdef spiderweb (spr environment/props/spiderweb))
+
+(entdef statue
+  (solid)
+  (ceramic)
+  (life 10)
+  (spr environment/props/statue))
+
 (entdef tree_withered
   (solid)
   (ceramic)
