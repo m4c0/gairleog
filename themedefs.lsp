@@ -27,12 +27,13 @@
 ))
 
 (def i statue)
-(def o spiderweb)
+(def o (random spiderweb empty))
 (def l pillar)
 (def m mannequin)
 (def - empty)
 (def u (random lilypad empty empty))
 (def y candles)
+(def p (per-level-pot))
 
 (def x (random (per-level-pot) candles grass empty empty))
 (def e (per-level-enemy))
