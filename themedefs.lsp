@@ -26,6 +26,14 @@
   (random pot-blue pot-other)
 ))
 
+(def i statue)
+(def o spiderweb)
+(def l pillar)
+(def m mannequin)
+(def - empty)
+(def u (random lilypad empty empty))
+(def y candles)
+
 (def x (random (per-level-pot) candles grass empty empty))
 (def e (per-level-enemy))
 (random
@@ -40,5 +48,9 @@
   (do
     (def . (random grass_swamp grass_swamp empty))
     (def , (random tree_swamp tree_withered))
+    )
+  (do
+    (def . (random grass_swamp grass_swamp empty))
+    (def , mushroom)
     )
 )
