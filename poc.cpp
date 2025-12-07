@@ -8,13 +8,13 @@ import entdefs;
 import ents;
 import errs;
 import fx;
+import glispy;
 import hai;
 import hitdefs;
 import imgui;
 import inv;
 import jute;
 import lights;
-import lispy;
 import lootfx;
 import map;
 import res;
@@ -69,11 +69,28 @@ static void on_game_frame() {
   fx::draw(m);
 }
 
+static constexpr jute::heap to_s(unsigned n) {
+  if (n == 0) return "0";
+
+  char buf[16] {};
+  auto p = buf + 15;
+  while (n) {
+    *p-- = (n % 10) + '0';
+    n /= 10;
+  }
+  auto l = static_cast<unsigned>(buf + 15 - p);
+  return jute::heap { jute::view { p + 1, l } };
+}
+static_assert(to_s(0) == "0");
+static_assert(to_s(1) == "1");
+static_assert(to_s(123) == "123");
+
 // TODO: random effects on level change
 // TODO: level-based exit placement
 // TODO: drop a random item on level change
 static void on_exit() try {
   save::current_stage++;
+  glispy::game_values().level = to_s(save::current_stage);
   ents::reset();
   map::build();
   lights::reset();
