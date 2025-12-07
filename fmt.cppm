@@ -69,7 +69,7 @@ struct mask<long long> {
   consteval mask(const char (&str)[N]) :
     str { str }
   , idx { p_idx(str, "d") }
-  , len { N }
+  , len { N - 1 }
   {}
 };
 template<>
@@ -82,7 +82,7 @@ struct mask<sv> {
   consteval mask(const char (&str)[N]) :
     str { str }
   , idx { p_idx(str, "s") }
-  , len { N }
+  , len { N - 1 }
   {}
 };
 
@@ -90,14 +90,14 @@ export constexpr jute::heap fmt(mask<long long> mask, long long n) {
   auto [ str, idx, len ] = mask;
   sv pre { str, idx };
   auto val = to_s(n);
-  sv post { str + idx + 2, len - idx - 3 };
+  sv post { str + idx + 2, len - idx - 2 };
   return (pre + val + post).heap();
 }
 export constexpr jute::heap fmt(mask<sv> mask, sv n) {
   auto [ str, idx, len ] = mask;
   sv pre { str, idx };
   auto val = to_s(n);
-  sv post { str + idx + 2, len - idx - 3 };
+  sv post { str + idx + 2, len - idx - 2 };
   return (pre + val + post).heap();
 }
 
