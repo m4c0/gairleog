@@ -63,13 +63,11 @@ static consteval unsigned p_idx(lit haystack, lit needle) {
     i++;
     if (haystack.str[i] == '%') continue; // Skip %%
 
-    bool ok = true;
     for (auto j = 0; j < needle.len; j++) {
       if (haystack.str[i + j] == needle.str[j]) continue;
-      ok = false;
-      break;
+      throw "invalid mask in format string";
     }
-    if (ok) return i - 1;
+    return i - 1;
   }
   // TODO: merge mask
   throw "missing mask in format string";
@@ -106,7 +104,7 @@ static_assert(fmt("%d", 123) == "123");
 static_assert(fmt("val = %d...", 123) == "val = 123...");
 static_assert(fmt("val = %f...", 2.3) == "val = 2.300...");
 static_assert(fmt("val = %s...", "ok") == "val = ok...");
-// static_assert(fmt("val = %e...", 123) == "");
-// static_assert(fmt("val", 123) == "");
+// static_assert(fmt("val = %e...", 123) == ""); // compile-time error
+// static_assert(fmt("val", 123) == ""); // compile-time error
 
 int main() {}
