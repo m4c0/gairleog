@@ -233,6 +233,12 @@ static void on_inventory() {
               text(font, "Def.:   ");
               number(font, player.defense);
             });
+            space();
+            hbox([&] {
+              // TODO: link with real level number
+              text(font, "Stage:  ");
+              number(font, 0);
+            });
           });
         });
       });
