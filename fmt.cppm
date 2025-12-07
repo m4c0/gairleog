@@ -2,7 +2,14 @@
 export module fmt;
 import jute;
 import sv;
-// TODO: implement a constexpr "fmt(mask, vals...)"
+
+struct lit {
+  const char * str;
+  unsigned len;
+
+  template<unsigned N>
+  consteval lit(const char (&str)[N]) : str { str }, len { N - 1 } {}
+};
 
 static constexpr jute::heap to_s(long long val) {
   if (val == 0) return "0";
@@ -28,13 +35,9 @@ static_assert(to_s(-98) == "-98");
 
 static constexpr jute::view to_s(sv val) { return val; }
 
-struct lit {
-  const char * str;
-  unsigned len;
-
-  template<unsigned N>
-  consteval lit(const char (&str)[N]) : str { str }, len { N - 1 } {}
-};
+template<typename T> consteval lit needle();
+template<> consteval lit needle<long long>() { return "d"; }
+template<> consteval lit needle<sv       >() { return "s"; }
 
 static consteval unsigned p_idx(lit haystack, lit needle) {
   for (auto i = 0; i < haystack.len - needle.len; i++) {
@@ -56,10 +59,6 @@ static consteval unsigned p_idx(lit haystack, lit needle) {
 }
 static_assert(p_idx("ok%lldok", "lld") == 2);
 
-template<typename T> consteval lit needle();
-template<> consteval lit needle<long long>() { return "d"; }
-template<> consteval lit needle<sv>() { return "s"; }
-
 template<typename T>
 struct mask {
   const char * str;
@@ -73,21 +72,16 @@ struct mask {
   , len { N - 1 }
   {}
 };
+template<typename T> static constexpr jute::heap fmt_impl(mask<T> mask, T n) {
+  auto [ str, idx, len ] = mask;
+  sv pre { str, idx };
+  auto val = to_s(n);
+  sv post { str + idx + 2, len - idx - 2 };
+  return (pre + val + post).heap();
+}
 
-export constexpr jute::heap fmt(mask<long long> mask, long long n) {
-  auto [ str, idx, len ] = mask;
-  sv pre { str, idx };
-  auto val = to_s(n);
-  sv post { str + idx + 2, len - idx - 2 };
-  return (pre + val + post).heap();
-}
-export constexpr jute::heap fmt(mask<sv> mask, sv n) {
-  auto [ str, idx, len ] = mask;
-  sv pre { str, idx };
-  auto val = to_s(n);
-  sv post { str + idx + 2, len - idx - 2 };
-  return (pre + val + post).heap();
-}
+export constexpr jute::heap fmt(mask<long long> mask, long long n) { return fmt_impl(mask, n); }
+export constexpr jute::heap fmt(mask<sv>        mask, sv        n) { return fmt_impl(mask, n); }
 
 static_assert(fmt("%d", 123) == "123");
 static_assert(fmt("val = %d...", 123) == "val = 123...");
