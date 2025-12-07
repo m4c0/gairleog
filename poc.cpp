@@ -59,6 +59,8 @@ static void on_game_frame() {
 static void on_game();
 static void on_main_menu();
 
+// TODO: random effects on level change
+// TODO: level-based exit placement
 // TODO: drop a random item on level change
 static void on_exit() try {
   ents::reset();
@@ -69,6 +71,11 @@ static void on_exit() try {
   silog::die("%s", lispy::to_file_err(e).begin());
 } catch (const hai::cstr & err) {
   silog::die("%s", err.begin());
+}
+
+static void on_game_over() {
+  // TODO: implement game over
+  on_game();
 }
 
 static sitime::stopwatch g_sel_anim {};
@@ -86,8 +93,7 @@ static void on_inv_use() try {
     switch (act) {
       using enum lootfx::action;
       case damage:
-        // TODO: game over
-        if (!ents::take_hit(player)) return on_game();
+        if (!ents::take_hit(player)) return on_game_over();
         break;
       case defence: player->defense++; break;
       case heal: if (player->life < player->max_life) player->life++; break;
@@ -145,8 +151,7 @@ static void on_inventory() {
     ents::foreach({ .player = true }, [&](auto p) {
       player = p;
     });
-    // TODO: game over
-    if (!player.life) return on_game();
+    if (!player.life) return on_game_over();
 
     using namespace imgui;
     start(&*m, { -14.f, -1.5f }, [&] {
