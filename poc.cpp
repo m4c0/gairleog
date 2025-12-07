@@ -81,13 +81,12 @@ static void on_exit() try {
 }
 
 static void on_game_over() {
-  // TODO: only enable exit after we reset
-  save::reset([] {});
+  save::reset([] {
+    using namespace casein;
+    handle(KEY_DOWN, on_main_menu);
+  });
 
   reset_keys();
-
-  using namespace casein;
-  handle(KEY_DOWN, on_main_menu);
 
   v::on_frame = [] {};
 
