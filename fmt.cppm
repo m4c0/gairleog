@@ -45,22 +45,61 @@ static consteval unsigned p_idx(const char * hs, unsigned hl, lit needle) {
 }
 static_assert(p_idx("ok%lldok", 8, "lld") == 2);
 
-template<lit2 S, typename T>
+template<const char * Str, unsigned Len, typename... T>
+struct indices {
+  sv p[sizeof...(T)];
+  sv f;
+
+  consteval indices() {
+    lit needles[] { needle<T>()... };
+    auto str = Str;
+    auto len = Len;
+    for (auto i = 0; i < sizeof...(T); i++) {
+      p[i] = { str, p_idx(str, len, needles[i]) };
+      str += p[i].size() + 2;
+      len -= p[i].size() + 2;
+    }
+    f = { str, len };
+  }
+};
+namespace {
+  template<lit2 M> struct i : indices<M.str, M.len, int, int> {};
+}
+static_assert([] {
+  i<"aa%daaa%daaaa"> ii {};
+  auto [v0, v1] = ii.p;
+  return v0 == "aa" && v1 == "aaa" && ii.f == "aaaa";
+}());
+
+static constexpr jute::heap to_s(auto && n) { return jute::to_s(n); }
+static constexpr jute::heap to_s(sv n) { return jute::heap { jute::no_copy {}, n }; }
+
+template<const char * Str, unsigned Len, typename... T>
 struct mask {
-  static constexpr jute::heap fmt(T && n) {
-    constexpr unsigned idx = p_idx(S.str, S.len, needle<T>());
-    auto [ str, len ] = S;
-    sv pre { str, idx };
-    auto val = jute::to_s(traits::move(n));
-    sv post { str + idx + 2, len - idx - 2 };
-    return (pre + val + post).heap();
+  static constexpr jute::heap fmt(T &&... n) {
+    static constexpr const indices<Str, Len, T...> idxs {};
+    jute::heap vals[] { to_s(traits::fwd<T>(n))... };
+
+    unsigned len = idxs.f.size();
+    for (auto & v : vals) len += v.size();
+    for (auto l : idxs.p) len += l.size();
+
+    char * buf = new char[len];
+    jute::view vw { buf, len };
+    for (auto i = 0; i < sizeof...(T); i++) {
+      for (auto c : idxs.p[i]) *buf++ = c;
+      for (auto c : vals[i]) *buf++ = c;
+    }
+    for (auto c : idxs.f) *buf++ = c;
+
+    return jute::heap { jute::owned {}, vw };
   }
 };
 
 export
-template<lit2 Msk, typename T>
-constexpr jute::heap fmt(T && n) {
-  return mask<Msk, T>::fmt(traits::fwd<T>(n));
+template<lit2 Msk, typename... T>
+constexpr jute::heap fmt(T &&... n) {
+  return mask<Msk.str, Msk.len, T...>::fmt(traits::fwd<T>(n)...);
 }
 
 static_assert(fmt<"%d">(123) == "123");
@@ -70,7 +109,6 @@ static_assert(fmt<"val = %s...">("ok"_sv) == "val = ok...");
 // static_assert(fmt<"val = %e...">(123) == ""); // compile-time error
 // static_assert(fmt<"val">(123) == ""); // compile-time error
 
-// static_assert(fmt2("we got %d from %s at %f rate...", 23, "there", 6.7) == "");
-// static_assert(fmt2("we got %d from %s at %f rate...", 23, "there", 6.7) == "we got 23 from there at 6.7 rate...");
+static_assert(fmt<"we got %d from %s at %f rate...">(23, "there"_sv, 6.7) == "we got 23 from there at 6.700 rate...");
 
 int main() {}
