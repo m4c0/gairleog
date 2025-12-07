@@ -28,17 +28,24 @@ static_assert(to_s(-98) == "-98");
 
 static constexpr jute::view to_s(sv val) { return val; }
 
-template<unsigned N, unsigned M>
-static consteval unsigned p_idx(const char (&str)[N], const char (&m)[M]) {
-  for (auto i = 0; i < N - M; i++) {
-    if (str[i] != '%') continue;
+struct lit {
+  const char * str;
+  unsigned len;
+
+  template<unsigned N>
+  consteval lit(const char (&str)[N]) : str { str }, len { N - 1 } {}
+};
+
+static consteval unsigned p_idx(lit haystack, lit needle) {
+  for (auto i = 0; i < haystack.len - needle.len; i++) {
+    if (haystack.str[i] != '%') continue;
 
     i++;
-    if (str[i] == '%') continue; // Skip %%
+    if (haystack.str[i] == '%') continue; // Skip %%
 
     bool ok = true;
-    for (auto j = 0; j < M - 1; j++) {
-      if (str[i + j] == m[j]) continue;
+    for (auto j = 0; j < needle.len; j++) {
+      if (haystack.str[i + j] == needle.str[j]) continue;
       ok = false;
       break;
     }
