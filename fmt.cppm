@@ -33,9 +33,26 @@ static_assert(to_s(1) == "1");
 static_assert(to_s(123) == "123");
 static_assert(to_s(-98) == "-98");
 
+static constexpr jute::heap to_s(double val) {
+  auto is = to_s(static_cast<long long>(val));
+
+  auto tmp = to_s(static_cast<long long>(val * 1000.0 + 1000.0));
+  auto fs = (*tmp).subview(tmp.size() - 3).after;
+
+  return (is + "." + fs).heap();
+}
+static_assert(to_s(0.0) == "0.000");
+static_assert(to_s(1.0) == "1.000");
+static_assert(to_s(123.0) == "123.000");
+static_assert(to_s(-98.0) == "-98.000");
+static_assert(to_s(12.3) == "12.300"); // 12.300001
+static_assert(to_s(2.3) == "2.300"); // 2.299999
+static_assert(to_s(0.001) == "0.001");
+
 static constexpr jute::view to_s(sv val) { return val; }
 
 template<typename T> consteval lit needle();
+template<> consteval lit needle<double   >() { return "f"; }
 template<> consteval lit needle<long long>() { return "d"; }
 template<> consteval lit needle<sv       >() { return "s"; }
 
@@ -55,7 +72,7 @@ static consteval unsigned p_idx(lit haystack, lit needle) {
     if (ok) return i - 1;
   }
   // TODO: merge mask
-  throw "missing %d in format string";
+  throw "missing mask in format string";
 }
 static_assert(p_idx("ok%lldok", "lld") == 2);
 
@@ -80,11 +97,14 @@ template<typename T> static constexpr jute::heap fmt_impl(mask<T> mask, T n) {
   return (pre + val + post).heap();
 }
 
+export constexpr jute::heap fmt(mask<double   > mask, double    n) { return fmt_impl(mask, n); }
+export constexpr jute::heap fmt(mask<long long> mask, int       n) { return fmt_impl(mask, static_cast<long long>(n)); }
 export constexpr jute::heap fmt(mask<long long> mask, long long n) { return fmt_impl(mask, n); }
 export constexpr jute::heap fmt(mask<sv>        mask, sv        n) { return fmt_impl(mask, n); }
 
 static_assert(fmt("%d", 123) == "123");
 static_assert(fmt("val = %d...", 123) == "val = 123...");
+static_assert(fmt("val = %f...", 2.3) == "val = 2.300...");
 static_assert(fmt("val = %s...", "ok") == "val = ok...");
 // static_assert(fmt("val = %e...", 123) == "");
 // static_assert(fmt("val", 123) == "");
