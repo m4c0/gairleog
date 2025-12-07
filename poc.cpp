@@ -85,10 +85,33 @@ static void on_game_over() {
   reset_keys();
 
   using namespace casein;
-  handle(KEY_DOWN, on_game);
+  handle(KEY_DOWN, on_main_menu);
 
   v::on_frame = [] {};
-  auto _ = v::map();
+
+  auto font = sprdef::get("font").id;
+
+  auto m = v::map();
+
+  using namespace imgui;
+  start(&*m, {}, [&] {
+    vbox([&] {
+      scale({ 2.0f }, [&] {
+        hbox([&] { text(font, "Game Over"); });
+      });
+      space({});
+      hbox([&] {
+        scale({ 2.f }, [] { space({}); });
+        text(font, "You did great!");
+      });
+      space({});
+      hbox([&] {
+        scale({ 2.5f }, [] { space({}); });
+        text(font, "Press any key");
+      });
+    });
+  });
+  v::set_grid({ {9.f,3.f}, 9 });
 }
 
 static sitime::stopwatch g_sel_anim {};
