@@ -33,13 +33,23 @@ static void reset_keys() {
   reset_k(KEY_UP);
 }
 
+static void on_game();
+static void on_game_over();
+static void on_main_menu();
+
 static void on_game_frame() {
   lights::tick();
 
+  bool dead = true;
   ents::foreach([&](const auto & e) {
     if (!e.flags.player) return;
     v::set_grid({ e.pos + 0.5f, 6 });
+    dead = false;
   });
+  if (dead) {
+    on_game_over();
+    return;
+  }
 
   auto m = v::map();
   ents::foreach([&](const auto & d) {
@@ -55,9 +65,6 @@ static void on_game_frame() {
   });
   fx::draw(m);
 }
-
-static void on_game();
-static void on_main_menu();
 
 // TODO: random effects on level change
 // TODO: level-based exit placement
@@ -75,7 +82,13 @@ static void on_exit() try {
 
 static void on_game_over() {
   // TODO: implement game over
-  on_game();
+  reset_keys();
+
+  using namespace casein;
+  handle(KEY_DOWN, on_game);
+
+  v::on_frame = [] {};
+  auto _ = v::map();
 }
 
 static sitime::stopwatch g_sel_anim {};
