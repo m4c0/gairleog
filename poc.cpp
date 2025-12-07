@@ -93,6 +93,17 @@ static void on_game_over() {
 
   auto font = sprdef::get("font").id;
 
+  // TODO: move to LISP
+  const hai::array<sv> phrases = hai::array<sv>::make(
+    "You did great!",
+    "Next time will be better...",
+    "You were awesome!",
+    "This happens to all of us",
+    "Hope you had fun!",
+    "Thanks for playing!"
+  );
+  auto msg = phrases[rng::rand(phrases.size())];
+
   auto m = v::map();
 
   using namespace imgui;
@@ -102,11 +113,12 @@ static void on_game_over() {
         hbox([&] { text(font, "Game Over"); });
       });
       space();
-      hbox([&] {
-        // TODO: calculate space from text
-        scale({ 2.f }, [] { space(); });
-        // TODO: take from a list (in lisp?) 
-        text(font, "You did great!");
+      scale({ 0.5f }, [&] {
+        hbox([&] {
+          auto x = (9.f / 0.5f) - msg.size() / 2.0f;
+          scale({ x }, [] { space(); });
+          text(font, msg);
+        });
       });
       space();
       hbox([&] {
