@@ -81,6 +81,9 @@ static void on_exit() try {
 }
 
 static void on_game_over() {
+  // TODO: only enable exit after we reset
+  save::reset([] {});
+
   reset_keys();
 
   using namespace casein;

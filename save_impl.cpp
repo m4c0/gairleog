@@ -12,15 +12,21 @@ static bool g_exists = false;
 
 // Currently, "save" is also the "state" manager
 static void reset() {
+  silog::log(silog::info, "Game reset");
+  g_exists = false;
   ents::reset();
   fx::reset();
   inv::reset();
   lootfx::reset();
 }
 
+void save::reset(hai::fn<void> callback) {
+  ::reset();
+  store(callback);
+}
+
 void save::prefetch(hai::fn<void> callback) {
-  g_exists = false;
-  reset();
+  ::reset();
 
   try {
     file::reader f {};
@@ -31,8 +37,7 @@ void save::prefetch(hai::fn<void> callback) {
     silog::log(silog::info, "Game prefetched");
     g_exists = true;
   } catch (...) {
-    silog::log(silog::info, "Game reset");
-    reset();
+    ::reset();
   }
 
   callback();
