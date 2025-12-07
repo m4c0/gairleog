@@ -56,11 +56,12 @@ static consteval unsigned p_idx(lit haystack, lit needle) {
 }
 static_assert(p_idx("ok%lldok", "lld") == 2);
 
+template<typename T> consteval lit needle();
+template<> consteval lit needle<long long>() { return "d"; }
+template<> consteval lit needle<sv>() { return "s"; }
+
 template<typename T>
-struct mask;
-
-template<>
-struct mask<long long> {
+struct mask {
   const char * str;
   unsigned idx;
   unsigned len;
@@ -68,20 +69,7 @@ struct mask<long long> {
   template<unsigned N>
   consteval mask(const char (&str)[N]) :
     str { str }
-  , idx { p_idx(str, "d") }
-  , len { N - 1 }
-  {}
-};
-template<>
-struct mask<sv> {
-  const char * str;
-  unsigned idx;
-  unsigned len;
-
-  template<unsigned N>
-  consteval mask(const char (&str)[N]) :
-    str { str }
-  , idx { p_idx(str, "s") }
+  , idx { p_idx(str, needle<T>()) }
   , len { N - 1 }
   {}
 };
