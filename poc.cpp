@@ -81,7 +81,6 @@ static void on_exit() try {
 }
 
 static void on_game_over() {
-  // TODO: implement game over
   reset_keys();
 
   using namespace casein;
@@ -101,7 +100,9 @@ static void on_game_over() {
       });
       space({});
       hbox([&] {
+        // TODO: calculate space from text
         scale({ 2.f }, [] { space({}); });
+        // TODO: take from a list (in lisp?) 
         text(font, "You did great!");
       });
       space({});

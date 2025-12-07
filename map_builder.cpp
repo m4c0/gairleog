@@ -105,6 +105,7 @@ void map::build() {
   perlin pln {};
   make_walls(pln, data);
 
+  // TODO: move to lisp
   const unsigned bases[] {
     sprdef::get("environment/walls/brick_clay").id,
     sprdef::get("environment/walls/walls_cave_brown").id,
