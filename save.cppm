@@ -7,6 +7,7 @@ namespace save {
   export struct jid {} jid {};
 
   export bool exists();
+  export int current_stage;
 
   export void prefetch(hai::fn<void> callback);
   export void store(hai::fn<void> callback);

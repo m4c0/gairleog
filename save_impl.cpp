@@ -3,9 +3,7 @@ import ents;
 import file;
 import fx;
 import inv;
-import lispy;
 import lootfx;
-import res;
 import silog;
 
 static bool g_exists = false;
@@ -14,6 +12,7 @@ static bool g_exists = false;
 static void reset() {
   silog::log(silog::info, "Game reset");
   g_exists = false;
+  save::current_stage = 0;
   ents::reset();
   fx::reset();
   inv::reset();
@@ -30,6 +29,7 @@ void save::prefetch(hai::fn<void> callback) {
 
   try {
     file::reader f {};
+    current_stage = f.read<int>();
     ents::read(&f);
     inv::read(&f);
     lootfx::read(&f);
@@ -52,6 +52,7 @@ void save::store(hai::fn<void> callback) {
 
   try {
     file::writer f {};
+    f.write(current_stage);
     ents::write(&f);
     inv::write(&f);
     lootfx::write(&f);

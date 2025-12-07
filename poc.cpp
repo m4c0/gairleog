@@ -38,6 +38,8 @@ static void on_game();
 static void on_game_over();
 static void on_main_menu();
 
+// TODO: some visual feedback for near-death
+// TODO: some visual feedback for poison
 static void on_game_frame() {
   lights::tick();
 
@@ -71,6 +73,7 @@ static void on_game_frame() {
 // TODO: level-based exit placement
 // TODO: drop a random item on level change
 static void on_exit() try {
+  save::current_stage++;
   ents::reset();
   map::build();
   lights::reset();
@@ -237,7 +240,7 @@ static void on_inventory() {
             hbox([&] {
               // TODO: link with real level number
               text(font, "Stage:  ");
-              number(font, 0);
+              number(font, save::current_stage);
             });
           });
         });
