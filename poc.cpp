@@ -18,6 +18,7 @@ import lispy;
 import lootfx;
 import map;
 import res;
+import rng;
 import save;
 import sicfg;
 import silog;
@@ -324,6 +325,7 @@ static void on_game() {
 }
 
 static void on_start() {
+  rng::seed();
   lootfx::reset();
   inv::reset();
   v::on_frame = on_exit;
