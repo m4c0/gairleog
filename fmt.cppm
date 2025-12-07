@@ -26,6 +26,8 @@ static_assert(to_s(1) == "1");
 static_assert(to_s(123) == "123");
 static_assert(to_s(-98) == "-98");
 
+static constexpr jute::view to_s(sv val) { return val; }
+
 template<unsigned N>
 static consteval unsigned ll_idx(const char (&str)[N]) {
   for (auto i = 0; i < N - 2; i++) {
@@ -40,6 +42,19 @@ static consteval unsigned ll_idx(const char (&str)[N]) {
 }
 static_assert(ll_idx("ok%dok") == 2);
 
+template<unsigned N>
+static consteval unsigned sv_idx(const char (&str)[N]) {
+  for (auto i = 0; i < N - 2; i++) {
+    if (str[i] != '%') continue;
+
+    i++;
+    if (str[i] == '%') continue; // Skip %%
+
+    if (str[i] == 's') return i - 1;
+  }
+  throw "missing %s in format string";
+}
+
 struct ll_mask {
   const char * str;
   unsigned idx;
@@ -52,9 +67,27 @@ struct ll_mask {
   , len { N }
   {}
 };
+struct sv_mask {
+  const char * str;
+  unsigned idx;
+  unsigned len;
 
-export
-constexpr jute::heap fmt(ll_mask mask, long long n) {
+  template<unsigned N>
+  consteval sv_mask(const char (&str)[N]) :
+    str { str }
+  , idx { sv_idx(str) }
+  , len { N }
+  {}
+};
+
+export constexpr jute::heap fmt(ll_mask mask, long long n) {
+  auto [ str, idx, len ] = mask;
+  sv pre { str, idx };
+  auto val = to_s(n);
+  sv post { str + idx + 2, len - idx - 3 };
+  return (pre + val + post).heap();
+}
+export constexpr jute::heap fmt(sv_mask mask, sv n) {
   auto [ str, idx, len ] = mask;
   sv pre { str, idx };
   auto val = to_s(n);
@@ -64,6 +97,7 @@ constexpr jute::heap fmt(ll_mask mask, long long n) {
 
 static_assert(fmt("%d", 123) == "123");
 static_assert(fmt("val = %d...", 123) == "val = 123...");
+static_assert(fmt("val = %s...", "ok") == "val = ok...");
 // static_assert(fmt("val = %e...", 123) == "");
 // static_assert(fmt("val", 123) == "");
 
