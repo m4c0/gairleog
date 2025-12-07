@@ -11,49 +11,10 @@ struct lit {
   consteval lit(const char (&str)[N]) : str { str }, len { N - 1 } {}
 };
 
-static constexpr jute::heap to_s(long long val) {
-  if (val == 0) return "0";
-
-  auto negative = val < 0;
-  unsigned long long n = negative ? -val : val;
-
-  static constexpr const auto sz = 32;
-  char buf[sz] {};
-  auto p = buf + sz - 1;
-  while (n) {
-    *p-- = (n % 10) + '0';
-    n /= 10;
-  }
-  if (negative) *p-- = '-';
-  auto l = static_cast<unsigned>(buf + sz - 1 - p);
-  return jute::heap { jute::view { p + 1, l } };
-}
-static_assert(to_s(0) == "0");
-static_assert(to_s(1) == "1");
-static_assert(to_s(123) == "123");
-static_assert(to_s(-98) == "-98");
-
-static constexpr jute::heap to_s(double val) {
-  auto is = to_s(static_cast<long long>(val));
-
-  auto tmp = to_s(static_cast<long long>(val * 1000.0 + 1000.0));
-  auto fs = (*tmp).subview(tmp.size() - 3).after;
-
-  return (is + "." + fs).heap();
-}
-static_assert(to_s(0.0) == "0.000");
-static_assert(to_s(1.0) == "1.000");
-static_assert(to_s(123.0) == "123.000");
-static_assert(to_s(-98.0) == "-98.000");
-static_assert(to_s(12.3) == "12.300"); // 12.300001
-static_assert(to_s(2.3) == "2.300"); // 2.299999
-static_assert(to_s(0.001) == "0.001");
-
-static constexpr jute::view to_s(sv val) { return val; }
-
 template<typename T> consteval lit needle();
 template<> consteval lit needle<double   >() { return "f"; }
 template<> consteval lit needle<long long>() { return "d"; }
+template<> consteval lit needle<int      >() { return "d"; }
 template<> consteval lit needle<sv       >() { return "s"; }
 
 static consteval unsigned p_idx(lit haystack, lit needle) {
@@ -90,7 +51,7 @@ struct mask {
 template<typename T> static constexpr jute::heap fmt_impl(mask<T> mask, T n) {
   auto [ str, idx, len ] = mask;
   sv pre { str, idx };
-  auto val = to_s(n);
+  auto val = jute::to_s(n);
   sv post { str + idx + 2, len - idx - 2 };
   return (pre + val + post).heap();
 }
