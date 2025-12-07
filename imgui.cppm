@@ -62,11 +62,8 @@ namespace imgui {
     adv();
   }
 
-  // TODO: either fix "size" or remove it
-  export void space(dotz::vec2 size) {
-    compo(node {
-      .size = g_state.scale,
-    });
+  export void space() {
+    compo({});
   };
 
   export void sprite(unsigned id) {

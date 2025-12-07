@@ -23,7 +23,6 @@ static void process(jute::view file) {
   auto id = next_id;
   auto img = stbi::load(jojo::slurp(file));
   auto data = reinterpret_cast<const stbi::pixel *>(*img.data);
-  // TODO: deal with animations
   if (img.num_channels != 4) return;
 
   for (auto e = 0; e < img.height / 16; e++) {

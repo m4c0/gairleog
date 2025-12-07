@@ -98,16 +98,16 @@ static void on_game_over() {
       scale({ 2.0f }, [&] {
         hbox([&] { text(font, "Game Over"); });
       });
-      space({});
+      space();
       hbox([&] {
         // TODO: calculate space from text
-        scale({ 2.f }, [] { space({}); });
+        scale({ 2.f }, [] { space(); });
         // TODO: take from a list (in lisp?) 
         text(font, "You did great!");
       });
-      space({});
+      space();
       hbox([&] {
-        scale({ 2.5f }, [] { space({}); });
+        scale({ 2.5f }, [] { space(); });
         text(font, "Press any key");
       });
     });
@@ -202,18 +202,18 @@ static void on_inventory() {
               number(font, player.max_life);
             });
             if (player.poison) {
-              space({ 0.1f });
+              space();
               hbox([&] {
                 text(font, "Poison: ");
                 number(font, player.poison);
               });
             }
-            space({ 0.1f });
+            space();
             hbox([&] {
               text(font, "Str.:   ");
               number(font, player.strength);
             });
-            space({ 0.1f });
+            space();
             hbox([&] {
               text(font, "Def.:   ");
               number(font, player.defense);
@@ -371,7 +371,7 @@ static void on_options() {
       hbox([&] {
         if (g_opt_clk && g_opt_sel == id) clicked = true;;
         sprite(g_opt_sel == id ? mark : 0);
-        space({ 0.5f });
+        space();
         text(font, name);
         extra();
         id++;
@@ -430,7 +430,7 @@ static void do_main_menu() {
       hbox([&] {
         if (enabled && g_menu_clk && g_menu_sel == id) clicked = true;;
         sprite(enabled && g_menu_sel == id ? mark : 0);
-        space({ 0.5f });
+        space();
         mult(enabled ? 1.0 : 0.2, [&] {
           text(font, name);
         });
@@ -448,7 +448,7 @@ static void do_main_menu() {
         });
         hbox([&] {
           scale({ 3.f }, [&] {
-            space({ 1 });
+            space();
           });
           scale({ 0.75f }, [&] {
             text(font, "Swamp of doom");

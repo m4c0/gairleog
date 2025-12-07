@@ -35,7 +35,7 @@ static void on_frame() {
       scale({ 0.5f }, [&] {
         hbox([&] {
           sprite(gray);
-          space({ 0.5f });
+          space();
           text(font, "ok!");
         });
       });
