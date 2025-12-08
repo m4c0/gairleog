@@ -409,7 +409,10 @@ static void on_options() {
         if (g_opt_clk && g_opt_sel == id) clicked = true;;
         sprite(g_opt_sel == id ? mark : 0);
         space();
-        text(font, name);
+        auto txt = g_opt_sel == id
+          ? jute::fmt<BLINK "%s">(name)
+          : name;
+        text(font, txt);
         extra();
         id++;
       });
@@ -469,7 +472,10 @@ static void do_main_menu() {
         sprite(enabled && g_menu_sel == id ? mark : 0);
         space();
         mult(enabled ? 1.0 : 0.2, [&] {
-          text(font, name);
+          auto txt = g_menu_sel == id
+            ? jute::fmt<BLINK "%s">(name)
+            : name;
+          text(font, txt);
         });
         if (enabled) id++;
       });
