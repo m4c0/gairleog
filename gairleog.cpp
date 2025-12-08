@@ -102,16 +102,7 @@ static void on_exit() try {
   silog::die("%s", err.begin());
 }
 
-static void on_game_over() {
-  save::reset([] {
-    using namespace casein;
-    handle(KEY_DOWN, on_main_menu);
-  });
-
-  reset_keys();
-
-  v::on_frame = [] {};
-
+static void do_game_over() {
   auto font = sprdef::get("font").id;
 
   auto msg = strings::get("gameover-sub");
@@ -140,6 +131,16 @@ static void on_game_over() {
     });
   });
   v::set_grid({ {9.f,3.f}, 9 });
+}
+static void on_game_over() {
+  save::reset([] {
+    using namespace casein;
+    handle(KEY_DOWN, on_main_menu);
+
+    v::on_frame = do_game_over;
+  });
+
+  reset_keys();
 }
 
 static sitime::stopwatch g_sel_anim {};
