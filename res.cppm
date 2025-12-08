@@ -20,6 +20,7 @@ import roomdefs;
 import sfxdefs;
 import sires;
 import sprdef;
+import strings;
 import themedefs;
 
 namespace res {
@@ -51,7 +52,7 @@ namespace res {
                 safe_load("lootfx.lsp", [=](auto src) mutable {
                   lootfx::run(src);
 
-                  cb();
+                  strings::load(cb);
                 });
               });
             });
