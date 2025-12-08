@@ -37,11 +37,6 @@ static auto & cursor() {
   return i;
 }
 
-static unsigned cursor_id() {
-  static auto id = sprdef::get("fx/fx_orange_bite").id + 4;
-  return id;
-}
-
 static unsigned font_id(char c) {
   static auto font = sprdef::get("font").id;
   return font + c;
@@ -68,17 +63,16 @@ static unsigned (*g_spr_id)(char) = font_id;
 static void on_frame() {
   auto m = v::map();
 
-  m->push({
-    .pos = cursor(),
-    .mult { 0.2f },
-    .id = cursor_id(),
-  });
-
   for (auto y = 0; y < g_table.size(); y++) {
     auto & row = g_table[y];
     for (auto x = 0; x < row.size(); x++) {
+      dotz::ivec2 pos { x, y };
+      auto mult = cursor() == pos
+        ? dotz::vec4 { 0.1f, 0.1f, 0.9f, 1.0f }
+        : dotz::vec4 { 1 };
       m->push({
-        .pos { x, y },
+        .pos = pos,
+        .mult = mult,
         .id = g_spr_id(row.data()[x]),
       });
     }
