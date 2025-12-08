@@ -63,7 +63,7 @@ static void on_game_frame() {
     m->push({
       .pos = p,
       .scale = d.size,
-      .mult = l,
+      .mult { l, l, l, 1.f },
       .id = d.sprite,
     });
   });
@@ -291,7 +291,7 @@ static void on_inventory() {
       m->push({
         .pos { xx - s, yy },
         .scale { s },
-        .mult = a,
+        .mult { a, a, a, 1.f },
         .id = i.sprite,
       });
 

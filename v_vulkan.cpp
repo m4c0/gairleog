@@ -41,8 +41,8 @@ struct app_stuff {
     .attributes {
       vee::vertex_attribute_vec2(0, traits::offset_of(&v::sprite::pos)),
       vee::vertex_attribute_vec2(0, traits::offset_of(&v::sprite::scale)),
+      vee::vertex_attribute_vec4(0, traits::offset_of(&v::sprite::mult)),
       vee::vertex_attribute_uint(0, traits::offset_of(&v::sprite::id)),
-      vee::vertex_attribute_float(0, traits::offset_of(&v::sprite::mult)),
     },
   });
   vee::sampler smp = [] {
