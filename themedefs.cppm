@@ -7,11 +7,17 @@ using namespace lispy;
 using namespace lispy::experimental;
 
 namespace themedefs {
-  hai::cstr g_src {};
-  export void run(jute::view src) { g_src = src.cstr(); }
+  hai::varray<const node *> nodes { 32 };
+  auto memory = arena<node>::make();
 
-  // TODO: cache in a context
+  export void run(jute::view src) {
+    auto m = memory->use();
+    each("themedefs.lsp", src, [](auto * n) {
+      nodes.push_back_doubling(n);
+    });
+  }
+
   export void eval() {
-    lispy::run<node>("themedefs.lsp", g_src);
+    for (auto n : nodes) auto _ = eval<node>(n);
   }
 }
