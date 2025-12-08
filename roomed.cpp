@@ -70,7 +70,7 @@ static void on_frame() {
 
   m->push({
     .pos = cursor(),
-    .mult { 0.3f },
+    .mult { 0.2f },
     .id = cursor_id(),
   });
 
