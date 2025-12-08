@@ -25,6 +25,7 @@ import silog;
 import sitime;
 import sprdef;
 import sfxdefs;
+import strings;
 import sv;
 import v;
 
@@ -113,16 +114,7 @@ static void on_game_over() {
 
   auto font = sprdef::get("font").id;
 
-  // TODO: move to LISP
-  const hai::array<sv> phrases = hai::array<sv>::make(
-    "You did great!",
-    "Next time will be better...",
-    "You were awesome!",
-    "This happens to all of us",
-    "Hope you had fun!",
-    "Thanks for playing!"
-  );
-  auto msg = phrases[rng::rand(phrases.size())];
+  auto msg = strings::get("gameover-sub");
 
   auto m = v::map();
 

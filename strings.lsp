@@ -1,4 +1,4 @@
-(def gameover (random
+(def gameover-sub (random
   "You did great!"
   "Next time will be better..."
   "You were awesome!"
