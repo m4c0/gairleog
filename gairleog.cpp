@@ -102,10 +102,9 @@ static void on_exit() try {
   silog::die("%s", err.begin());
 }
 
+static jute::heap game_over_msg = "";
 static void do_game_over() {
   auto font = sprdef::get("font").id;
-
-  auto msg = strings::get("gameover-sub");
 
   auto m = v::map();
 
@@ -118,9 +117,9 @@ static void do_game_over() {
       space();
       scale({ 0.5f }, [&] {
         hbox([&] {
-          auto x = (9.f / 0.5f) - msg.size() / 2.0f;
+          auto x = (9.f / 0.5f) - game_over_msg.size() / 2.0f;
           scale({ x }, [] { space(); });
-          text(font, msg);
+          text(font, game_over_msg);
         });
       });
       space();
@@ -141,6 +140,7 @@ static void on_game_over() {
   });
 
   reset_keys();
+  game_over_msg = strings::get("gameover-sub");
 }
 
 static sitime::stopwatch g_sel_anim {};
