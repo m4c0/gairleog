@@ -1,6 +1,7 @@
 export module imgui;
 import dotz;
 import hai;
+import sitime;
 import sv;
 import v;
 
@@ -79,8 +80,28 @@ namespace imgui {
   }
 
   export void text(unsigned font, sv str) {
-    for (auto c : str) {
-      sprite(font + c);
+    static sitime::stopwatch timer {};
+
+    bool blink = false;
+    for (auto i = 0; i < str.size(); i++) {
+      auto c = str[i];
+
+      if (c == 0x1B && i < str.size() - 3) {
+        if (str[i + 1] == '[') {
+          if (str[i + 2] == '5') {
+            if (str[i + 3] == 'm') {
+              blink = true;
+              i += 3;
+              continue;
+            }
+          }
+        }
+      }
+
+      float a = blink 
+        ? dotz::sin(timer.secs() * 3) * 0.5 + 0.5
+        : 1;
+      mult(a, [&] { sprite(font + c); });
     }
   };
   export void number(unsigned font, unsigned n) {

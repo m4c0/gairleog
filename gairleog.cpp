@@ -29,6 +29,8 @@ import strings;
 import sv;
 import v;
 
+#define BLINK "\e[5m"
+
 static void reset_keys() {
   using namespace casein;
   reset_k(KEY_DOWN);
@@ -103,7 +105,6 @@ static void on_exit() try {
 }
 
 static jute::heap g_game_over_msg = "";
-static sitime::stopwatch g_game_over_timer {};
 static void do_game_over() {
   auto font = sprdef::get("font").id;
 
@@ -126,10 +127,7 @@ static void do_game_over() {
       space();
       hbox([&] {
         scale({ 2.5f }, [] { space(); });
-        float a = dotz::sinf(g_game_over_timer.secs() * 3.14) * 0.5 + 0.5;
-        mult(a, [&] {
-          text(font, "Press any key");
-        });
+        text(font, BLINK "Press any key");
       });
     });
   });
@@ -145,7 +143,6 @@ static void on_game_over() {
 
   reset_keys();
   g_game_over_msg = strings::get("gameover-sub");
-  g_game_over_timer = {};
 }
 
 static sitime::stopwatch g_sel_anim {};
