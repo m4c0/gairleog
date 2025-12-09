@@ -21,13 +21,10 @@ namespace strings {
     });
   }
 
-  auto g_tmp = arena<node>::make();
   export jute::heap get(sv key) {
     frame_guard c { g_ctx };
     temp_frame ctx {};
-
-    g_tmp->reset();
-    auto a = g_tmp->use();
+    temp_arena<node> mem {};
 
     return jute::heap { eval<node>(context()->def(key))->atom };
   }
