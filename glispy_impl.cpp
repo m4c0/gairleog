@@ -1,17 +1,27 @@
 module glispy;
+import jute;
+import map;
 import perlin;
+import save;
 
 namespace glispy {
   using nt = const node *;
-  
+
+  static jute::heap g_level = "0";
   static perlin g_perlin {};
+
+  void reset() {
+    g_level = jute::to_s(save::current_stage);
+    g_perlin = {};
+  }
 
   static nt perlin(nt n, nt const * aa, unsigned as) {
     if (as == 0) erred(n, "perlin expects at least one value");
 
-    auto f = g_perlin(game_values().perlin) * 0.5 + 0.5;
-    auto i = static_cast<int>(f * as);
-    return aa[i];
+    return n;
+    //auto f = g_perlin(game_values().perlin) * 0.5 + 0.5;
+    //auto i = static_cast<int>(f * as);
+    //return aa[i];
   }
 
   static auto g_ctx = [] {
@@ -26,7 +36,7 @@ namespace glispy {
     ctx->fns["level"] = [](auto n, auto aa, auto as) -> const node * {
       if (as != 0) erred(n, "level does not take parameters");
       auto nn = clone<node>(n);
-      nn->atom = game_values().level;
+      nn->atom = g_level;
       return nn;
     };
     ctx->fns["lte"] = [](auto n, auto aa, auto as) -> const node * {

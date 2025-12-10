@@ -7,13 +7,7 @@ import jute;
 using namespace lispy;
 
 namespace glispy {
-  export auto & game_values() {
-    static struct {
-      jute::heap level = "0";
-      dotz::vec2 perlin {};
-    } i;
-    return i;
-  }
+  export void reset();
 
   export lispy::frame_guard frame_guard();
 }

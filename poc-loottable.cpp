@@ -3,6 +3,7 @@
 import jute;
 import glispy;
 import print;
+import save;
 import sv;
 
 using namespace lispy;
@@ -16,6 +17,13 @@ static constexpr const auto src = R"(
   ))
 )"_sv;
 
+static void test(int level, sv expected, sv err_msg) {
+  save::current_stage = level;
+  glispy::reset();
+  auto n = eval<node>(context()->def("this"));
+  assert(n->atom == expected, err_msg);
+}
+
 int main() try {
   temp_arena<node> a {};
 
@@ -27,17 +35,9 @@ int main() try {
 
   lispy::temp_frame ctx {};
 
-  glispy::game_values().level = "3";
-  auto n = eval<node>(context()->def("this"));
-  assert(n->atom == "B"_sv, "failed on at-range test");
-
-  glispy::game_values().level = "4";
-  n = eval<node>(context()->def("this"));
-  assert(n->atom == "C"_sv, "failed on range test");
-
-  glispy::game_values().level = "8";
-  n = eval<node>(context()->def("this"));
-  assert(n->atom == "D"_sv, "failed on fallback test");
+  test(3, "B", "failed on at-range test");
+  test(4, "C", "failed on range test");
+  test(8, "D", "failed on fallback test");
 } catch (const lispy::parser_error & e) {
   putln("line ", e.line, " col ", e.col, " -- ", e.msg);
 }
