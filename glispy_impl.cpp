@@ -1,6 +1,19 @@
 module glispy;
+import perlin;
 
 namespace glispy {
+  using nt = const node *;
+  
+  static perlin g_perlin {};
+
+  static nt perlin(nt n, nt const * aa, unsigned as) {
+    if (as == 0) erred(n, "perlin expects at least one value");
+
+    auto f = g_perlin(game_values().perlin) * 0.5 + 0.5;
+    auto i = static_cast<int>(f * as);
+    return aa[i];
+  }
+
   static auto g_ctx = [] {
     auto ctx = frame::make();
     ctx->fns["first-of"] = [](auto n, auto aa, auto as) -> const node * {
@@ -28,6 +41,7 @@ namespace glispy {
       auto rhs = to_i(eval<node>(aa[1]));
       return lhs >= rhs ? eval<node>(aa[2]) : nullptr;
     };
+    ctx->fns["perlin"] = perlin;
     return ctx;
   }();
 
