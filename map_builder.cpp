@@ -2,7 +2,6 @@ module map;
 import dotz;
 import ents;
 import entdefs;
-import perlin;
 import rng;
 import roomdefs;
 import sprdef;
@@ -87,7 +86,7 @@ namespace {
   }
 }
 
-void make_walls(perlin & pln, map::t & map);
+void make_walls(map::t & map);
 
 void map::build() {
   map::t data {};
@@ -102,24 +101,7 @@ void map::build() {
 
   (w > h ? vsplit : hsplit)(data, {1,1}, {w-2,h-2});
 
-  perlin pln {};
-  make_walls(pln, data);
-
-  // TODO: move to lisp
-  const unsigned bases[] {
-    sprdef::get("environment/walls/brick_clay").id,
-    sprdef::get("environment/walls/walls_cave_brown").id,
-    sprdef::get("environment/walls/walls_cave_gray").id,
-    sprdef::get("environment/walls/walls_dungeon_gray").id,
-    sprdef::get("environment/walls/walls_dungeon_yellow").id,
-  };
-  for (auto y = 0; y < h; y++) {
-    for (auto x = 0; x < w; x++) {
-      if (!data[y][x].flags.wall) continue;
-      dotz::vec2 p { static_cast<float>(x) / w, static_cast<float>(y) / h };
-      data[y][x].sprite += bases[static_cast<unsigned>(pln(p) * 2.5 + 2.5)];
-    }
-  }
+  make_walls(data);
 
   data[1][1] = { entdefs::get("player") };
   data[h - 2][w - 2] = { entdefs::get("exit") };

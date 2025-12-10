@@ -17,7 +17,7 @@ namespace glispy {
 
   static nt perlin(nt n, nt const * aa, unsigned as) {
     if (as == 0) erred(n, "perlin expects at least one value");
-    auto p = static_cast<dotz::vec2 *>(context()->ptr("map_coord"));
+    auto p = static_cast<dotz::vec2 *>(context()->ptr("map-coord"));
     if (!p) erred(n, "perlin cannot be used in this context");
 
     auto f = g_perlin(*p) * 0.5 + 0.5;

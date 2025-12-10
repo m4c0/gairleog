@@ -1,7 +1,10 @@
 module map;
 import dotz;
+import glispy;
 import perlin;
 import rng;
+import sprdef;
+import strings;
 
 static constexpr auto rnd_rl() {
   switch (rng::rand(30)) {
@@ -17,10 +20,15 @@ static constexpr bool wall(const map::t & map, unsigned x, unsigned y) {
   return map[y][x].flags.wall;
 }
 
-void make_walls(perlin & pln, map::t & map) {
+void make_walls(map::t & map) {
   const auto pr = [&](auto x, auto y) {
     dotz::vec2 p { static_cast<float>(x) / map::w, static_cast<float>(y) / map::h };
-    return static_cast<unsigned>(pln(p) * 2.5 + 2.5);
+
+    auto g = glispy::frame_guard();
+    lispy::temp_frame ctx {};
+    ctx.ptrs["map-coord"] = &p;
+    auto spr_name = strings::get("wall-sprites");
+    return sprdef::get(spr_name).id;
   };
 
   for (auto y = 0; y < map::h; y++) {
@@ -49,7 +57,7 @@ void make_walls(perlin & pln, map::t & map) {
         u ? 25 :
         d ? 3 :
         36;
-      map[y][x].sprite = n;
+      map[y][x].sprite = n + p;
     }
   }
 }

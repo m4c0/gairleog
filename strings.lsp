@@ -6,3 +6,11 @@
   "Hope you had fun!"
   "Thanks for playing!"
 ))
+
+(def wall-sprites (perlin
+  environment/walls/brick_clay
+  environment/walls/walls_cave_brown
+  environment/walls/walls_cave_gray
+  environment/walls/walls_dungeon_gray
+  environment/walls/walls_dungeon_yellow
+))
