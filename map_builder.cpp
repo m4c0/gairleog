@@ -2,6 +2,7 @@ module map;
 import dotz;
 import ents;
 import entdefs;
+import hai;
 import rng;
 import roomdefs;
 import sprdef;
@@ -89,7 +90,10 @@ namespace {
 void make_walls(map::t & map);
 
 void map::build() {
-  map::t data {};
+  // Hack to use heap for this. On WASM this overflows the stack.
+  struct mapt { map::t data; };
+  auto dptr = hai::uptr<mapt>::make();
+  auto & data = dptr->data;
 
   for (auto y = 0; y < h; y++) {
     for (auto x = 0; x < w; x++) {
