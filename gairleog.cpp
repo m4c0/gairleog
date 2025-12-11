@@ -141,6 +141,7 @@ static void on_inv_use() try {
   });
   if (!player || player->life == 0) return;
 
+  // TODO: tell the user what they got
   for (auto act : lootfx::apply(inv::at(g_sel).sprite)) {
     switch (act) {
       using enum lootfx::action;
