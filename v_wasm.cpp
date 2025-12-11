@@ -154,10 +154,10 @@ struct mapper : v::mapper {
   void push(v::sprite s) override {
     buffer.push_back(s);
   }
-  void set_grid(grid g) override {
+  void set_grid(v::grid g) override {
     using namespace gelo;
     g.grid_size.y *= -1;
-    buffer_data(UNIFORM_BUFFER, &g, sizeof(grid), DYNAMIC_DRAW);
+    buffer_data(UNIFORM_BUFFER, &g, sizeof(v::grid), DYNAMIC_DRAW);
   }
 };
 
