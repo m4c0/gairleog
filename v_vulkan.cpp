@@ -72,14 +72,13 @@ struct mapper : v::mapper, voo::memiter<v::sprite> {
   mapper() : voo::memiter<v::sprite> { *g_as->buf.memory, &g_as->count } {}
   virtual ~mapper() {}
   void push(v::sprite s) override { *this += s; }
+  void set_grid(v::grid g) override {
+    voo::mapmem m { *g_as->uni.memory };
+    *static_cast<v::grid *>(*m) = g;
+  }
 };
 hai::uptr<v::mapper> v::map() {
   return hai::uptr<v::mapper> { new ::mapper {} };
-}
-
-void v::set_grid(v::grid g) {
-  voo::mapmem m { *g_as->uni.memory };
-  *static_cast<grid *>(*m) = g;
 }
 
 static void on_start() try {

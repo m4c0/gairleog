@@ -12,9 +12,8 @@ import sprdef;
 import v;
 
 static void on_frame() {
-  v::set_grid({ 0, 6 });
-
   auto m = v::map();
+  m->set_grid({ 0, 6 });
   fx::draw(m);
 }
 

@@ -145,11 +145,6 @@ namespace v {
     draw_arrays_instanced(TRIANGLES, 0, 6, buffer.size());
   }
 
-  void set_grid(grid g) {
-    using namespace gelo;
-    g.grid_size.y *= -1;
-    buffer_data(UNIFORM_BUFFER, &g, sizeof(grid), DYNAMIC_DRAW);
-  }
 }
 
 struct mapper : v::mapper {
@@ -158,6 +153,11 @@ struct mapper : v::mapper {
   }
   void push(v::sprite s) override {
     buffer.push_back(s);
+  }
+  void set_grid(grid g) override {
+    using namespace gelo;
+    g.grid_size.y *= -1;
+    buffer_data(UNIFORM_BUFFER, &g, sizeof(grid), DYNAMIC_DRAW);
   }
 };
 

@@ -27,10 +27,9 @@ namespace v {
     dotz::vec2 grid_pos;
     dotz::vec2 grid_size;
   };
-  export void set_grid(grid g);
-
   export struct mapper {
     virtual ~mapper() {}
+    virtual void set_grid(grid g) = 0;
     virtual void push(sprite s) = 0;
   };
   export hai::uptr<mapper> map();

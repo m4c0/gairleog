@@ -61,7 +61,13 @@ static unsigned theme_id(char c) {
 static unsigned (*g_spr_id)(char) = font_id;
 
 static void on_frame() {
+  dotz::vec2 p {
+    (g_table[0].size() + 0.5f) / 2.0f,
+    (g_table.size() + 0.5f) / 2.0f,
+  };
+
   auto m = v::map();
+  m->set_grid({ p, g_grid_size + 1 });
 
   for (auto y = 0; y < g_table.size(); y++) {
     auto & row = g_table[y];
@@ -78,11 +84,6 @@ static void on_frame() {
     }
   }
 
-  dotz::vec2 p {
-    (g_table[0].size() + 0.5f) / 2.0f,
-    (g_table.size() + 0.5f) / 2.0f,
-  };
-  v::set_grid({ p, g_grid_size + 1 });
   v::on_frame = [] {};
 }
 

@@ -12,8 +12,6 @@ import sv;
 import v;
 
 static void on_frame() {
-  v::set_grid({ 6, 6 });
-
   auto font = sprdef::get("font").id;
 
   auto brown  = sprdef::get("fx/fx_brown_bite" ).id + 4;
@@ -23,6 +21,7 @@ static void on_frame() {
   auto orange = sprdef::get("fx/fx_orange_bite").id + 4;
 
   auto m = v::map();
+  m->set_grid({ 6, 6 });
 
   using namespace imgui;
   start(&*m, {}, [&] {

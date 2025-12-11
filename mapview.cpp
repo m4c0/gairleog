@@ -14,6 +14,7 @@ import v;
 
 static void load() {
   auto m = v::map();
+  m->set_grid({ 16, 16 });
   ents::foreach([&](const auto & d) {
     m->push({
       .pos = d.pos,
@@ -38,7 +39,6 @@ static void on_frame() {
   map::build();
 
   load();
-  v::set_grid({ 16, 16 });
   v::on_frame = [] {};
 
   using namespace casein;

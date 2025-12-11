@@ -47,10 +47,11 @@ static void on_main_menu();
 static void on_game_frame() {
   lights::tick();
 
+  dotz::vec2 player_pos {};
   bool dead = true;
   ents::foreach([&](const auto & e) {
     if (!e.flags.player) return;
-    v::set_grid({ e.pos + 0.5f, 6 });
+    player_pos = e.pos;
     dead = false;
   });
   if (dead) {
@@ -59,6 +60,7 @@ static void on_game_frame() {
   }
 
   auto m = v::map();
+  m->set_grid({ player_pos + 0.5f, 6 });
   ents::foreach([&](const auto & d) {
     auto p = d.pos;
     if (d.size.x < 1) p.x++;
@@ -96,6 +98,7 @@ static void do_game_over() {
   auto font = sprdef::get("font").id;
 
   auto m = v::map();
+  m->set_grid({ {9.f,3.f}, 9 });
 
   using namespace imgui;
   start(&*m, {}, [&] {
@@ -118,7 +121,6 @@ static void do_game_over() {
       });
     });
   });
-  v::set_grid({ {9.f,3.f}, 9 });
 }
 static void on_game_over() {
   save::reset([] {
@@ -201,6 +203,7 @@ static void on_inventory() {
 
     auto font = sprdef::get("font").id;
     auto m = v::map();
+    m->set_grid({ 0, 12 });
 
     ents::t player {};
     ents::foreach({ .player = true }, [&](auto p) {
@@ -303,7 +306,6 @@ static void on_inventory() {
     }
 
     console::draw(m);
-    v::set_grid({ 0, 12 });
   };
 
   g_sel = 0;
@@ -447,6 +449,7 @@ static void do_main_menu() {
 
   v::on_frame = [] {
     auto m = v::map();
+    m->set_grid({ {8,4}, 8 });
 
     auto font = sprdef::get("font").id;
     auto mark = entdefs::get("player").sprite;
@@ -498,7 +501,6 @@ static void do_main_menu() {
 #endif
       });
     });
-    v::set_grid({ {8,4}, 8 });
 
     if (g_menu_sel < 0) g_menu_sel = id - 1;
     if (g_menu_sel >= id) g_menu_sel = 0;
