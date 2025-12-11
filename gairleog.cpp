@@ -422,11 +422,13 @@ static void on_options() {
         scale({ 4.0f }, [&] {
           hbox([&] {});
         });
+#ifndef LECO_TARGET_WASM
         if (opt_item("Fullscreen ", casein::fullscreen)) {
           casein::fullscreen = !casein::fullscreen;
           casein::interrupt(casein::IRQ_FULLSCREEN);
           sicfg::boolean("windowed", !casein::fullscreen);
         }
+#endif
         if (opt_item("Sounds     ", audio::enabled)) {
           audio::enabled = !audio::enabled;
           audio::interrupt();
