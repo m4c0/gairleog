@@ -142,7 +142,7 @@ namespace v {
 
     bind_buffer(ARRAY_BUFFER, g_inst_buffer);
     buffer_data(ARRAY_BUFFER, buffer.begin(), buffer.size() * sizeof(sprite), DYNAMIC_DRAW);
-    draw_arrays_instanced(TRIANGLES, 0, 6, buffer.size());
+    draw_arrays_instanced(TRIANGLE_STRIP, 0, 4, buffer.size());
   }
 
 }
