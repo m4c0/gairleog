@@ -16,21 +16,30 @@ import silog;
 namespace v {
   constexpr const auto max_sprites = 10240;
 
-  export struct sprite {
+  export struct grid {
+    dotz::vec2 grid_pos;
+    dotz::vec2 grid_size;
+  };
+  export struct sprite : grid {
     dotz::vec2 pos;
     dotz::vec2 scale { 1 };
     dotz::vec4 mult { 1 };
     unsigned id;
   };
 
-  export struct grid {
-    dotz::vec2 grid_pos;
-    dotz::vec2 grid_size;
-  };
-  export struct mapper {
+  export class mapper {
+  protected:
+    grid m_grid {};
+
+    virtual void add_sprite(sprite s) = 0;
+
+  public:
     virtual ~mapper() {}
-    virtual void set_grid(grid g) = 0;
-    virtual void push(sprite s) = 0;
+    void set_grid(grid g) { m_grid = g; }
+    void push(sprite s) { 
+      static_cast<grid &>(s) = m_grid;
+      add_sprite(s);
+    }
   };
   export hai::uptr<mapper> map();
 

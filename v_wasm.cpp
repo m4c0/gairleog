@@ -32,7 +32,6 @@ namespace v {
 
   static int g_program;
   static int g_inst_buffer;
-  static int g_uni_buffer;
   static int g_texture;
   static int g_u_aspect;
   static int g_u_uni;
@@ -65,9 +64,6 @@ namespace v {
 
     static constexpr const auto stride = sizeof(sprite);
 
-    g_uni_buffer = create_buffer();
-    bind_buffer_base(UNIFORM_BUFFER, g_u_uni, g_uni_buffer);
-
     auto b = g_inst_buffer = gelo::create_buffer();
     bind_buffer(ARRAY_BUFFER, b);
 
@@ -84,8 +80,16 @@ namespace v {
     vertex_attrib_divisor(2, 1);
 
     enable_vertex_attrib_array(3);
-    vertex_attrib_i_pointer(3, 1, UNSIGNED_INT, stride, traits::offset_of(&v::sprite::id));
+    vertex_attrib_pointer(3, 2, FLOAT, false, stride, traits::offset_of(&v::sprite::grid_pos));
     vertex_attrib_divisor(3, 1);
+
+    enable_vertex_attrib_array(4);
+    vertex_attrib_pointer(4, 2, FLOAT, false, stride, traits::offset_of(&v::sprite::grid_size));
+    vertex_attrib_divisor(4, 1);
+
+    enable_vertex_attrib_array(5);
+    vertex_attrib_i_pointer(5, 1, UNSIGNED_INT, stride, traits::offset_of(&v::sprite::id));
+    vertex_attrib_divisor(5, 1);
   }
 
   void load_texture(jute::view name) {
@@ -151,13 +155,9 @@ struct mapper : v::mapper {
   mapper() {
     buffer.truncate(0);
   }
-  void push(v::sprite s) override {
+  void add_sprite(v::sprite s) {
+    s.grid_size.y *= -1;
     buffer.push_back(s);
-  }
-  void set_grid(v::grid g) override {
-    using namespace gelo;
-    g.grid_size.y *= -1;
-    buffer_data(UNIFORM_BUFFER, &g, sizeof(v::grid), DYNAMIC_DRAW);
   }
 };
 

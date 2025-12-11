@@ -16,11 +16,9 @@ struct app_stuff {
   vee::render_pass rp = voo::single_att_render_pass(dq);
   vee::descriptor_set_layout dsl = vee::create_descriptor_set_layout({
     vee::dsl_fragment_sampler(),
-    vee::dsl_vertex_uniform(),
   });
   vee::descriptor_pool dpool = vee::create_descriptor_pool(1, {
     vee::combined_image_sampler(1),
-    vee::uniform_buffer(1),
   });
   vee::descriptor_set dset = vee::allocate_descriptor_set(*dpool, *dsl);
   vee::pipeline_layout pl = vee::create_pipeline_layout(
@@ -42,6 +40,8 @@ struct app_stuff {
       vee::vertex_attribute_vec2(0, traits::offset_of(&v::sprite::pos)),
       vee::vertex_attribute_vec2(0, traits::offset_of(&v::sprite::scale)),
       vee::vertex_attribute_vec4(0, traits::offset_of(&v::sprite::mult)),
+      vee::vertex_attribute_vec2(0, traits::offset_of(&v::sprite::grid_pos)),
+      vee::vertex_attribute_vec2(0, traits::offset_of(&v::sprite::grid_size)),
       vee::vertex_attribute_uint(0, traits::offset_of(&v::sprite::id)),
     },
   });
@@ -56,10 +56,6 @@ struct app_stuff {
       dq.physical_device(),
       v::max_sprites * sizeof(v::sprite),
       vee::buffer_usage::vertex_buffer);
-  voo::bound_buffer uni = voo::bound_buffer::create_from_host(
-      dq.physical_device(),
-      sizeof(v::grid),
-      vee::buffer_usage::uniform_buffer);
   voo::bound_image img {};
   unsigned count {};
 } * g_as;
@@ -71,11 +67,7 @@ struct ext_stuff {
 struct mapper : v::mapper, voo::memiter<v::sprite> {
   mapper() : voo::memiter<v::sprite> { *g_as->buf.memory, &g_as->count } {}
   virtual ~mapper() {}
-  void push(v::sprite s) override { *this += s; }
-  void set_grid(v::grid g) override {
-    voo::mapmem m { *g_as->uni.memory };
-    *static_cast<v::grid *>(*m) = g;
-  }
+  void add_sprite(v::sprite s) override { *this += s; }
 };
 hai::uptr<v::mapper> v::map() {
   return hai::uptr<v::mapper> { new ::mapper {} };
@@ -84,7 +76,6 @@ hai::uptr<v::mapper> v::map() {
 static void on_start() try {
   g_as = new app_stuff {};
 
-  vee::update_descriptor_set_for_uniform(g_as->dset, 1, *g_as->uni.buffer);
   voo::load_image("pixelite2.png", g_as->dq.physical_device(), &g_as->img, [](auto) {
     vee::update_descriptor_set(g_as->dset, 0, 0, *g_as->img.iv, *g_as->smp);
   });
