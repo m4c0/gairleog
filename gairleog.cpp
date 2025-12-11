@@ -2,6 +2,7 @@
 
 import audio;
 import casein;
+import console;
 import dotz;
 import enemies;
 import entdefs;
@@ -70,6 +71,7 @@ static void on_game_frame() {
     });
   });
   fx::draw(m);
+  console::draw(m);
 }
 
 // TODO: splat
@@ -299,6 +301,8 @@ static void on_inventory() {
         });
       });
     }
+
+    console::draw(m);
     v::set_grid({ 0, 12 });
   };
 
@@ -347,6 +351,7 @@ static void on_start() {
   rng::seed();
   lootfx::reset();
   inv::reset();
+  console::reset();
   v::on_frame = on_exit;
 }
 static void on_continue() {
