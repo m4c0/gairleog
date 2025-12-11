@@ -80,7 +80,7 @@ namespace v {
     vertex_attrib_divisor(1, 1);
 
     enable_vertex_attrib_array(2);
-    vertex_attrib_pointer(2, 1, FLOAT, false, stride, traits::offset_of(&v::sprite::mult));
+    vertex_attrib_pointer(2, 4, FLOAT, false, stride, traits::offset_of(&v::sprite::mult));
     vertex_attrib_divisor(2, 1);
 
     enable_vertex_attrib_array(3);
