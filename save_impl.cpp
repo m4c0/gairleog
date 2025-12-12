@@ -33,6 +33,8 @@ void save::prefetch(hai::fn<void> callback) {
 
   try {
     file::reader f {};
+    if (!f) return callback();
+
     if (f.read<unsigned>() != id) throw 0;
     if (f.read<unsigned>() != version) throw 0;
     current_stage = f.read<int>();
@@ -43,6 +45,7 @@ void save::prefetch(hai::fn<void> callback) {
     silog::log(silog::info, "Game prefetched");
     g_exists = true;
   } catch (...) {
+    silog::error("Invalid save file");
     ::reset();
   }
 

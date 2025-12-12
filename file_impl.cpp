@@ -39,6 +39,8 @@ namespace file {
     if (fread(data, size, 1, *m_f) != 1) throw error {};
   }
 
+  reader::operator bool() const { return *m_f; }
+
   writer::writer() : m_f { new t { "wb" } } {}
   writer::~writer() = default;
 

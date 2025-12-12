@@ -25,6 +25,8 @@ namespace file {
     reader();
     ~reader();
 
+    [[nodiscard]] explicit operator bool() const;
+
     void read(void * data, unsigned size);
 
     template<typename T>
