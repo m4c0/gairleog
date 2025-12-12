@@ -1,4 +1,5 @@
 #pragma leco add_impl lootfx_impl
+#pragma leco add_impl lootfx_player
 export module lootfx;
 import file;
 import hai;
@@ -6,6 +7,10 @@ import jute;
 import rng;
 
 namespace lootfx {
+  export enum class outcome {
+    none,
+    death,
+  };
   export enum class action {
     damage,
     defence,
@@ -16,7 +21,7 @@ namespace lootfx {
     weakness,
     wither,
   };
-  export using action_list_t = hai::chain<action>;
+  using action_list_t = hai::chain<action>;
 
   hai::array<jute::heap> map { 4096 }; // Sprite ID to FX
   hai::varray<jute::heap> rest { 16 }; // List of available FX
@@ -33,6 +38,7 @@ namespace lootfx {
   export void run(jute::view);
 
   void apply(jute::view key, action_list_t * result);
+  [[nodiscard]] outcome apply_on_player(const action_list_t & actions);
   void pick(int s) {
     if (has(s)) return;
     if (rest.size() == 0) return;
@@ -41,10 +47,10 @@ namespace lootfx {
     map[s] = rest[n];
     rest[n] = rest.pop_back();
   }
-  export action_list_t apply(int s) {
+  export [[nodiscard]] outcome apply(int s) {
     action_list_t result { 8 };
     pick(s);
     apply(get(s), &result);
-    return result;
+    return apply_on_player(result);
   }
 }

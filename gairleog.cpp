@@ -149,47 +149,10 @@ static int g_sel = 0;
 static int g_tgt_sel = 0;
 
 static void on_inv_use() try {
-  ents::t * player;
-  ents::foreach({ .player = true }, [&](auto & p) {
-    player = &p;
-  });
-  if (!player || player->life == 0) return;
-
-  for (auto act : lootfx::apply(inv::at(g_sel).sprite)) {
-    switch (act) {
-      using enum lootfx::action;
-      case damage:
-        if (!ents::take_hit(player)) return on_game_over();
-        break;
-      case defence:
-        console::push("You feel sturdier");
-        player->defense++;
-        break;
-      case heal:
-        console::push("You got healed");
-        if (player->life < player->max_life) player->life++;
-        break;
-      case max_life:
-        console::push("Your life was extended");
-        player->max_life++;
-        break;
-      case poison:
-        console::push("You got poisoned");
-        player->poison++;
-        break;
-      case strength:
-        console::push("You feel stronger");
-        player->strength++;
-        break;
-      case weakness:
-        console::push("You feel weaker");
-        if (player->strength > 0) player->strength--;
-        break;
-      case wither:
-        console::push("You feel flimser");
-        if (player->defense > 0) player->defense--;
-        break;
-    }
+  switch (lootfx::apply(inv::at(g_sel).sprite)) {
+    using enum lootfx::outcome;
+    case death: return on_game_over();
+    case none: break;
   }
   inv::consume(g_sel);
   if (g_sel == inv::size()) {
