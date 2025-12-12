@@ -24,6 +24,7 @@ import save;
 import sicfg;
 import silog;
 import sitime;
+import splats;
 import sprdef;
 import sfxdefs;
 import strings;
@@ -82,6 +83,12 @@ static void on_game_frame() {
 
   auto m = v::map();
   m->set_grid({ player_pos + 0.5f, 6 });
+  splats::for_each([&](const auto & d) {
+    m->push({
+      .pos = d.pos,
+      .id = d.sprite,
+    });
+  });
   ents::foreach([&](const auto & d) {
     auto p = d.pos;
     if (d.size.x < 1) p.x++;
@@ -109,6 +116,7 @@ static void on_start_level() try {
   ents::reset();
   map::build();
   lights::reset();
+  splats::reset();
   on_game();
 } catch (const lispy::parser_error & e) {
   silog::die("%s", lispy::to_file_err(e).begin());
