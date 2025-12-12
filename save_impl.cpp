@@ -21,7 +21,8 @@ static void reset() {
 
 void save::reset(hai::fn<void> callback) {
   ::reset();
-  store(callback);
+  { file::writer f {}; }
+  callback();
 }
 
 void save::prefetch(hai::fn<void> callback) {

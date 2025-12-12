@@ -123,15 +123,15 @@ static void do_game_over() {
   });
 }
 static void on_game_over() {
+  reset_keys();
+  g_game_over_msg = strings::get("gameover-sub");
+
   save::reset([] {
     using namespace casein;
     handle(KEY_DOWN, on_main_menu);
 
     v::on_frame = do_game_over;
   });
-
-  reset_keys();
-  g_game_over_msg = strings::get("gameover-sub");
 }
 
 static sitime::stopwatch g_sel_anim {};
@@ -367,7 +367,9 @@ static void on_game() {
   handle(KEY_DOWN, K_RIGHT, move(+1, 0));
 
   handle(KEY_DOWN, K_TAB,    on_inventory);
-  handle(KEY_DOWN, K_ESCAPE, on_main_menu);
+  handle(KEY_DOWN, K_ESCAPE, [] {
+    save::store(on_main_menu);
+  });
 }
 
 static void on_start() {
@@ -548,7 +550,7 @@ static void on_main_menu() {
 
   if (g_menu_sel == 0) g_menu_sel = 1;
 
-  save::store(do_main_menu);
+  do_main_menu();
 }
 
 const int i = [] {
