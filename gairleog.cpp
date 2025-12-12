@@ -62,6 +62,9 @@ static void draw_console(auto & m) {
   });
 }
 
+// TODO: balance attack/defense of enemies
+// TODO: more rooms with enemies and fewer with pots
+// TODO: attack minus defense
 // TODO: some visual feedback for near-death
 static void on_game_frame() {
   static sitime::stopwatch timer {};
