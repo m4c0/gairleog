@@ -474,6 +474,43 @@ static void on_options() {
 }
 #endif
 
+static void on_credits() {
+  reset_keys();
+
+  v::on_frame = [] {
+    auto m = v::map();
+    m->set_grid({ 12, 12 });
+
+    auto font = sprdef::get("font").id;
+
+    using namespace imgui;
+
+    const auto center = [&](sv str) {
+      hbox([&] {
+        text(font, str);
+      });
+    };
+
+    start(&*m, {}, [&] {
+      vbox([&] {
+        center("Game developed by");
+        center("Eduardo 'm4c0' Costa");
+        center("https://m4c0.itch.io");
+        hbox([] {});
+        center("Using assets from the following packs:");
+        center("PixeLike II Asset Pack");
+        center("DUNGEON.mode");
+#ifndef LECO_TARGET_WASM
+        center("Minifantasy SFX Pack");
+#endif
+      });
+    });
+  };
+
+  using namespace casein;
+  handle(KEY_DOWN, K_ESCAPE, on_main_menu);
+}
+
 static int g_menu_sel = 0;
 static bool g_menu_clk = false;
 static void do_main_menu() {
@@ -527,6 +564,9 @@ static void do_main_menu() {
 #ifndef LECO_TARGET_WASM
         if (menu_item(save::exists(), "Continue")) on_continue();
         if (menu_item(true,           "Options"))  on_options();
+#endif
+        if (menu_item(true,           "Credits"))  on_credits();
+#ifndef LECO_TARGET_WASM
         if (menu_item(true,           "Exit"))     interrupt(IRQ_QUIT);
 #endif
       });
