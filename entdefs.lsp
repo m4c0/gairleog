@@ -132,7 +132,7 @@
   (atkspr fx/themed/fx_frost_bite)
   (spr characters/beast_snake))
 
-(entdef spirit_wotw
+(entdef spirit-wotw
   (solid)
   (enemy)
   (strength 1)
@@ -141,7 +141,7 @@
   (atkspr fx/themed/fx_frost_bite)
   (spr characters/spirit_will_o_the_wisp))
 
-(entdef spirit_faerie
+(entdef spirit-faerie
   (solid)
   (enemy)
   (strength 1)
