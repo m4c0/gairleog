@@ -371,9 +371,11 @@ static void on_game() {
   handle(KEY_DOWN, K_RIGHT, move(+1, 0));
 
   handle(KEY_DOWN, K_TAB,    on_inventory);
+#ifndef LECO_TARGET_WASM
   handle(KEY_DOWN, K_ESCAPE, [] {
     save::store(on_main_menu);
   });
+#endif
 }
 
 static void on_start() {
@@ -383,9 +385,11 @@ static void on_start() {
   console::reset();
   v::on_frame = on_exit;
 }
+#ifndef LECO_TARGET_WASM
 static void on_continue() {
   v::on_frame = on_game;
 }
+#endif
 
 static void menu(int * opt, bool * clk) {
   using namespace casein;
@@ -483,7 +487,6 @@ static void do_main_menu() {
     auto mark = entdefs::get("player").sprite;
 
     int id = 0;
-    bool has_cont = save::exists();
 
     using namespace imgui;
 
@@ -518,12 +521,13 @@ static void do_main_menu() {
           });
         });
         hbox([&] {});
-        if (menu_item(true,     "New Game")) on_start();
-        if (menu_item(has_cont, "Continue")) on_continue();
-#ifndef LECO_TARGET_WASM
-        if (menu_item(true,     "Options"))  on_options();
+
         using namespace casein;
-        if (menu_item(true,     "Exit"))     interrupt(IRQ_QUIT);
+        if (menu_item(true,           "New Game")) on_start();
+#ifndef LECO_TARGET_WASM
+        if (menu_item(save::exists(), "Continue")) on_continue();
+        if (menu_item(true,           "Options"))  on_options();
+        if (menu_item(true,           "Exit"))     interrupt(IRQ_QUIT);
 #endif
       });
     });
