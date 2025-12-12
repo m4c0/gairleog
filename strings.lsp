@@ -7,6 +7,8 @@
   "Thanks for playing!"
 ))
 
+(def level-exit-fx "Random")
+
 (def wall-sprites (perlin
   environment/walls/brick_clay
   environment/walls/walls_cave_brown

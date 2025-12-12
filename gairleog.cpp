@@ -82,10 +82,9 @@ static void on_game_frame() {
 }
 
 // TODO: splat
-// TODO: random effects on level change
 // TODO: level-based exit placement
 // TODO: drop a random item on level change
-static void on_exit() try {
+static void on_start_level() try {
   save::current_stage++;
   glispy::reset();
   ents::reset();
@@ -96,6 +95,12 @@ static void on_exit() try {
   silog::die("%s", lispy::to_file_err(e).begin());
 } catch (const hai::cstr & err) {
   silog::die("%s", err.begin());
+}
+static void on_exit() {
+  // TODO: random effects on level change
+  on_start_level();
+
+  auto n = strings::get("level-exit-fx");
 }
 
 static jute::heap g_game_over_msg = "";
@@ -381,7 +386,7 @@ static void on_start() {
   lootfx::reset();
   inv::reset();
   console::reset();
-  v::on_frame = on_exit;
+  v::on_frame = on_start_level;
 }
 #ifndef LECO_TARGET_WASM
 static void on_continue() {

@@ -16,3 +16,11 @@
   (poison)
   (random (poison) ())
   (random (poison) ())))
+
+(fx "Random" (random
+  (heal)
+  (defence)
+  (strength)
+  (maxlife)
+))
+
