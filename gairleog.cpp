@@ -152,13 +152,34 @@ static void on_inv_use() try {
       case damage:
         if (!ents::take_hit(player)) return on_game_over();
         break;
-      case defence: player->defense++; break;
-      case heal: if (player->life < player->max_life) player->life++; break;
-      case max_life: player->max_life++; break;
-      case poison: player->poison++; break;
-      case strength: player->strength++; break;
-      case weakness: if (player->strength > 0) player->strength--; break;
-      case wither: if (player->defense > 0) player->defense--; break;
+      case defence:
+        console::push("You feel sturdier");
+        player->defense++;
+        break;
+      case heal:
+        console::push("You got healed");
+        if (player->life < player->max_life) player->life++;
+        break;
+      case max_life:
+        console::push("Your life was extended");
+        player->max_life++;
+        break;
+      case poison:
+        console::push("You got poisoned");
+        player->poison++;
+        break;
+      case strength:
+        console::push("You feel stronger");
+        player->strength++;
+        break;
+      case weakness:
+        console::push("You feel weaker");
+        if (player->strength > 0) player->strength--;
+        break;
+      case wither:
+        console::push("You feel flimser");
+        if (player->defense > 0) player->defense--;
+        break;
     }
   }
   inv::consume(g_sel);
