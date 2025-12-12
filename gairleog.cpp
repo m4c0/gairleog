@@ -358,13 +358,11 @@ static constexpr const auto move(int dx, int dy) {
 }
 
 static void on_game() {
+  reset_keys();
+
   v::on_frame = on_game_frame;
 
   using namespace casein;
-  reset_k(KEY_DOWN);
-  reset_k(KEY_UP);
-
-  // TODO: move this inside on_game_frame to avoid dangling input on frame error
   handle(KEY_DOWN, K_UP,    move(0, -1));
   handle(KEY_DOWN, K_DOWN,  move(0, +1));
   handle(KEY_DOWN, K_LEFT,  move(-1, 0));
@@ -392,10 +390,9 @@ static void on_continue() {
 #endif
 
 static void menu(int * opt, bool * clk) {
-  using namespace casein;
-  reset_k(KEY_DOWN);
-  reset_k(KEY_UP);
+  reset_keys();
 
+  using namespace casein;
   handle(KEY_DOWN, K_UP, [opt] {
     (*opt)--;
     sfxdefs::play("menu_selection");
