@@ -49,7 +49,12 @@ namespace ents {
   }
 
   export bool take_hit(t * ent) {
-    splats::add(ent->pos);
+    if (ent->splat_sprite.id) {
+      splats::add({
+        .pos = ent->pos,
+        .sprite = ent->splat_sprite.id,
+      });
+    }
     if (ent->life) ent->life--;
     if (ent->life) return true;
     if (ent->loot == "") {

@@ -14,11 +14,8 @@ namespace splats {
     data.truncate(0);
   }
 
-  export void add(dotz::ivec2 p) {
-    data.push_back(t {
-      .pos = p,
-      .sprite = sprdef::get("environment/props/splatter_red").id,
-    });
+  export void add(t t) {
+    data.push_back_doubling(t);
   }
 
   export void for_each(auto && fn) {

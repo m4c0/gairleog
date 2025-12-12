@@ -10,6 +10,7 @@
   (solid)
   (spr characters/human_knight)
   (atkspr fx/fx_blue_slash)
+  (splatspr environment/props/splatter_red)
   (sfx
     (attack player_attack)
     (block player_block)
@@ -40,6 +41,7 @@
   (defense 0)
   (loot (random apple empty))
   (atkspr fx/themed/fx_frost_bite)
+  (splatspr environment/props/splatter_red)
   (spr characters/beast_bat))
 
 (entdef beholder
@@ -49,6 +51,7 @@
   (defense 0)
   (loot (random apple empty))
   (atkspr fx/themed/fx_frost_bite)
+  (splatspr environment/props/splatter_red)
   (spr characters/beast_beholder))
 
 (entdef demon
@@ -58,6 +61,7 @@
   (defense 0)
   (loot (random apple empty))
   (atkspr fx/themed/fx_frost_bite)
+  (splatspr environment/props/splatter_red)
   (spr characters/demon_knight))
 
 (entdef dragon-drake
@@ -67,6 +71,7 @@
   (defense 0)
   (loot (random apple empty))
   (atkspr fx/themed/fx_frost_bite)
+  (splatspr environment/props/splatter_red)
   (spr characters/dragon_drake))
 
 (entdef dragon-hydra
@@ -76,6 +81,7 @@
   (defense 0)
   (loot (random apple empty))
   (atkspr fx/themed/fx_frost_bite)
+  (splatspr environment/props/splatter_red)
   (spr characters/dragon_hydra))
 
 (entdef dragon-wyrm
@@ -85,6 +91,7 @@
   (defense 0)
   (loot (random apple empty))
   (atkspr fx/themed/fx_frost_bite)
+  (splatspr environment/props/splatter_red)
   (spr characters/dragon_wyrm))
 
 (entdef leech
@@ -94,6 +101,7 @@
   (defense 0)
   (loot (random apple empty))
   (atkspr fx/themed/fx_frost_bite)
+  (splatspr environment/props/splatter_red)
   (spr characters/beast_leech))
 
 (entdef ooze
@@ -112,6 +120,7 @@
   (defense 0)
   (loot (random apple empty))
   (atkspr fx/themed/fx_frost_bite)
+  (splatspr environment/props/splatter_red)
   (spr characters/beast_slime_green))
 
 (entdef slime-big
@@ -121,6 +130,7 @@
   (defense 0)
   (loot (random apple empty))
   (atkspr fx/themed/fx_frost_bite)
+  (splatspr environment/props/splatter_red)
   (spr characters/beast_slime_green_large))
 
 (entdef snake
@@ -130,6 +140,7 @@
   (defense 0)
   (loot (random apple empty))
   (atkspr fx/themed/fx_frost_bite)
+  (splatspr environment/props/splatter_red)
   (spr characters/beast_snake))
 
 (entdef spirit-wotw
@@ -139,6 +150,7 @@
   (defense 0)
   (loot (random berry empty))
   (atkspr fx/themed/fx_frost_bite)
+  (splatspr environment/props/splatter_red)
   (spr characters/spirit_will_o_the_wisp))
 
 (entdef spirit-faerie
@@ -148,6 +160,7 @@
   (defense 0)
   (loot (random berry empty))
   (atkspr fx/fx_red_impact)
+  (splatspr environment/props/splatter_red)
   (spr characters/spirit_faerie))
 
 (entdef wolf
@@ -157,6 +170,7 @@
   (defense 0)
   (loot (random apple empty))
   (atkspr fx/themed/fx_frost_bite)
+  (splatspr environment/props/splatter_red)
   (spr characters/beast_wolf_brown))
 
 ; =====================================================================

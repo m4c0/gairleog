@@ -39,6 +39,7 @@ namespace entdefs {
     unsigned     max_life      {};
     unsigned     sprite        {};
     sprdef::pair attack_sprite {};
+    sprdef::pair splat_sprite  {};
     unsigned     strength      {};
     unsigned     defense       {};
     flags        flags         {};
