@@ -43,8 +43,10 @@ static void on_game_over();
 static void on_main_menu();
 
 // TODO: some visual feedback for near-death
-// TODO: some visual feedback for poison
 static void on_game_frame() {
+  static sitime::stopwatch timer {};
+  float timer_a = dotz::sinf(timer.secs() * 3);
+
   lights::tick();
 
   dotz::vec2 player_pos {};
@@ -64,11 +66,14 @@ static void on_game_frame() {
   ents::foreach([&](const auto & d) {
     auto p = d.pos;
     if (d.size.x < 1) p.x++;
-    auto l = dotz::pow(lights::at(d.pos).current * 3.0, 1.5);
+    dotz::vec3 l = dotz::pow(lights::at(d.pos).current * 3.0, 1.5);
+    auto c = d.poison
+      ? dotz::vec3 { timer_a, 1, timer_a }
+      : dotz::vec3 { 1 };
     m->push({
       .pos = p,
       .scale = d.size,
-      .mult { l, l, l, 1.f },
+      .mult { l * c, 1.f },
       .id = d.sprite,
     });
   });
@@ -145,7 +150,6 @@ static void on_inv_use() try {
   });
   if (!player || player->life == 0) return;
 
-  // TODO: tell the user what they got
   for (auto act : lootfx::apply(inv::at(g_sel).sprite)) {
     switch (act) {
       using enum lootfx::action;
