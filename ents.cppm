@@ -9,6 +9,7 @@ import inv;
 import jute;
 import sfxdefs;
 import silog;
+import splats;
 
 namespace ents {
   export using flags = entdefs::flags;
@@ -48,6 +49,7 @@ namespace ents {
   }
 
   export bool take_hit(t * ent) {
+    splats::add(ent->pos);
     if (ent->life) ent->life--;
     if (ent->life) return true;
     if (ent->loot == "") {
