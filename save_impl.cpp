@@ -5,6 +5,7 @@ import fx;
 import inv;
 import lootfx;
 import silog;
+import splats;
 
 static constexpr const unsigned id = 'GAIR';
 static constexpr const unsigned version = 1001;
@@ -41,6 +42,7 @@ void save::prefetch(hai::fn<void> callback) {
     ents::read(&f);
     inv::read(&f);
     lootfx::read(&f);
+    splats::read(&f);
     
     silog::log(silog::info, "Game prefetched");
     g_exists = true;
@@ -67,6 +69,7 @@ void save::store(hai::fn<void> callback) {
     ents::write(&f);
     inv::write(&f);
     lootfx::write(&f);
+    splats::write(&f);
 
     silog::log(silog::info, "Game saved");
   } catch (...) {

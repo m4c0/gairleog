@@ -86,6 +86,7 @@ static void on_game_frame() {
   splats::for_each([&](const auto & d) {
     m->push({
       .pos = d.pos,
+      .mult { 1, 1, 1, 0.3f },
       .id = d.sprite,
     });
   });
@@ -107,7 +108,6 @@ static void on_game_frame() {
   draw_console(m);
 }
 
-// TODO: splat
 // TODO: level-based exit placement
 // TODO: drop a random item on level change
 static void on_start_level() try {

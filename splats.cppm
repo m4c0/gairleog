@@ -1,6 +1,8 @@
 export module splats;
 import dotz;
+import file;
 import hai;
+import silog;
 import sprdef;
 
 namespace splats {
@@ -20,5 +22,20 @@ namespace splats {
 
   export void for_each(auto && fn) {
     for (const auto & d : data) fn(d);
+  }
+
+  export void read(file::reader * r) {
+    data.truncate(0);
+
+    auto len = r->read<unsigned>();
+    silog::infof("Reading %d splats", len);
+    for (auto i = 0; i < len; i++) {
+      data.push_back_doubling(r->read<t>());
+    }
+  }
+  export void write(file::writer * w) {
+    silog::infof("Storing %d entities", data.size());
+    w->write(data.size());
+    for (auto d : data) w->write(d);
   }
 }
