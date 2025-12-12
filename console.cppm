@@ -1,18 +1,18 @@
 export module console;
-import casein;
 import dotz;
 import hai;
-import imgui;
 import jute;
 import sitime;
 import sprdef;
 
 namespace console {
+  export constexpr const auto lines = 6;
+
   struct message {
     float start {};
     jute::heap text {};
   };
-  hai::array<message> messages { 6 };
+  hai::array<message> messages { lines };
 
   sitime::stopwatch timer {};
 
@@ -31,22 +31,7 @@ namespace console {
     };
   }
 
-  export void draw(auto & m) {
-    auto font = sprdef::get("font").id;
-
-    m->set_grid({ 16, 16 });
-    auto w = 16.f * casein::window_size.x / casein::window_size.y - 16.f;
-
-    using namespace imgui;
-    start(&*m, { -w + 0.5f, 31.5f - messages.size() }, [&] {
-      vbox([&] {
-        for (auto m : messages) {
-          float a = 1.0f - dotz::clamp((timer.secs() - m.start) * 0.2f, 0.0f, 1.0f);
-          mult(a, [&] {
-            hbox([&] { text(font, m.text); });
-          });
-        }
-      });
-    });
+  export void for_each(auto && fn) {
+    for (auto m : messages) fn((timer.secs() - m.start), *m.text);
   }
 }

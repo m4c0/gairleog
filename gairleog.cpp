@@ -42,6 +42,25 @@ static void on_game();
 static void on_game_over();
 static void on_main_menu();
 
+static void draw_console(auto & m) {
+  auto font = sprdef::get("font").id;
+
+  m->set_grid({ 16, 16 });
+  auto w = 16.f * casein::window_size.x / casein::window_size.y - 16.f;
+
+  using namespace imgui;
+  start(&*m, { -w + 0.5f, 31.5f - console::lines }, [&] {
+    vbox([&] {
+      console::for_each([&](auto secs, auto txt) {
+        float a = 1.0f - dotz::clamp(secs * 0.2f, 0.0f, 1.0f);
+        mult(a, [&] {
+          hbox([&] { text(font, txt); });
+        });
+      });
+    });
+  });
+}
+
 // TODO: some visual feedback for near-death
 static void on_game_frame() {
   static sitime::stopwatch timer {};
@@ -78,7 +97,7 @@ static void on_game_frame() {
     });
   });
   fx::draw(m);
-  console::draw(m);
+  draw_console(m);
 }
 
 // TODO: splat
@@ -303,7 +322,7 @@ static void on_inventory() {
       });
     }
 
-    console::draw(m);
+    draw_console(m);
   };
 
   g_sel = 0;
