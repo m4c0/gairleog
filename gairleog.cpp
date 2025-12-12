@@ -388,6 +388,7 @@ static void on_options() {
 
   v::on_frame = [] {
     auto m = v::map();
+    m->set_grid({ {8,4}, 8 });
 
     auto font = sprdef::get("font").id;
     auto mark = entdefs::get("player").sprite;
