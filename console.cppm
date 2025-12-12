@@ -1,12 +1,20 @@
 export module console;
 import casein;
+import dotz;
 import hai;
 import imgui;
 import jute;
+import sitime;
 import sprdef;
 
 namespace console {
-  hai::array<jute::heap> messages { 6 };
+  struct message {
+    float start {};
+    jute::heap text {};
+  };
+  hai::array<message> messages { 6 };
+
+  sitime::stopwatch timer {};
 
   export void reset() {
     for (auto & m : messages) m = {};
@@ -16,7 +24,10 @@ namespace console {
     for (auto i = 0; i < messages.size() - 1; i++) {
       messages[i] = messages[i + 1];
     }
-    messages[messages.size() - 1] = msg;
+    messages[messages.size() - 1] = message {
+      .start = timer.secs(),
+      .text = msg,
+    };
   }
 
   export void draw(auto & m) {
@@ -29,7 +40,10 @@ namespace console {
     start(&*m, { -w + 0.5f, 31.5f - messages.size() }, [&] {
       vbox([&] {
         for (auto m : messages) {
-          hbox([&] { text(font, m); });
+          float a = 1.0f - dotz::clamp((timer.secs() - m.start) * 0.2f, 0.0f, 1.0f);
+          mult(a, [&] {
+            hbox([&] { text(font, m.text); });
+          });
         }
       });
     });
