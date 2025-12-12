@@ -408,6 +408,7 @@ static void menu(int * opt, bool * clk) {
 
 static void do_main_menu();
 
+#ifndef LECO_TARGET_WASM
 static int g_opt_sel = 0;
 static bool g_opt_clk = false;
 static void on_options() {
@@ -448,13 +449,11 @@ static void on_options() {
         scale({ 4.0f }, [&] {
           hbox([&] {});
         });
-#ifndef LECO_TARGET_WASM
         if (opt_item("Fullscreen ", casein::fullscreen)) {
           casein::fullscreen = !casein::fullscreen;
           casein::interrupt(casein::IRQ_FULLSCREEN);
           sicfg::boolean("windowed", !casein::fullscreen);
         }
-#endif
         if (opt_item("Sounds     ", audio::enabled)) {
           audio::enabled = !audio::enabled;
           audio::interrupt();
@@ -469,6 +468,7 @@ static void on_options() {
     if (g_opt_clk) g_opt_clk = false;
   };
 }
+#endif
 
 static int g_menu_sel = 0;
 static bool g_menu_clk = false;
@@ -520,8 +520,8 @@ static void do_main_menu() {
         hbox([&] {});
         if (menu_item(true,     "New Game")) on_start();
         if (menu_item(has_cont, "Continue")) on_continue();
-        if (menu_item(true,     "Options"))  on_options();
 #ifndef LECO_TARGET_WASM
+        if (menu_item(true,     "Options"))  on_options();
         using namespace casein;
         if (menu_item(true,     "Exit"))     interrupt(IRQ_QUIT);
 #endif
