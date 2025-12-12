@@ -6,6 +6,9 @@ import inv;
 import lootfx;
 import silog;
 
+static constexpr const unsigned id = 'GAIR';
+static constexpr const unsigned version = 1001;
+
 static bool g_exists = false;
 
 // Currently, "save" is also the "state" manager
@@ -30,6 +33,8 @@ void save::prefetch(hai::fn<void> callback) {
 
   try {
     file::reader f {};
+    if (f.read<unsigned>() != id) throw 0;
+    if (f.read<unsigned>() != version) throw 0;
     current_stage = f.read<int>();
     ents::read(&f);
     inv::read(&f);
@@ -53,6 +58,8 @@ void save::store(hai::fn<void> callback) {
 
   try {
     file::writer f {};
+    f.write(id);
+    f.write(version);
     f.write(current_stage);
     ents::write(&f);
     inv::write(&f);
