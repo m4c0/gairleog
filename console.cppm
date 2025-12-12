@@ -21,6 +21,7 @@ namespace console {
   }
 
   export void push(jute::heap msg) {
+    // TODO: merge duplicate messages (ex: "You got healed x3")
     for (auto i = 0; i < messages.size() - 1; i++) {
       messages[i] = messages[i + 1];
     }

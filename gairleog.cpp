@@ -96,11 +96,16 @@ static void on_start_level() try {
 } catch (const hai::cstr & err) {
   silog::die("%s", err.begin());
 }
-static void on_exit() {
-  // TODO: random effects on level change
-  on_start_level();
-
-  auto n = strings::get("level-exit-fx");
+static void on_exit() try {
+  switch (lootfx::apply_by_name(strings::get("level-exit-fx"))) {
+    using enum lootfx::outcome;
+    case death: return on_game_over();
+    case none: return on_start_level();
+  }
+} catch (const lispy::parser_error & e) {
+  silog::die("%s", lispy::to_file_err(e).begin());
+} catch (const hai::cstr & err) {
+  silog::die("%s", err.begin());
 }
 
 static jute::heap g_game_over_msg = "";

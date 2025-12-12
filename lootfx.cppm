@@ -47,10 +47,13 @@ namespace lootfx {
     map[s] = rest[n];
     rest[n] = rest.pop_back();
   }
-  export [[nodiscard]] outcome apply(int s) {
+  export [[nodiscard]] outcome apply_by_name(jute::view name) {
     action_list_t result { 8 };
-    pick(s);
-    apply(get(s), &result);
+    apply(name, &result);
     return apply_on_player(result);
+  }
+  export [[nodiscard]] outcome apply(int s) {
+    pick(s);
+    return apply_by_name(get(s));
   }
 }
