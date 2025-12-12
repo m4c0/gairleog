@@ -485,23 +485,28 @@ static void on_credits() {
 
     using namespace imgui;
 
-    const auto center = [&](sv str) {
-      hbox([&] {
-        text(font, str);
+    const auto center = [&](float sc, sv str) {
+      scale(sc, [&] {
+        hbox([&] {
+          scale((24 / sc - str.size()) / 2.f, [] { space(); });
+          text(font, str);
+        });
+        scale(0.5f, space);
       });
     };
 
     start(&*m, {}, [&] {
       vbox([&] {
-        center("Game developed by");
-        center("Eduardo 'm4c0' Costa");
-        center("https://m4c0.itch.io");
-        hbox([] {});
-        center("Using assets from the following packs:");
-        center("PixeLike II Asset Pack");
-        center("DUNGEON.mode");
+        scale(6.6f, space);
+        center(1.0f, "Game developed by");
+        center(1.0f, "Eduardo 'm4c0' Costa");
+        center(1.0f, "https://m4c0.itch.io");
+        scale(1.5f, space);
+        center(0.8f, "Using assets from:");
+        center(0.8f, "PixeLike II Asset Pack");
+        center(0.8f, "DUNGEON.mode");
 #ifndef LECO_TARGET_WASM
-        center("Minifantasy SFX Pack");
+        center(0.8f, "Minifantasy SFX Pack");
 #endif
       });
     });
