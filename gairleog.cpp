@@ -63,6 +63,8 @@ static void draw_console(auto & m) {
 }
 
 // TODO: some visual feedback for near-death
+// TODO: add sounds for more entities
+// TODO: fix sound bug on windows
 static void on_game_frame() {
   static sitime::stopwatch timer {};
   float timer_a = dotz::sinf(timer.secs() * 3);
@@ -544,7 +546,7 @@ static void do_main_menu() {
       return clicked;
     };
 
-    start(&*m, {}, [&] {
+    start(&*m, { 0, -1 }, [&] {
       vbox([&] {
         scale({ 2.0f }, [&] {
           hbox([&] {
@@ -571,6 +573,14 @@ static void do_main_menu() {
 #ifndef LECO_TARGET_WASM
         if (menu_item(true,           "Exit"))     interrupt(IRQ_QUIT);
 #endif
+      });
+    });
+    start(&*m, { 0, 11 }, [&] {
+      hbox([&] {
+        scale(0.5f, [&] {
+          scale(6.5f, space);
+          text(font, "Version: 1.0.1-beta");
+        });
       });
     });
 
