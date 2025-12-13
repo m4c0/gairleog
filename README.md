@@ -12,7 +12,21 @@ Using assets from these packs:
 
 ### Version 1.0.0-beta
 
-Work in progress
+Work in progress.
+
+Known issues:
+
+* Most actions have no associated sound (TODO)
+* Web: Audio does not sync properly on certain browsers (won't fix)
+* Windows: Audio occasionally fails (TODO)
+* Errors in resource files are only found when they are accessed. This means
+  certain failures might only appear late in the game.
+
+Where:
+
+* "won't fix" = will not fix in this version
+* "todo" = will be fixed before release of this version
+* no tags = no defined priority
 
 ### Version 1.0.0-alpha
 

@@ -65,7 +65,6 @@ static void draw_console(auto & m) {
 
 // TODO: some visual feedback for near-death
 // TODO: add sounds for more entities
-// TODO: fix sound bug on windows
 static void on_game_frame() {
   static sitime::stopwatch timer {};
   float timer_a = dotz::sinf(timer.secs() * 3);
@@ -269,7 +268,6 @@ static void on_inventory() {
             });
             space();
             hbox([&] {
-              // TODO: link with real level number
               text(font, "Stage:  ");
               number(font, save::current_stage);
             });
