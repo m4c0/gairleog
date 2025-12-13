@@ -189,13 +189,11 @@ static void on_inv_use() try {
     case none: break;
   }
   inv::consume(g_sel);
+  reset_keys();
+  g_sel_anim = {};
   if (g_sel == inv::size()) {
-    reset_keys();
-    g_sel_anim = {};
-    g_tgt_sel = g_sel - 1;
+    g_tgt_sel = g_sel ? g_sel - 1 : 0;
   } else {
-    reset_keys();
-    g_sel_anim = {};
     g_tgt_sel = g_sel;
     g_sel -= 1;
   }
