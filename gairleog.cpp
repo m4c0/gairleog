@@ -32,6 +32,7 @@ import sv;
 import v;
 
 #define BLINK "\e[5m"
+#define VERSION "1.0.0-beta"
 
 static void reset_keys() {
   using namespace casein;
@@ -579,7 +580,7 @@ static void do_main_menu() {
       hbox([&] {
         scale(0.5f, [&] {
           scale(6.5f, space);
-          text(font, "Version: 1.0.1-beta");
+          text(font, "Version: " VERSION);
         });
       });
     });
