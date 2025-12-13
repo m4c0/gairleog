@@ -31,6 +31,7 @@ namespace res {
   }
 
   static void load(jute::view sprdef_file, hai::fn<void> cb) {
+    // TODO: load in parallel, whenever possible
     auto g = glispy::frame_guard();
 
     safe_load(sprdef_file, [=](auto src) mutable {

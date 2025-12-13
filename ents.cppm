@@ -14,12 +14,13 @@ import splats;
 namespace ents {
   export using flags = entdefs::flags;
 
-  export struct t : entdefs::t {
+  struct data {
     dotz::ivec2 pos {};
     dotz::vec2 size { 1 };
     unsigned life {};
     unsigned poison {};
   };
+  export struct t : entdefs::t, data {};
   hai::varray<t> ents { 1024 };
 
   export void foreach(auto && fn) {
@@ -41,7 +42,7 @@ namespace ents {
   static t create(dotz::ivec2 pos, entdefs::t tdef) {
     t ent = { tdef };
     ent.pos = pos;
-    ent.life = tdef.life ? tdef.life : 1;
+    ent.life = tdef.max_life ? tdef.max_life : 1;
     return ent;
   }
   export void add(dotz::ivec2 pos, entdefs::t tdef) {
@@ -132,7 +133,9 @@ namespace ents {
         .pick   = r->read<jute::heap>(),
         .walk   = r->read<jute::heap>(),
       };
-      auto val = r->read<t>();
+      t val {};
+      static_cast<data &>(val) = r->read<data>();
+      static_cast<entdefs::data &>(val) = r->read<entdefs::data>();
       val.loot = loot;
       val.sfx = sfx;
       ents.push_back_doubling(val);
@@ -148,10 +151,8 @@ namespace ents {
       w->write(d.sfx.miss);
       w->write(d.sfx.pick);
       w->write(d.sfx.walk);
-
-      d.loot = {};
-      d.sfx = {};
-      w->write(d);
+      w->write(static_cast<data>(d));
+      w->write(static_cast<entdefs::data>(d));
     }
   }
 }

@@ -32,6 +32,7 @@ import sv;
 import v;
 
 #define BLINK "\e[5m"
+#define VERSION "1.0.0-beta"
 
 static void reset_keys() {
   using namespace casein;
@@ -66,6 +67,7 @@ static void draw_console(auto & m) {
 // TODO: more rooms with enemies and fewer with pots
 // TODO: attack minus defense
 // TODO: some visual feedback for near-death
+// TODO: add sounds for more entities
 static void on_game_frame() {
   static sitime::stopwatch timer {};
   float timer_a = dotz::sinf(timer.secs() * 3);
@@ -190,13 +192,11 @@ static void on_inv_use() try {
     case none: break;
   }
   inv::consume(g_sel);
+  reset_keys();
+  g_sel_anim = {};
   if (g_sel == inv::size()) {
-    reset_keys();
-    g_sel_anim = {};
-    g_tgt_sel = g_sel - 1;
+    g_tgt_sel = g_sel ? g_sel - 1 : 0;
   } else {
-    reset_keys();
-    g_sel_anim = {};
     g_tgt_sel = g_sel;
     g_sel -= 1;
   }
@@ -269,7 +269,6 @@ static void on_inventory() {
             });
             space();
             hbox([&] {
-              // TODO: link with real level number
               text(font, "Stage:  ");
               number(font, save::current_stage);
             });
@@ -547,7 +546,7 @@ static void do_main_menu() {
       return clicked;
     };
 
-    start(&*m, {}, [&] {
+    start(&*m, { 0, -1 }, [&] {
       vbox([&] {
         scale({ 2.0f }, [&] {
           hbox([&] {
@@ -574,6 +573,14 @@ static void do_main_menu() {
 #ifndef LECO_TARGET_WASM
         if (menu_item(true,           "Exit"))     interrupt(IRQ_QUIT);
 #endif
+      });
+    });
+    start(&*m, { 0, 11 }, [&] {
+      hbox([&] {
+        scale(0.5f, [&] {
+          scale(6.5f, space);
+          text(font, "Version: " VERSION);
+        });
       });
     });
 

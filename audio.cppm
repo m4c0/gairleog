@@ -12,7 +12,6 @@ export namespace audio {
 #ifndef LECO_TARGET_WASM
 #pragma leco add_impl audio_impl
 #else
-// TODO: fix audio on wasm
 namespace audio {
   void init() {}
   void play(const hai::array<float> & samples) {}

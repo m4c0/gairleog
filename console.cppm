@@ -11,6 +11,7 @@ namespace console {
   struct message {
     float start {};
     jute::heap text {};
+    int count {};
   };
   hai::array<message> messages { lines };
 
@@ -21,17 +22,30 @@ namespace console {
   }
 
   export void push(jute::heap msg) {
-    // TODO: merge duplicate messages (ex: "You got healed x3")
+    auto & last = messages[messages.size() - 1];
+    if (last.text == msg) {
+      last.count++;
+      return;
+    }
+
     for (auto i = 0; i < messages.size() - 1; i++) {
       messages[i] = messages[i + 1];
     }
-    messages[messages.size() - 1] = message {
+    last = message {
       .start = timer.secs(),
       .text = msg,
+      .count = 1,
     };
   }
 
   export void for_each(auto && fn) {
-    for (auto m : messages) fn((timer.secs() - m.start), *m.text);
+    for (auto m : messages) {
+      auto dt = timer.secs() - m.start;
+      switch (m.count) {
+        case 0: fn(0, jute::view {}); break;
+        case 1: fn(dt, *m.text); break;
+        default: fn(dt, *jute::fmt<"%s (%d times)">(m.text, m.count)); break;
+      }
+    }
   }
 }
