@@ -41,7 +41,7 @@ namespace ents {
   static t create(dotz::ivec2 pos, entdefs::t tdef) {
     t ent = { tdef };
     ent.pos = pos;
-    ent.life = tdef.life ? tdef.life : 1;
+    ent.life = tdef.max_life ? tdef.max_life : 1;
     return ent;
   }
   export void add(dotz::ivec2 pos, entdefs::t tdef) {

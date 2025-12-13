@@ -82,10 +82,9 @@ namespace entdefs {
 
     ctx->fns["atkspr"]   = mem_fn<&cnode::attr, &cnode::attack_sprite, to_spr_pair>;
     ctx->fns["defense"]  = mem_fn<&cnode::attr, &cnode::defense,       to_i>;
-    ctx->fns["life"]     = mem_fn<&cnode::attr, &cnode::life,          to_life>;
+    ctx->fns["life"]     = mem_fn<&cnode::attr, &cnode::max_life,      to_life>;
     ctx->fns["light"]    = mem_fn<&cnode::attr, &cnode::light,         to_light>;
     ctx->fns["loot"]     = mem_fn<&cnode::attr, &cnode::loot,          to_loot>;
-    ctx->fns["maxlife"]  = mem_fn<&cnode::attr, &cnode::max_life,      to_life>;
     ctx->fns["splatspr"] = mem_fn<&cnode::attr, &cnode::splat_sprite,  to_spr_pair>;
     ctx->fns["spr"]      = mem_fn<&cnode::attr, &cnode::sprite,        to_spr>;
     ctx->fns["strength"] = mem_fn<&cnode::attr, &cnode::strength,      to_i>;

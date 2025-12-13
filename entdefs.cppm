@@ -35,7 +35,6 @@ namespace entdefs {
     sfx sfx {};
 
     float        light         {};
-    unsigned     life          {};
     unsigned     max_life      {};
     unsigned     sprite        {};
     sprdef::pair attack_sprite {};
