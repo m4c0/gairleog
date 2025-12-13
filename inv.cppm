@@ -7,20 +7,17 @@ import silog;
 import sv;
 
 namespace inv {
-  export struct t : entdefs::t {
-  };
-
-  hai::varray<t> data { 128 };
+  hai::varray<entdefs::t> data { 128 };
 
   export void reset() {
     data.truncate(0);
   }
 
   export void add(entdefs::t tdef) {
-    data.push_back_doubling(t { tdef });
+    data.push_back_doubling(tdef);
   }
 
-  static t invalid {};
+  static entdefs::t invalid {};
   export const auto & at(int idx) {
     if (idx < 0 || idx >= data.size()) return invalid;
     return data[idx];
@@ -40,9 +37,9 @@ namespace inv {
     auto len = r->read<unsigned>();
     silog::infof("Reading %d inventory entries", len);
     for (auto i = 0; i < len; i++) {
-      auto loot = r->read<jute::heap>();
-      t val { r->read<entdefs::data>() };
-      val.loot = loot;
+      entdefs::t val {};
+      val.loot = r->read<jute::heap>();
+      static_cast<entdefs::data &>(val) = r->read<entdefs::data>();
       data.push_back_doubling(val);
     }
   }
