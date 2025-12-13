@@ -16,9 +16,11 @@ Work in progress.
 
 Known issues:
 
+* Damage does not show on console (TODO)
 * Most actions have no associated sound (TODO)
 * Web: Audio does not sync properly on certain browsers (won't fix)
 * Windows: Audio occasionally fails (TODO)
+* Windows: Room editor cannot save rooms (TODO)
 * Errors in resource files are only found when they are accessed. This means
   certain failures might only appear late in the game.
 
