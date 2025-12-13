@@ -9,13 +9,13 @@ import sprdef;
 
 namespace {
   // TODO: move to lisp
-  static constexpr const entdefs::t wall {
+  static constexpr const entdefs::t wall {{
     .flags {
       .fluorescent = true,
       .solid = true,
       .wall = true,
     },
-  };
+  }};
 
   [[nodiscard]] bool furnish(map::t & map, dotz::ivec2 aa, dotz::ivec2 bb) {
     auto ab = bb - aa + 1;

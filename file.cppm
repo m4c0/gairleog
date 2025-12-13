@@ -18,6 +18,9 @@ namespace file {
   template<typename T>
   concept not_a_pointer = !pointer<T>;
 
+  template<typename T>
+  concept serializable = not_a_pointer<T> && __is_standard_layout(T);
+
   export class reader {
     hai::uptr<t> m_f;
 
@@ -29,13 +32,15 @@ namespace file {
 
     void read(void * data, unsigned size);
 
-    template<typename T>
+    template<serializable T>
     void read(T * t) {
       read(t, sizeof(T));
     }
 
-    template<typename T> T read();
-    template<not_a_pointer T>
+    template<typename T> T read() {
+      static_assert(false, "Type is not serialisable");
+    }
+    template<serializable T>
     T read() {
       T val {};
       read(&val);
@@ -60,7 +65,7 @@ namespace file {
 
     void write(const void * data, unsigned size);
 
-    template<not_a_pointer T>
+    template<serializable T>
     void write(T val) {
       write(&val, sizeof(T));
     }

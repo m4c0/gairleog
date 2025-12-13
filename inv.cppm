@@ -41,7 +41,7 @@ namespace inv {
     silog::infof("Reading %d inventory entries", len);
     for (auto i = 0; i < len; i++) {
       auto loot = r->read<jute::heap>();
-      auto val = r->read<t>();
+      t val { r->read<entdefs::data>() };
       val.loot = loot;
       data.push_back_doubling(val);
     }
@@ -49,10 +49,9 @@ namespace inv {
   export void write(file::writer * w) {
     silog::infof("Storing %d inventory entries", data.size());
     w->write(data.size());
-    for (auto d : data) {
+    for (const auto & d : data) {
       w->write(d.loot);
-      d.loot = {};
-      w->write(d);
+      w->write(static_cast<entdefs::data>(d));
     }
   }
 }

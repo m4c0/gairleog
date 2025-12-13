@@ -30,10 +30,7 @@ namespace entdefs {
     jute::heap walk {};
   };
 
-  export struct t {
-    jute::heap loot {};
-    sfx sfx {};
-
+  export struct data {
     float        light         {};
     unsigned     max_life      {};
     unsigned     sprite        {};
@@ -42,6 +39,10 @@ namespace entdefs {
     unsigned     strength      {};
     unsigned     defense       {};
     flags        flags         {};
+  };
+  export struct t : data {
+    jute::heap loot {};
+    sfx sfx {};
   };
 
   export inline unsigned bit_of(flags f) {
