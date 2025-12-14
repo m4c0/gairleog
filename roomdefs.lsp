@@ -26,4 +26,5 @@
   (room l.i.l ..... .,,.u ..... l.i.l)
   (room y...y lu.xl u...e leu.l y..uy)
   (room y...y lu.xl u..eo leu.l yo.uy)
+  (room ...... ...... ...... ...... ...... ......)
 )
