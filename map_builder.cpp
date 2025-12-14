@@ -5,6 +5,7 @@ import entdefs;
 import hai;
 import rng;
 import roomdefs;
+import save;
 import sprdef;
 
 namespace {
@@ -100,12 +101,14 @@ void map::build() {
 
   make_walls(data);
 
-  // TODO: level-based exit placement
   // TODO: add a no-return "entry" door
   // TODO: draw "exit" with open door and "entry" with a closed door
   // TODO: place entry/exit with boundary walls
-  data[1][1] = { entdefs::get("player") };
-  data[h - 2][w - 2] = { entdefs::get("exit") };
+  bool flip = save::current_stage % 2;
+  auto px =  flip ? 1 : w - 2;
+  auto ex = !flip ? 1 : w - 2;
+  data[1][px] = { entdefs::get("player") };
+  data[h - 2][ex] = { entdefs::get("exit") };
 
   for (auto y = 0; y < h; y++) {
     for (auto x = 0; x < w; x++) {
