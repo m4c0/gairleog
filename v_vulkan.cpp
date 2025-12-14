@@ -85,8 +85,6 @@ static void on_start() try {
   silog::die("Error starting: %s", msg.begin());
 }
 static void on_frame() try {
-  if (!g_es) g_es = new ext_stuff {};
-
   g_es->sw.acquire_next_image();
   g_es->sw.queue_one_time_submit([] {
     v::call_on_frame();
@@ -121,7 +119,10 @@ const int i = [] {
   using namespace vinyl;
   on(START,  on_start);
   on(RESIZE, [] { delete g_es; g_es = nullptr; });
-  on(FRAME,  on_frame);
+  on(FRAME,  [] {
+    if (!g_es) g_es = new ext_stuff {};
+    on_frame();
+  });
   on(STOP,   [] {
     delete g_es;
     delete g_as;

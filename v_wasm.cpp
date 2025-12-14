@@ -11,6 +11,7 @@ import vinyl;
 using namespace jute::literals;
 
 static hai::varray<v::sprite> buffer { 10240 };
+static bool g_init = false;
 
 namespace v {
   static hai::cstr vert_shader {};
@@ -35,8 +36,6 @@ namespace v {
   static int g_texture;
   static int g_u_aspect;
   static int g_u_uni;
-
-  void frame();
 
   void setup() {
     using namespace gelo;
@@ -117,7 +116,7 @@ namespace v {
       tex_parameter_i(TEXTURE_2D, TEXTURE_MAG_FILTER, NEAREST);
 
       // Last resource loaded, let's start
-      vinyl::on(vinyl::FRAME, frame);
+      g_init = true;
     });
   }
 
@@ -165,7 +164,7 @@ hai::uptr<v::mapper> v::map() {
   return hai::uptr<v::mapper> { new ::mapper {} };
 }
 
-void v::frame() {
+static void on_frame() {
   v::call_on_frame();
   v::render();
 }
@@ -176,5 +175,9 @@ const int i = [] {
   on(START, ::v::create_window);
   // TODO: fix wasm bug when resizing window
   // on(RESIZE, ...);
+  on(FRAME, [] {
+    if (!g_init) return;
+    on_frame();
+  });
   return 0;
 }();
