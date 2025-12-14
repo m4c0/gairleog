@@ -34,8 +34,7 @@
   (life (level))
   (ceramic)
   (fluorescent)
-  (solid)
-  (wall))
+  (solid))
 
 (entdef wall
   (spr environment/walls/brick_clay)
