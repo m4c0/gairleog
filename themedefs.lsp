@@ -34,6 +34,7 @@
 (def u (random lilypad empty empty))
 (def y candles)
 (def p (per-level-pot))
+(def w wall)
 
 (def x (random (per-level-pot) candles grass empty empty))
 (def e (per-level-enemy))

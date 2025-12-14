@@ -19,6 +19,7 @@
     (walk player_walk)))
 
 (entdef wall
+  (spr environment/walls/brick_clay)
   (fluorescent)
   (solid)
   (wall))
