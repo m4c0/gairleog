@@ -15,7 +15,6 @@ using vv = vinyl::v<app_stuff, ext_stuff>;
 using namespace jute::literals;
 
 static hai::varray<v::sprite> buffer { 10240 };
-static bool g_init = false;
 
 namespace v {
   static hai::cstr vert_shader {};
@@ -113,9 +112,6 @@ namespace v {
       tex_parameter_i(TEXTURE_2D, TEXTURE_WRAP_T, CLAMP_TO_EDGE);
       tex_parameter_i(TEXTURE_2D, TEXTURE_MIN_FILTER, NEAREST);
       tex_parameter_i(TEXTURE_2D, TEXTURE_MAG_FILTER, NEAREST);
-
-      // Last resource loaded, let's start
-      g_init = true;
     });
   }
 
@@ -164,7 +160,7 @@ hai::uptr<v::mapper> v::map() {
 }
 
 static void on_frame() {
-  if (!g_init) return;
+  if (!v::g_texture) return; // Last resource to load
   v::call_on_frame();
   v::render();
 }
