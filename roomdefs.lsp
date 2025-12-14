@@ -27,4 +27,5 @@
   (room y...y lu.xl u...e leu.l y..uy)
   (room y...y lu.xl u..eo leu.l yo.uy)
   (room ...... ...... ...... ...... ...... ......)
+  (room ...... .wwww. .wp-w. .w-ew. .wqww. ......)
 )
