@@ -99,16 +99,14 @@ void map::build() {
 
   (w > h ? vsplit : hsplit)(data, {1,1}, {w-2,h-2});
 
-  make_walls(data);
-
-  // TODO: add a no-return "entry" door
-  // TODO: draw "exit" with open door and "entry" with a closed door
-  // TODO: place entry/exit with boundary walls
   bool flip = save::current_stage % 2;
   auto px =  flip ? 1 : w - 2;
   auto ex = !flip ? 1 : w - 2;
+  data[0][px] = { entdefs::get("entry") };
   data[1][px] = { entdefs::get("player") };
   data[h - 2][ex] = { entdefs::get("exit") };
+
+  make_walls(data);
 
   for (auto y = 0; y < h; y++) {
     for (auto x = 0; x < w; x++) {

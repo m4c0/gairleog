@@ -18,11 +18,6 @@
     (poison player_poison)
     (walk player_walk)))
 
-(entdef exit
-  (light 0.3)
-  (exit)
-  (spr environment/props/door_cage_open))
-
 (entdef apple   (food) (fluorescent) (spr items/food/appletomato_red))
 (entdef berry   (food) (fluorescent) (spr items/food/cherriesberries_green))
 (entdef chicken (food) (fluorescent) (spr items/food/chicken_raw))
@@ -41,6 +36,15 @@
   (fluorescent)
   (solid)
   (wall))
+
+(entdef entry
+  (solid)
+  (spr environment/props/door_cage_closed))
+
+(entdef exit
+  (light 0.3)
+  (exit)
+  (spr environment/props/door_cage_open))
 
 ; =====================================================================
 ; Enemies
