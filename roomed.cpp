@@ -5,12 +5,13 @@
 import casein;
 import dotz;
 import entdefs;
+import glispy;
 import hai;
 import hay;
 import jute;
-import lispy;
 import print;
 import res;
+import save;
 import silog;
 import sires;
 import sprdef;
@@ -43,6 +44,7 @@ static unsigned font_id(char c) {
 }
 
 static unsigned theme_id(char c) {
+  auto g = glispy::frame_guard();
   temp_arena<node> a {};
   temp_frame ctx {};
   themedefs::eval();
@@ -115,6 +117,7 @@ static const node * load_roomdefs(const node * n, const node * const * aa, unsig
 }
 
 static void load(void *, const hai::cstr & src) try {
+  auto g = glispy::frame_guard();
   temp_frame ctx {}; 
   ctx.fns["roomdefs"] = load_roomdefs;
   run<node>("roomdefs.lsp", src);
@@ -171,6 +174,7 @@ static void save_(void *, const hai::cstr & src) try {
 }
 
 static void on_save() {
+  auto g = glispy::frame_guard();
   temp_arena<node> a {};
   silog::info("Saving new rooms");
   sires::read("roomdefs.lsp", nullptr, save_);
@@ -204,6 +208,7 @@ const int i = [] {
   handle(KEY_DOWN, K_ENTER, on_save);
 
   handle(KEY_DOWN, [] {
+    auto g = glispy::frame_guard();
     temp_arena<node> a {};
     temp_frame ctx {};
     themedefs::eval();
@@ -217,6 +222,8 @@ const int i = [] {
     v::on_frame = on_frame;
   });
 
+  save::current_stage = 1;
+  glispy::reset();
   res::load_all(on_init);
   return 0;
 }();
