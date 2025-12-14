@@ -6,7 +6,6 @@ import silog;
 import sires;
 import stubby;
 import traits;
-import vaselin;
 import vinyl;
 
 using namespace jute::literals;
@@ -37,7 +36,7 @@ namespace v {
   static int g_u_aspect;
   static int g_u_uni;
 
-  void frame(void *);
+  void frame();
 
   void setup() {
     using namespace gelo;
@@ -118,7 +117,7 @@ namespace v {
       tex_parameter_i(TEXTURE_2D, TEXTURE_MAG_FILTER, NEAREST);
 
       // Last resource loaded, let's start
-      vaselin::request_animation_frame(frame, nullptr);
+      vinyl::on(vinyl::FRAME, frame);
     });
   }
 
@@ -166,16 +165,16 @@ hai::uptr<v::mapper> v::map() {
   return hai::uptr<v::mapper> { new ::mapper {} };
 }
 
-void v::frame(void *) {
+void v::frame() {
   v::call_on_frame();
   v::render();
-  vaselin::request_animation_frame(frame, nullptr);
 }
 
 const int i = [] {
   using namespace vinyl;
 
   on(START, ::v::create_window);
+  // TODO: fix wasm bug when resizing window
+  // on(RESIZE, ...);
   return 0;
 }();
-
