@@ -24,7 +24,6 @@ struct app_stuff {
   vee::descriptor_pool dpool = vee::create_descriptor_pool(1, {
     vee::combined_image_sampler(1),
   });
-  vee::descriptor_set dset = vee::allocate_descriptor_set(*dpool, *dsl);
   vee::pipeline_layout pl = vee::create_pipeline_layout(
       *dsl,
       vee::vertex_push_constant_range<float>());
@@ -49,6 +48,12 @@ struct app_stuff {
       vee::vertex_attribute_uint(0, traits::offset_of(&v::sprite::id)),
     },
   });
+  voo::bound_buffer buf = voo::bound_buffer::create_from_host(
+      dq.physical_device(),
+      v::max_sprites * sizeof(v::sprite),
+      vee::buffer_usage::vertex_buffer);
+
+  vee::descriptor_set dset = vee::allocate_descriptor_set(*dpool, *dsl);
   vee::sampler smp = [] {
     auto info = vee::sampler_create_info {};
     info.address_mode(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE);
@@ -56,11 +61,8 @@ struct app_stuff {
     info.unnormalizedCoordinates = wagen::vk_true;
     return vee::create_sampler(info);
   }();
-  voo::bound_buffer buf = voo::bound_buffer::create_from_host(
-      dq.physical_device(),
-      v::max_sprites * sizeof(v::sprite),
-      vee::buffer_usage::vertex_buffer);
   voo::bound_image img {};
+
   unsigned count {};
 
   app_stuff() try {
