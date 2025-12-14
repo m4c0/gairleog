@@ -196,6 +196,17 @@ const int i = [] {
   handle(KEY_DOWN, K_LEFT,  cursor(-1,  0));
   handle(KEY_DOWN, K_RIGHT, cursor(+1,  0));
 
+  handle(KEY_DOWN, K_MINUS, [] {
+    if (--save::current_stage < 1) save::current_stage = 1;
+    glispy::reset();
+    v::on_frame = on_frame;
+  });
+  handle(KEY_DOWN, K_EQUAL, [] {
+    ++save::current_stage;
+    glispy::reset();
+    v::on_frame = on_frame;
+  });
+
   handle(KEY_DOWN, K_TAB, [] {
     g_spr_id = theme_id;
     if (!casein::keydown_repeating) v::on_frame = on_frame;
