@@ -5,45 +5,12 @@ import gelo;
 import jute;
 import silog;
 import sires;
-import stubby;
 import traits;
 import vinyl;
 
 using namespace jute::literals;
 
 static hai::varray<v::sprite> buffer { 10240 };
-
-struct v_texture : public v::texture {
-  int texture {};
-
-  explicit v_texture(sv name) {
-    sires::read(name, nullptr, [this,name](auto, hai::cstr & bits) {
-      using namespace gelo;
-
-      silog::log(silog::info, "[%*s] loaded", static_cast<int>(name.size()), name.begin());
-
-      auto t = texture = gelo::create_texture();
-      active_texture(TEXTURE0);
-      bind_texture(TEXTURE_2D, t);
-
-      auto img = stbi::load(bits);
-      auto & [ w, h, ch, data ] = img;
-      bind_texture(TEXTURE_2D, t);
-      tex_image_2d(TEXTURE_2D, 0, RGBA, w, h, 0, RGBA, UNSIGNED_BYTE, *data, w * h * 4);
-      tex_parameter_i(TEXTURE_2D, TEXTURE_WRAP_S, CLAMP_TO_EDGE);
-      tex_parameter_i(TEXTURE_2D, TEXTURE_WRAP_T, CLAMP_TO_EDGE);
-      tex_parameter_i(TEXTURE_2D, TEXTURE_MIN_FILTER, NEAREST);
-      tex_parameter_i(TEXTURE_2D, TEXTURE_MAG_FILTER, NEAREST);
-    });
-  }
-
-  [[nodiscard]] explicit operator bool() const {
-    return texture != 0;
-  }
-};
-hai::uptr<v::texture> v::load_texture(sv name) {
-  return hai::uptr<v::texture> { new v_texture { name } };
-}
 
 namespace v {
   static hai::cstr vert_shader {};
@@ -168,7 +135,7 @@ hai::uptr<v::mapper> v::map() {
 }
 
 struct app_stuff {
-  hai::uptr<v::texture> txt = v::load_texture("pixelite2.png");
+  vinyl::nearest_texture txt { "pixelite2.png" };
 
   app_stuff() { v::create_window(); };
 };

@@ -12,10 +12,4 @@ struct ext_stuff;
 using vv = vinyl::v<app_stuff, ext_stuff>;
 
 namespace v {
-  struct texture {
-    virtual ~texture() {}
-
-    [[nodiscard]] virtual explicit operator bool() const = 0;
-  };
-  hai::uptr<texture> load_texture(sv name);
-};
+}

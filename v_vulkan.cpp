@@ -12,38 +12,6 @@ import vinyl;
 import voo;
 import wagen;
 
-struct v_texture : public v::texture {
-  vee::descriptor_set_layout dsl = vee::create_descriptor_set_layout({
-    vee::dsl_fragment_sampler(),
-  });
-  vee::descriptor_pool dpool = vee::create_descriptor_pool(1, {
-    vee::combined_image_sampler(1),
-  });
-  vee::descriptor_set dset = vee::allocate_descriptor_set(*dpool, *dsl);
-  vee::sampler smp = [] {
-    auto info = vee::sampler_create_info {};
-    info.address_mode(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE);
-    info.nearest();
-    info.unnormalizedCoordinates = wagen::vk_true;
-    return vee::create_sampler(info);
-  }();
-  voo::bound_image img {};
-
-  explicit v_texture(sv name) {
-    voo::load_image(name, &img, [this](auto) {
-      // TODO: only start after this is triggered
-      vee::update_descriptor_set(dset, 0, 0, *img.iv, *smp);
-    });
-  }
-
-  [[nodiscard]] explicit operator bool() const {
-    return true;
-  }
-};
-hai::uptr<v::texture> v::load_texture(sv name) {
-  return hai::uptr<v::texture> { new v_texture { name } };
-}
-
 struct app_stuff {
   voo::device_and_queue dq { "gairleog", casein::native_ptr };
   vee::render_pass rp = voo::single_att_render_pass(dq);
@@ -82,7 +50,7 @@ struct app_stuff {
       v::max_sprites * sizeof(v::sprite),
       vee::buffer_usage::vertex_buffer);
 
-  hai::uptr<v::texture> txt = v::load_texture("pixelite2.png");
+  vinyl::nearest_texture txt { "pixelite2.png" };
 
   unsigned count {};
 };
@@ -121,8 +89,7 @@ static void on_frame() try {
     vee::cmd_set_viewport(cb, ext);
     vee::cmd_set_scissor(cb, ext);
     vee::cmd_bind_gr_pipeline(cb, *vv::as()->ppl);
-    vee::cmd_bind_descriptor_set(cb, *vv::as()->pl, 0, 
-        static_cast<v_texture &>(*vv::as()->txt).dset);
+    vee::cmd_bind_descriptor_set(cb, *vv::as()->pl, 0, vv::as()->txt.dset);
     vee::cmd_push_vertex_constants(cb, *vv::as()->pl, &pc);
     vee::cmd_bind_vertex_buffers(cb, 0, *vv::as()->buf.buffer, ofs);
     vee::cmd_draw(cb, 4, vv::as()->count);
