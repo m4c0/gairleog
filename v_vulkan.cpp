@@ -96,10 +96,10 @@ static void on_frame() try {
     auto cb = vv::ss()->sw.command_buffer();
     auto ext = vv::ss()->sw.extent();
 
-    //----- magic block for double-buffer
+    // TODO: fix a rare sync issue between player and rest of game
     auto ofs = 0U;
+
     float pc = vv::ss()->sw.aspect();
-    //------
 
     auto rp = vv::ss()->sw.cmd_render_pass({
       .clear_colours { vee::clear_colour(0, 0, 0, 1) },
