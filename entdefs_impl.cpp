@@ -96,6 +96,7 @@ namespace entdefs {
     ctx->fns["food"]        = mem_set<{ .food        = true }>;
     ctx->fns["player"]      = mem_set<{ .player      = true }>;
     ctx->fns["solid"]       = mem_set<{ .solid       = true }>;
+    ctx->fns["wall"]        = mem_set<{ .wall        = true }>;
     return ctx;
   }();
 

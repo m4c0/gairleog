@@ -58,6 +58,7 @@ namespace entdefs {
     if (atom == "food")        return bit_of({ .food           = true });
     if (atom == "player")      return bit_of({ .player         = true });
     if (atom == "solid")       return bit_of({ .solid          = true });
+    if (atom == "wall")        return bit_of({ .wall           = true });
     return 0U; // Should only happen whilst parsing
   }
 

@@ -18,6 +18,11 @@
     (poison player_poison)
     (walk player_walk)))
 
+(entdef wall
+  (fluorescent)
+  (solid)
+  (wall))
+
 (entdef exit
   (light 0.3)
   (exit)
