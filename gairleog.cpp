@@ -64,7 +64,6 @@ static void draw_console(auto & m) {
 }
 
 // TODO: balance attack/defense of enemies
-// TODO: more rooms with enemies and fewer with pots
 // TODO: attack minus defense
 // TODO: some visual feedback for near-death
 // TODO: add sounds for more entities
@@ -113,7 +112,6 @@ static void on_game_frame() {
   draw_console(m);
 }
 
-// TODO: level-based exit placement
 // TODO: drop a random item on level change
 static void on_start_level() try {
   save::current_stage++;

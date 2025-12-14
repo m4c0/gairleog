@@ -100,6 +100,10 @@ void map::build() {
 
   make_walls(data);
 
+  // TODO: level-based exit placement
+  // TODO: add a no-return "entry" door
+  // TODO: draw "exit" with open door and "entry" with a closed door
+  // TODO: place entry/exit with boundary walls
   data[1][1] = { entdefs::get("player") };
   data[h - 2][w - 2] = { entdefs::get("exit") };
 
