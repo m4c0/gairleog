@@ -1,4 +1,5 @@
 module v;
+import :tools;
 import casein;
 import gelo;
 import jute;
@@ -8,13 +9,41 @@ import stubby;
 import traits;
 import vinyl;
 
-struct app_stuff;
-struct ext_stuff;
-using vv = vinyl::v<app_stuff, ext_stuff>;
-
 using namespace jute::literals;
 
 static hai::varray<v::sprite> buffer { 10240 };
+
+struct v_texture : public v::texture {
+  int texture {};
+
+  explicit v_texture(sv name) {
+    sires::read(name, nullptr, [this,name](auto, hai::cstr & bits) {
+      using namespace gelo;
+
+      silog::log(silog::info, "[%*s] loaded", static_cast<int>(name.size()), name.begin());
+
+      auto t = texture = gelo::create_texture();
+      active_texture(TEXTURE0);
+      bind_texture(TEXTURE_2D, t);
+
+      auto img = stbi::load(bits);
+      auto & [ w, h, ch, data ] = img;
+      bind_texture(TEXTURE_2D, t);
+      tex_image_2d(TEXTURE_2D, 0, RGBA, w, h, 0, RGBA, UNSIGNED_BYTE, *data, w * h * 4);
+      tex_parameter_i(TEXTURE_2D, TEXTURE_WRAP_S, CLAMP_TO_EDGE);
+      tex_parameter_i(TEXTURE_2D, TEXTURE_WRAP_T, CLAMP_TO_EDGE);
+      tex_parameter_i(TEXTURE_2D, TEXTURE_MIN_FILTER, NEAREST);
+      tex_parameter_i(TEXTURE_2D, TEXTURE_MAG_FILTER, NEAREST);
+    });
+  }
+
+  [[nodiscard]] explicit operator bool() const {
+    return texture != 0;
+  }
+};
+hai::uptr<v::texture> v::load_texture(sv name) {
+  return hai::uptr<v::texture> { new v_texture { name } };
+}
 
 namespace v {
   static hai::cstr vert_shader {};
@@ -36,9 +65,9 @@ namespace v {
 
   static int g_program;
   static int g_inst_buffer;
-  static int g_texture;
   static int g_u_aspect;
   static int g_u_uni;
+  static bool g_loaded = false;
 
   void setup() {
     using namespace gelo;
@@ -94,27 +123,6 @@ namespace v {
     vertex_attrib_divisor(5, 1);
   }
 
-  void load_texture(jute::view name) {
-    sires::read(name, nullptr, [name](auto, hai::cstr & bits) {
-      using namespace gelo;
-
-      silog::log(silog::info, "[%*s] loaded", static_cast<int>(name.size()), name.begin());
-
-      auto t = g_texture = gelo::create_texture();
-      active_texture(TEXTURE0);
-      bind_texture(TEXTURE_2D, t);
-
-      auto img = stbi::load(bits);
-      auto & [ w, h, ch, data ] = img;
-      bind_texture(TEXTURE_2D, g_texture);
-      tex_image_2d(TEXTURE_2D, 0, RGBA, w, h, 0, RGBA, UNSIGNED_BYTE, *data, w * h * 4);
-      tex_parameter_i(TEXTURE_2D, TEXTURE_WRAP_S, CLAMP_TO_EDGE);
-      tex_parameter_i(TEXTURE_2D, TEXTURE_WRAP_T, CLAMP_TO_EDGE);
-      tex_parameter_i(TEXTURE_2D, TEXTURE_MIN_FILTER, NEAREST);
-      tex_parameter_i(TEXTURE_2D, TEXTURE_MAG_FILTER, NEAREST);
-    });
-  }
-
   void create_window() {
     sires::read("gairleog.vert.gles", nullptr, [](auto, hai::cstr & gles) {
       vert_shader = traits::move(gles);
@@ -124,7 +132,7 @@ namespace v {
         frag_shader = traits::move(gles);
 
         setup();
-        load_texture("pixelite2.png");
+        g_loaded = true;
       });
     });
   }
@@ -159,17 +167,20 @@ hai::uptr<v::mapper> v::map() {
   return hai::uptr<v::mapper> { new ::mapper {} };
 }
 
-static void on_frame() {
-  if (!v::g_texture) return; // Last resource to load
-  v::call_on_frame();
-  v::render();
-}
-
 struct app_stuff {
+  hai::uptr<v::texture> txt = v::load_texture("pixelite2.png");
+
   app_stuff() { v::create_window(); };
 };
 // TODO: fix wasm bug when resizing window
 struct ext_stuff {};
+
+static void on_frame() {
+  if (!vv::as()->txt) return; // Last resource to load
+  if (!v::g_loaded) return; // Last resource to load
+  v::call_on_frame();
+  v::render();
+}
 
 const int i = [] {
   vv::setup(on_frame);
