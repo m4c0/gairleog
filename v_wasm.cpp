@@ -8,6 +8,10 @@ import stubby;
 import traits;
 import vinyl;
 
+struct app_stuff;
+struct ext_stuff;
+using vv = vinyl::v<app_stuff, ext_stuff>;
+
 using namespace jute::literals;
 
 static hai::varray<v::sprite> buffer { 10240 };
@@ -165,6 +169,7 @@ hai::uptr<v::mapper> v::map() {
 }
 
 static void on_frame() {
+  if (!g_init) return;
   v::call_on_frame();
   v::render();
 }
@@ -172,13 +177,10 @@ static void on_frame() {
 struct app_stuff {
   app_stuff() { v::create_window(); };
 };
+// TODO: fix wasm bug when resizing window
+struct ext_stuff {};
+
 const int i = [] {
-  using vv = vinyl::v<app_stuff, int>;
-  // TODO: fix wasm bug when resizing window
-  vv::on_frame() = [] {
-    if (!g_init) return;
-    on_frame();
-  };
-  vv::setup();
+  vv::setup(on_frame);
   return 0;
 }();

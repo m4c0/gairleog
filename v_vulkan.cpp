@@ -120,7 +120,6 @@ static void on_frame() try {
 }
 
 const int i = [] {
-  vv::on_frame() = on_frame;
-  vv::setup();
+  vv::setup(on_frame);
   return 0;
 }();
