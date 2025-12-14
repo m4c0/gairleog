@@ -248,19 +248,19 @@ static void on_inventory() {
               text(font, "/");
               number(font, player.max_life);
             });
+            space();
             if (player.poison) {
-              space();
               hbox([&] {
                 text(font, "Poison: ");
                 number(font, player.poison);
               });
+              scale(0.5f, space);
             }
-            space();
             hbox([&] {
               text(font, "Str.:   ");
               number(font, player.strength);
             });
-            space();
+            scale(0.5f, space);
             hbox([&] {
               text(font, "Def.:   ");
               number(font, player.defense);
