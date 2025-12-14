@@ -18,22 +18,30 @@
     (poison player_poison)
     (walk player_walk)))
 
-(entdef wall
-  (spr environment/walls/brick_clay)
-  (fluorescent)
-  (solid)
-  (wall))
-
 (entdef exit
   (light 0.3)
   (exit)
-  (spr environment/props/door_closed))
+  (spr environment/props/door_cage_open))
 
 (entdef apple   (food) (fluorescent) (spr items/food/appletomato_red))
 (entdef berry   (food) (fluorescent) (spr items/food/cherriesberries_green))
 (entdef chicken (food) (fluorescent) (spr items/food/chicken_raw))
 (entdef potato  (food) (fluorescent) (spr items/food/potato_orange))
 (entdef turnip  (food) (fluorescent) (spr items/food/radishturnip_brown))
+
+(entdef door
+  (spr environment/props/door_closed)
+  (life 5)
+  (ceramic)
+  (fluorescent)
+  (solid)
+  (wall))
+
+(entdef wall
+  (spr environment/walls/brick_clay)
+  (fluorescent)
+  (solid)
+  (wall))
 
 ; =====================================================================
 ; Enemies
