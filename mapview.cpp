@@ -53,6 +53,17 @@ static void on_frame() {
   handle(KEY_DOWN, K_DOWN,  move(0, +1));
   handle(KEY_DOWN, K_LEFT,  move(-1, 0));
   handle(KEY_DOWN, K_RIGHT, move(+1, 0));
+
+  handle(KEY_DOWN, K_MINUS, [] {
+    if (--save::current_stage < 1) save::current_stage = 1;
+    glispy::reset();
+    v::on_frame = on_frame;
+  });
+  handle(KEY_DOWN, K_EQUAL, [] {
+    ++save::current_stage;
+    glispy::reset();
+    v::on_frame = on_frame;
+  });
 }
 
 const int i = [] {
