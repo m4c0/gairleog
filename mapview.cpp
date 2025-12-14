@@ -4,10 +4,11 @@ import casein;
 import enemies;
 import ents;
 import errs;
+import glispy;
 import hai;
-import lispy;
 import map;
 import res;
+import save;
 import silog;
 import sires;
 import v;
@@ -56,6 +57,8 @@ static void on_frame() {
 
 const int i = [] {
   try {
+    save::current_stage = 1;
+    glispy::reset();
     res::load_all([] {
       v::on_frame = on_frame;
     });
