@@ -104,7 +104,8 @@ void map::build() {
   auto ex = !flip ? 1 : w - 2;
   data[0][px] = { entdefs::get("entry") };
   data[1][px] = { entdefs::get("player") };
-  data[h - 2][ex] = { entdefs::get("exit") };
+  data[h - 2][ex] = {};
+  data[h - 1][ex] = { entdefs::get("exit") };
 
   make_walls(data);
 
