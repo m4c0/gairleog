@@ -7,6 +7,7 @@ import sires;
 import stubby;
 import traits;
 import vaselin;
+import vinyl;
 
 using namespace jute::literals;
 
@@ -172,9 +173,9 @@ void v::frame(void *) {
 }
 
 const int i = [] {
-  using namespace casein;
+  using namespace vinyl;
 
-  handle(CREATE_WINDOW, v::create_window);
+  on(START, ::v::create_window);
   return 0;
 }();
 
