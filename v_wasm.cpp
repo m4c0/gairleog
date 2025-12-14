@@ -96,19 +96,14 @@ namespace v {
   }
 
   void load_texture(jute::view name) {
-    using namespace gelo;
-
-    unsigned pix = 0xFF00FFFF;
-
-    auto t = g_texture = gelo::create_texture();
-    active_texture(TEXTURE0);
-    bind_texture(TEXTURE_2D, t);
-    tex_image_2d(TEXTURE_2D, 0, RGBA, 1, 1, 0, RGBA, UNSIGNED_BYTE, &pix, sizeof(pix));
-
     sires::read(name, nullptr, [name](auto, hai::cstr & bits) {
       using namespace gelo;
 
       silog::log(silog::info, "[%*s] loaded", static_cast<int>(name.size()), name.begin());
+
+      auto t = g_texture = gelo::create_texture();
+      active_texture(TEXTURE0);
+      bind_texture(TEXTURE_2D, t);
 
       auto img = stbi::load(bits);
       auto & [ w, h, ch, data ] = img;
