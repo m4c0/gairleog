@@ -31,7 +31,7 @@
 
 (entdef door
   (spr environment/props/door_closed)
-  (life 5)
+  (life (level))
   (ceramic)
   (fluorescent)
   (solid)
