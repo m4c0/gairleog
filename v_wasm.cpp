@@ -169,15 +169,16 @@ static void on_frame() {
   v::render();
 }
 
+struct app_stuff {
+  app_stuff() { v::create_window(); };
+};
 const int i = [] {
-  using namespace vinyl;
-
-  on(START, ::v::create_window);
+  using vv = vinyl::v<app_stuff, int>;
   // TODO: fix wasm bug when resizing window
-  // on(RESIZE, ...);
-  on(FRAME, [] {
+  vv::on_frame() = [] {
     if (!g_init) return;
     on_frame();
-  });
+  };
+  vv::setup();
   return 0;
 }();

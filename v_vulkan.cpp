@@ -11,6 +11,10 @@ import vinyl;
 import voo;
 import wagen;
 
+struct app_stuff;
+struct ext_stuff;
+using vv = vinyl::v<app_stuff, ext_stuff>;
+
 struct app_stuff {
   voo::device_and_queue dq { "gairleog", casein::native_ptr };
   vee::render_pass rp = voo::single_att_render_pass(dq);
@@ -58,14 +62,25 @@ struct app_stuff {
       vee::buffer_usage::vertex_buffer);
   voo::bound_image img {};
   unsigned count {};
-} * g_as;
+
+  app_stuff() try {
+    voo::load_image("pixelite2.png", dq.physical_device(), &img, [this](auto) {
+      // TODO: only start after this is triggered
+      vee::update_descriptor_set(dset, 0, 0, *img.iv, *smp);
+    });
+  } catch (const lispy::parser_error & e) {
+    silog::die("%s", lispy::to_file_err(e).begin());
+  } catch (const hai::cstr & msg) {
+    silog::die("Error starting: %s", msg.begin());
+  }
+};
 
 struct ext_stuff {
-  voo::swapchain_and_stuff sw { g_as->dq, *g_as->rp };
-} * g_es;
+  voo::swapchain_and_stuff sw { vv::as()->dq, *vv::as()->rp };
+};
 
 struct mapper : v::mapper, voo::memiter<v::sprite> {
-  mapper() : voo::memiter<v::sprite> { *g_as->buf.memory, &g_as->count } {}
+  mapper() : voo::memiter<v::sprite> { *vv::as()->buf.memory, &vv::as()->count } {}
   virtual ~mapper() {}
   void add_sprite(v::sprite s) override { *this += s; }
 };
@@ -73,42 +88,31 @@ hai::uptr<v::mapper> v::map() {
   return hai::uptr<v::mapper> { new ::mapper {} };
 }
 
-static void on_start() try {
-  g_as = new app_stuff {};
-
-  voo::load_image("pixelite2.png", g_as->dq.physical_device(), &g_as->img, [](auto) {
-    vee::update_descriptor_set(g_as->dset, 0, 0, *g_as->img.iv, *g_as->smp);
-  });
-} catch (const lispy::parser_error & e) {
-  silog::die("%s", lispy::to_file_err(e).begin());
-} catch (const hai::cstr & msg) {
-  silog::die("Error starting: %s", msg.begin());
-}
 static void on_frame() try {
-  g_es->sw.acquire_next_image();
-  g_es->sw.queue_one_time_submit([] {
+  vv::ss()->sw.acquire_next_image();
+  vv::ss()->sw.queue_one_time_submit([] {
     v::call_on_frame();
 
-    auto cb = g_es->sw.command_buffer();
-    auto ext = g_es->sw.extent();
+    auto cb = vv::ss()->sw.command_buffer();
+    auto ext = vv::ss()->sw.extent();
 
     //----- magic block for double-buffer
     auto ofs = 0U;
-    float pc = g_es->sw.aspect();
+    float pc = vv::ss()->sw.aspect();
     //------
 
-    auto rp = g_es->sw.cmd_render_pass({
+    auto rp = vv::ss()->sw.cmd_render_pass({
       .clear_colours { vee::clear_colour(0, 0, 0, 1) },
     });
     vee::cmd_set_viewport(cb, ext);
     vee::cmd_set_scissor(cb, ext);
-    vee::cmd_bind_gr_pipeline(cb, *g_as->ppl);
-    vee::cmd_bind_descriptor_set(cb, *g_as->pl, 0, g_as->dset);
-    vee::cmd_push_vertex_constants(cb, *g_as->pl, &pc);
-    vee::cmd_bind_vertex_buffers(cb, 0, *g_as->buf.buffer, ofs);
-    vee::cmd_draw(cb, 4, g_as->count);
+    vee::cmd_bind_gr_pipeline(cb, *vv::as()->ppl);
+    vee::cmd_bind_descriptor_set(cb, *vv::as()->pl, 0, vv::as()->dset);
+    vee::cmd_push_vertex_constants(cb, *vv::as()->pl, &pc);
+    vee::cmd_bind_vertex_buffers(cb, 0, *vv::as()->buf.buffer, ofs);
+    vee::cmd_draw(cb, 4, vv::as()->count);
   });
-  g_es->sw.queue_present();
+  vv::ss()->sw.queue_present();
 } catch (const lispy::parser_error & e) {
   silog::die("%s", lispy::to_file_err(e).begin());
 } catch (const hai::cstr & msg) {
@@ -116,17 +120,7 @@ static void on_frame() try {
 }
 
 const int i = [] {
-  using namespace vinyl;
-  on(START,  on_start);
-  on(RESIZE, [] { delete g_es; g_es = nullptr; });
-  on(FRAME,  [] {
-    if (!g_es) g_es = new ext_stuff {};
-    on_frame();
-  });
-  on(STOP,   [] {
-    delete g_es;
-    delete g_as;
-  });
-
+  vv::on_frame() = on_frame;
+  vv::setup();
   return 0;
 }();
