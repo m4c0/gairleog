@@ -11,10 +11,11 @@ namespace entdefs {
     bool fluorescent : 1 = false;
     bool food        : 1 = false;
     bool player      : 1 = false;
+    bool poison      : 1 = false;
     bool solid       : 1 = false;
     bool wall        : 1 = false;
   };
-  static_assert(sizeof(flags) == 1);
+  static_assert(sizeof(flags) == 2);
 
   union u32flags {
     unsigned u32 = 0;
@@ -57,6 +58,7 @@ namespace entdefs {
     if (atom == "fluorescent") return bit_of({ .fluorescent    = true });
     if (atom == "food")        return bit_of({ .food           = true });
     if (atom == "player")      return bit_of({ .player         = true });
+    if (atom == "poison")      return bit_of({ .poison         = true });
     if (atom == "solid")       return bit_of({ .solid          = true });
     if (atom == "wall")        return bit_of({ .wall           = true });
     return 0U; // Should only happen whilst parsing

@@ -95,6 +95,7 @@ namespace entdefs {
     ctx->fns["fluorescent"] = mem_set<{ .fluorescent = true }>;
     ctx->fns["food"]        = mem_set<{ .food        = true }>;
     ctx->fns["player"]      = mem_set<{ .player      = true }>;
+    ctx->fns["poison"]      = mem_set<{ .poison      = true }>;
     ctx->fns["solid"]       = mem_set<{ .solid       = true }>;
     ctx->fns["wall"]        = mem_set<{ .wall        = true }>;
     return ctx;

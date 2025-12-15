@@ -10,10 +10,15 @@
 (hitdef player enemy
   (hit))
 
-(hitdef enemy player
+(hitdef poison player
   (random
     (miss)
     (miss)
+    (miss)
+    (poison)))
+
+(hitdef enemy player
+  (random
     (miss)
     (miss)
     (miss)
