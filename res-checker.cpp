@@ -16,7 +16,6 @@ int main() try {
 
     auto e = entdefs::get("player");
     assert(e.attack_sprite.id, "missing player attack sprite");
-    assert(e.sfx.attack != "", "missing player attack sound");
   });
 } catch (const lispy::parser_error & e) {
   errln(lispy::to_file_err(e));

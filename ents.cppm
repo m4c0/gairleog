@@ -94,7 +94,7 @@ namespace ents {
         switch (act) {
           using enum hitdefs::action;
           case block:
-            sfxdefs::play(ent->sfx.block);
+            sfxdefs::play(ent->name, "block");
             p_pos = ent->pos;
             break;
           case exit:
@@ -107,25 +107,25 @@ namespace ents {
             int atk = rng::rand(ent->strength * 6);
             int def = rng::rand(d.defense * 6);
             if (atk > def) {
-              sfxdefs::play(ent->sfx.attack);
+              sfxdefs::play(ent->name, "attack");
               take_hit(&d, rng::rand(atk - def));
             } else {
-              sfxdefs::play(ent->sfx.miss);
+              sfxdefs::play(ent->name, "miss");
             }
             break;
           }
           case miss:
             // TODO: attack anim
             p_pos = ent->pos;
-            sfxdefs::play(ent->sfx.miss);
+            sfxdefs::play(ent->name, "miss");
             break;
           case pick:
             inv::add(d);
-            sfxdefs::play(ent->sfx.pick);
+            sfxdefs::play(ent->name, "pick");
             d = {}; 
             break;
           case poison:
-            sfxdefs::play(ent->sfx.poison);
+            sfxdefs::play(ent->name, "poison");
             p_pos = ent->pos;
             d.poison++;
             break;
@@ -143,19 +143,11 @@ namespace ents {
     auto len = r->read<unsigned>();
     silog::infof("Reading %d entities", len);
     for (auto i = 0; i < len; i++) {
-      auto loot = r->read<jute::heap>();
-      entdefs::sfx sfx {
-        .attack = r->read<jute::heap>(),
-        .block  = r->read<jute::heap>(),
-        .miss   = r->read<jute::heap>(),
-        .pick   = r->read<jute::heap>(),
-        .walk   = r->read<jute::heap>(),
-      };
       t val {};
       static_cast<data &>(val) = r->read<data>();
       static_cast<entdefs::data &>(val) = r->read<entdefs::data>();
-      val.loot = loot;
-      val.sfx = sfx;
+      val.loot = r->read<jute::heap>();
+      val.name = r->read<jute::heap>();
       ents.push_back_doubling(val);
     }
   }
@@ -163,14 +155,10 @@ namespace ents {
     silog::infof("Storing %d entities", ents.size());
     w->write(ents.size());
     for (auto d : ents) {
-      w->write(d.loot);
-      w->write(d.sfx.attack);
-      w->write(d.sfx.block);
-      w->write(d.sfx.miss);
-      w->write(d.sfx.pick);
-      w->write(d.sfx.walk);
       w->write(static_cast<data>(d));
       w->write(static_cast<entdefs::data>(d));
+      w->write(d.name);
+      w->write(d.loot);
     }
   }
 }

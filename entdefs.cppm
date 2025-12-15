@@ -22,15 +22,6 @@ namespace entdefs {
     flags f;
   };
 
-  export struct sfx {
-    jute::heap attack {};
-    jute::heap block {};
-    jute::heap miss {};
-    jute::heap pick {};
-    jute::heap poison {};
-    jute::heap walk {};
-  };
-
   export struct data {
     float        light         {};
     unsigned     max_life      {};
@@ -42,8 +33,8 @@ namespace entdefs {
     flags        flags         {};
   };
   export struct t : data {
+    jute::heap name {};
     jute::heap loot {};
-    sfx sfx {};
   };
 
   export inline unsigned bit_of(flags f) {

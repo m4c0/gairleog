@@ -9,14 +9,7 @@
   (solid)
   (spr characters/human_knight)
   (atkspr fx/fx_blue_slash)
-  (splatspr environment/props/splatter_red)
-  (sfx
-    (attack player_attack)
-    (block player_block)
-    (miss player_miss)
-    (pick player_pick)
-    (poison player_poison)
-    (walk player_walk)))
+  (splatspr environment/props/splatter_red))
 
 (entdef apple   (food) (fluorescent) (spr items/food/appletomato_red))
 (entdef berry   (food) (fluorescent) (spr items/food/cherriesberries_green))

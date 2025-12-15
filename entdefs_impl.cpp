@@ -18,9 +18,6 @@ namespace entdefs {
   struct cnode : node, t {
     void (*attr)(cnode *, const cnode *);
   };
-  struct snode : node, sfx {
-    void (*attr)(snode *, const snode *);
-  };
 
   static float to_light(const lispy::node * n) {
     auto i = lispy::to_f(n);
@@ -34,10 +31,6 @@ namespace entdefs {
   }
   static jute::heap to_loot(const lispy::node * n) {
     if (!entdefs::has(n->atom)) lispy::erred(n, "unknown entdef");
-    return jute::heap { n->atom };
-  }
-  static jute::heap to_sfx(const lispy::node * n) {
-    if (!sfxdefs::has(n->atom)) lispy::erred(n, "unknown sfxdef");
     return jute::heap { n->atom };
   }
   static unsigned to_spr(const lispy::node * name) {
@@ -58,28 +51,8 @@ namespace entdefs {
     self->flags = u.f;
   }>;
 
-  static auto sfx_ctx = [] {
-    auto ctx = lispy::frame::make();
-    ctx->fns["attack"] = mem_fn<&snode::attr, &snode::attack, to_sfx>;
-    ctx->fns["block"]  = mem_fn<&snode::attr, &snode::block,  to_sfx>;
-    ctx->fns["miss"]   = mem_fn<&snode::attr, &snode::miss,   to_sfx>;
-    ctx->fns["pick"]   = mem_fn<&snode::attr, &snode::pick,   to_sfx>;
-    ctx->fns["poison"] = mem_fn<&snode::attr, &snode::poison, to_sfx>;
-    ctx->fns["walk"]   = mem_fn<&snode::attr, &snode::walk,   to_sfx>;
-    return ctx;
-  }();
-
   static auto entdef_ctx = [] {
     auto ctx = lispy::frame::make();
-    ctx->fns["sfx"] = [](auto n, auto aa, auto as) -> const node * {
-      auto nn = clone<cnode>(n);
-      temp_arena<snode> a {};
-      frame_guard c { sfx_ctx };
-      nn->attr = [](auto * self, auto * n) { self->sfx = n->sfx; };
-      nn->sfx = *fill_clone<snode>(n, aa, as);
-      return nn;
-    };
-
     ctx->fns["atkspr"]   = mem_fn<&cnode::attr, &cnode::attack_sprite, to_spr_pair>;
     ctx->fns["defense"]  = mem_fn<&cnode::attr, &cnode::defense,       to_i>;
     ctx->fns["life"]     = mem_fn<&cnode::attr, &cnode::max_life,      to_life>;

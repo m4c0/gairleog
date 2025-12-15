@@ -6,6 +6,7 @@ import errs;
 import glispy;
 import hashley;
 import hai;
+import jute;
 import silog;
 import sires;
 import sv;
@@ -50,10 +51,9 @@ namespace sfxdefs {
     });
   }
 
-  static const t dummy {};
-  export const t & get(sv name) {
+  export void play(sv name) {
     auto n = g_ctx->defs[name];
-    if (!n) return dummy;
+    if (!n) return;
 
     using namespace lispy;
     
@@ -61,14 +61,11 @@ namespace sfxdefs {
     frame_guard c { g_ctx };
     temp_frame ctx {};
     auto nn = eval<node>(n);
-    if (!is_atom(nn)) return dummy;
-    return cache[nn->atom];
+    if (!is_atom(nn)) return;
+    audio::play(cache[nn->atom].samples);
   }
 
-  export bool has(sv name) {
-    return g_ctx->defs[name];
-  }
-  export void play(sv name) {
-    audio::play(get(name).samples);
+  export void play(sv ent, sv name) {
+    play(*jute::fmt<"%s-%s">(ent, name));
   }
 }
