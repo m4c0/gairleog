@@ -16,3 +16,6 @@
   environment/walls/walls_dungeon_gray
   environment/walls/walls_dungeon_yellow
 ))
+
+(def poison-decay (random 0 0 0 0 1))
+(def poison-hit (random 0 1 2))

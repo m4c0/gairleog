@@ -63,6 +63,7 @@ static void draw_console(auto & m) {
   });
 }
 
+// TODO: poison cure should be random
 // TODO: tweak splat colours based on character
 // TODO: increase enemy stats after each level
 // TODO: balance enemy health

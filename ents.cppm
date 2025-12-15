@@ -10,6 +10,7 @@ import jute;
 import sfxdefs;
 import silog;
 import splats;
+import strings;
 
 namespace ents {
   export using flags = entdefs::flags;
@@ -49,14 +50,14 @@ namespace ents {
     ents.push_back_doubling(create(pos, tdef));
   }
 
-  export bool take_hit(t * ent) {
+  export bool take_hit(t * ent, unsigned dmg) {
     if (ent->splat_sprite.id) {
       splats::add({
         .pos = ent->pos,
         .sprite = ent->splat_sprite.id,
       });
     }
-    if (ent->life) ent->life--;
+    if (ent->life) ent->life -= dotz::min(ent->life, dmg);;
     if (ent->life) return true;
     if (ent->loot == "") {
       *ent = {};
@@ -70,11 +71,19 @@ namespace ents {
     none,
     exit,
   };
+  static bool process_poison(t * ent) {
+    if (!ent->poison) return true;
+
+    auto [decay, dok] = jute::to_u32(strings::get("poison-decay"));
+    if (!dok) silog::die("poison-decay must yield integers");
+    ent->poison -= dotz::min(ent->poison, decay);
+
+    auto [hit, hok] = jute::to_u32(strings::get("poison-hit"));
+    if (!hok) silog::die("poison-hit must yield integers");
+    return take_hit(ent, hit);
+  }
   export move_outcome move(t * ent, dotz::ivec2 by) {
-    if (ent->poison) {
-      ent->poison--;
-      if (!take_hit(ent)) return move_outcome::none;
-    }
+    if (!process_poison(ent)) return move_outcome::none;
 
     move_outcome res {};
     auto p_pos = ent->pos + by;
@@ -94,7 +103,7 @@ namespace ents {
             fx::add(d.pos, ent->attack_sprite);
             sfxdefs::play(ent->sfx.attack);
             p_pos = ent->pos;
-            take_hit(&d);
+            take_hit(&d, 1);
             break;
           case miss:
             // TODO: attack anim
