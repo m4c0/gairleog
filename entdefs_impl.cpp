@@ -105,6 +105,8 @@ namespace entdefs {
 
     temp_arena<cnode> a {};
     frame_guard c { entdef_ctx };
-    return *fill_clone<cnode>(d.n, d.args.begin(), d.args.size());
+    auto res = *fill_clone<cnode>(d.n, d.args.begin(), d.args.size());
+    res.name = jute::heap { name };
+    return res;
   }
 }
