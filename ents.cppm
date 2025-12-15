@@ -7,6 +7,7 @@ import hai;
 import hitdefs;
 import inv;
 import jute;
+import rng;
 import sfxdefs;
 import silog;
 import splats;
@@ -99,12 +100,20 @@ namespace ents {
           case exit:
             res = move_outcome::exit;
             break;
-          case hit:
+          case hit: {
             fx::add(d.pos, ent->attack_sprite);
-            sfxdefs::play(ent->sfx.attack);
             p_pos = ent->pos;
-            take_hit(&d, 1);
+
+            int atk = rng::rand(ent->strength * 6);
+            int def = rng::rand(d.defense * 6);
+            if (atk > def) {
+              sfxdefs::play(ent->sfx.attack);
+              take_hit(&d, rng::rand(atk - def));
+            } else {
+              sfxdefs::play(ent->sfx.miss);
+            }
             break;
+          }
           case miss:
             // TODO: attack anim
             p_pos = ent->pos;
