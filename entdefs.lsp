@@ -89,7 +89,7 @@
   (loot (random apple empty))
   (atkspr fx/themed/fx_frost_bite)
   (splatspr environment/props/splatter_red)
-  (spr characters/dragon_drake))
+  (spr characters/dragon_drake_red))
 
 (entdef dragon-hydra
   (solid)
@@ -100,7 +100,7 @@
   (loot (random apple empty))
   (atkspr fx/themed/fx_frost_bite)
   (splatspr environment/props/splatter_red)
-  (spr characters/dragon_hydra))
+  (spr characters/dragon_hydra_blue))
 
 (entdef dragon-wyrm
   (solid)
@@ -111,7 +111,7 @@
   (loot (random apple empty))
   (atkspr fx/themed/fx_frost_bite)
   (splatspr environment/props/splatter_red)
-  (spr characters/dragon_wyrm))
+  (spr characters/dragon_wyrm_green))
 
 (entdef leech
   (solid)
@@ -131,7 +131,7 @@
   (defense 3)
   (loot (random apple empty))
   (atkspr fx/themed/fx_frost_bite)
-  (spr characters/beast_ooze))
+  (spr characters/beast_ooze_blue))
 
 (entdef slime
   (solid)

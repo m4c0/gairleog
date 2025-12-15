@@ -63,11 +63,13 @@ static void draw_console(auto & m) {
   });
 }
 
+// TODO: tweak splat colours based on character
 // TODO: increase enemy stats after each level
 // TODO: balance enemy health
 // TODO: attack minus defense
 // TODO: some visual feedback for near-death
 // TODO: add sounds for more entities
+// TODO: add more colour variations
 static void on_game_frame() {
   static sitime::stopwatch timer {};
   float timer_a = dotz::sinf(timer.secs() * 3);
