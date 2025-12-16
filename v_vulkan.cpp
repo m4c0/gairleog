@@ -12,10 +12,8 @@ import vinyl;
 import voo;
 import wagen;
 
-struct app_stuff : vinyl::base_app_stuff {
+struct app_stuff : v::base_app_stuff {
   vee::render_pass rp = voo::single_att_render_pass(dq);
-
-  vinyl::nearest_texture txt { "pixelite2.png" };
 
   vee::pipeline_layout pl = vee::create_pipeline_layout(
       *txt.dsl,
@@ -47,8 +45,6 @@ struct app_stuff : vinyl::base_app_stuff {
       vee::buffer_usage::vertex_buffer);
 
   unsigned count {};
-
-  app_stuff() : base_app_stuff("Gairleog") {}
 };
 
 struct ext_stuff {
