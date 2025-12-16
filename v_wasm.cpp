@@ -12,44 +12,11 @@ using namespace jute::literals;
 
 static hai::varray<v::sprite> buffer { 10240 };
 
+struct app_stuff : v::base_app_stuff {};
+// TODO: fix wasm bug when resizing window
+struct ext_stuff {};
+
 namespace v {
-  class shader {
-    int m_id = 0;
-
-  protected:
-    shader() = default;
-    shader(unsigned type, sv name, sv ext) {
-      auto filename = jute::fmt<"%s.%s.gles">(name, ext);
-      sires::read(filename, nullptr, [=](auto, hai::cstr & gles) {
-        using namespace gelo;
-
-        auto v = gelo::create_shader(type);
-        shader_source(v, gles.begin(), gles.size());
-        compile_shader(v);
-        if (!get_shader_parameter_b(v, COMPILE_STATUS)) {
-          char buf[1024] {};
-          get_shader_info_log(v, buf, sizeof(buf) - 1);
-          silog::log(silog::error, "Error compiling shader:\n%s", buf);
-        }
-      });
-    }
-
-  public:
-    constexpr auto id() const { return m_id; }
-    explicit constexpr operator bool() const { return m_id; }
-  };
-  struct vert_shader : shader {
-    vert_shader() = default;
-    explicit vert_shader(sv name) : shader { gelo::VERTEX_SHADER, name, "vert" } {}
-  };
-  struct frag_shader : shader {
-    frag_shader() = default;
-    explicit frag_shader(sv name) : shader { gelo::FRAGMENT_SHADER, name, "frag" } {}
-  };
-
-  static vert_shader g_vert_shader {};
-  static frag_shader g_frag_shader {};
-
   static int g_program;
   static int g_inst_buffer;
   static int g_u_aspect;
@@ -59,11 +26,9 @@ namespace v {
   void setup() {
     using namespace gelo;
 
-    if (!g_vert_shader || !g_frag_shader) return;
-
     auto p = g_program = create_program();
-    attach_shader(p, g_vert_shader.id());
-    attach_shader(p, g_frag_shader.id());
+    attach_shader(p, vv::as()->vert.id());
+    attach_shader(p, vv::as()->frag.id());
 
     link_program(p);
     if (!get_program_parameter_b(p, LINK_STATUS)) {
@@ -114,11 +79,6 @@ namespace v {
     g_loaded = true;
   }
 
-  void create_window() {
-    g_vert_shader = vert_shader { "gairleog" };
-    g_frag_shader = frag_shader { "gairleog" };
-  }
-
   void render() {
     using namespace gelo;
 
@@ -149,16 +109,9 @@ hai::uptr<v::mapper> v::map() {
   return hai::uptr<v::mapper> { new ::mapper {} };
 }
 
-struct app_stuff {
-  vinyl::nearest_texture txt { "pixelite2.png" };
-
-  app_stuff() { v::create_window(); };
-};
-// TODO: fix wasm bug when resizing window
-struct ext_stuff {};
-
 static void on_frame() {
-  if (!vv::as()->txt) return; // Last resource to load
+  if (!*vv::as()) return;
+  if (!v::g_program) v::setup();
   if (!v::g_loaded) return; // Last resource to load
   v::call_on_frame();
   v::render();

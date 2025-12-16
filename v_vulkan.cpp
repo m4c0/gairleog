@@ -12,8 +12,7 @@ import vinyl;
 import voo;
 import wagen;
 
-struct app_stuff {
-  voo::device_and_queue dq { "gairleog", casein::native_ptr };
+struct app_stuff : v::base_app_stuff {
   vee::render_pass rp = voo::single_att_render_pass(dq);
   vee::descriptor_set_layout dsl = vee::create_descriptor_set_layout({
     vee::dsl_fragment_sampler(),
@@ -29,10 +28,7 @@ struct app_stuff {
     .render_pass = *rp,
     .topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP,
     .back_face_cull = false,
-    .shaders {
-      *voo::vert_shader("gairleog.vert.spv"),
-      *voo::frag_shader("gairleog.frag.spv"),
-    },
+    .shaders { *vert, *frag },
     .bindings {
       vee::vertex_input_bind_per_instance(sizeof(v::sprite)),
     },
