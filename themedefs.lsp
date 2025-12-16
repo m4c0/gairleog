@@ -1,8 +1,15 @@
-(def easy-enemy   (random snake bat wolf slime))
+(def easy-enemy   (random bat wolf slime))
 (def medium-enemy (random spirit-wotw spirit-faerie slime-big))
-(def hard-enemy   (random beholder leech ooze))
+(def hard-enemy   (random beholder ooze))
 (def super-enemy  (random demon dragon-drake dragon-hydra dragon-wyrm))
 
+(def per-level-poison-enemy (first-of
+  (lte (level)  5 empty)
+  (lte (level) 15 snake)
+  (lte (level) 25 (random leech snake))
+  (lte (level) 35 (random dragon-drake dragon-hydra dragon-wyrm leech snake))
+  (random dragon-drake dragon-hydra dragon-wyrm)
+))
 (def per-level-enemy (first-of
   (lte (level)  3 (random (easy-enemy) empty empty))
   (lte (level)  6 (random (easy-enemy) (easy-enemy) empty))
@@ -17,6 +24,7 @@
   (lte (level) 33 (random (hard-enemy) (super-enemy) (super-enemy)))
   (super-enemy)
 ))
+
 (def per-level-pot (first-of
   (lte (level)  9 pot-red)
   (lte (level) 18 (random pot-red pot-blue))
@@ -38,7 +46,7 @@
 (def w wall)
 
 (def x (random (per-level-pot) candles grass empty empty))
-(def e (per-level-enemy))
+(def e (random (per-level-enemy) (per-level-poison-enemy)))
 (random
   (do
     (def . (random grass empty empty))
