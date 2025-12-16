@@ -13,22 +13,39 @@ using namespace jute::literals;
 static hai::varray<v::sprite> buffer { 10240 };
 
 namespace v {
-  static hai::cstr vert_shader {};
-  static hai::cstr frag_shader {};
+  class shader {
+    int m_id = 0;
 
-  static void shader(int prog, int type, jute::view src) {
-    using namespace gelo;
-  
-    auto v = create_shader(type);
-    shader_source(v, src.begin(), src.size());
-    compile_shader(v);
-    if (!get_shader_parameter_b(v, COMPILE_STATUS)) {
-      char buf[1024] {};
-      get_shader_info_log(v, buf, sizeof(buf) - 1);
-      silog::log(silog::error, "Error compiling shader:\n%s", buf);
+  protected:
+    shader() = default;
+    shader(unsigned type, const char * data, unsigned sz)
+      : m_id { gelo::create_shader(type) }
+    {
+      using namespace gelo;
+      shader_source(m_id, data, sz);
+      compile_shader(m_id);
+      if (!get_shader_parameter_b(m_id, COMPILE_STATUS)) {
+        char buf[1024] {};
+        get_shader_info_log(m_id, buf, sizeof(buf) - 1);
+        silog::log(silog::error, "Error compiling shader:\n%s", buf);
+      }
     }
-    attach_shader(prog, v);
-  }
+
+  public:
+    constexpr auto id() const { return m_id; }
+    explicit constexpr operator bool() const { return m_id; }
+  };
+  struct vert_shader : shader {
+    vert_shader() = default;
+    vert_shader(const char * data, unsigned size) : shader(gelo::VERTEX_SHADER, data, size) {}
+  };
+  struct frag_shader : shader {
+    frag_shader() = default;
+    frag_shader(const char * data, unsigned size) : shader(gelo::FRAGMENT_SHADER, data, size) {}
+  };
+
+  static vert_shader vert_shader {};
+  static frag_shader frag_shader {};
 
   static int g_program;
   static int g_inst_buffer;
@@ -40,8 +57,8 @@ namespace v {
     using namespace gelo;
 
     auto p = g_program = create_program();
-    shader(p, VERTEX_SHADER, vert_shader);
-    shader(p, FRAGMENT_SHADER, frag_shader);
+    attach_shader(p, vert_shader.id());
+    attach_shader(p, frag_shader.id());
 
     link_program(p);
     if (!get_program_parameter_b(p, LINK_STATUS)) {
@@ -92,11 +109,11 @@ namespace v {
 
   void create_window() {
     sires::read("gairleog.vert.gles", nullptr, [](auto, hai::cstr & gles) {
-      vert_shader = traits::move(gles);
+      vert_shader = { gles.begin(), gles.size() };;
 
       // TODO: load in parallel
       sires::read("gairleog.frag.gles", nullptr, [](auto, hai::cstr & gles) {
-        frag_shader = traits::move(gles);
+        frag_shader = { gles.begin(), gles.size() };;
 
         setup();
         g_loaded = true;

@@ -30,8 +30,8 @@ struct app_stuff {
     .topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP,
     .back_face_cull = false,
     .shaders {
-      voo::shader("gairleog.vert.spv").pipeline_vert_stage(),
-      voo::shader("gairleog.frag.spv").pipeline_frag_stage(),
+      *voo::vert_shader("gairleog.vert.spv"),
+      *voo::frag_shader("gairleog.frag.spv"),
     },
     .bindings {
       vee::vertex_input_bind_per_instance(sizeof(v::sprite)),
