@@ -134,10 +134,10 @@ hai::uptr<v::mapper> v::map() {
   return hai::uptr<v::mapper> { new ::mapper {} };
 }
 
-struct app_stuff {
+struct app_stuff : vinyl::base_app_stuff {
   vinyl::nearest_texture txt { "pixelite2.png" };
 
-  app_stuff() { v::create_window(); };
+  app_stuff() : base_app_stuff("Gairleog") { v::create_window(); }
 };
 // TODO: fix wasm bug when resizing window
 struct ext_stuff {};

@@ -12,17 +12,13 @@ import vinyl;
 import voo;
 import wagen;
 
-struct app_stuff {
-  voo::device_and_queue dq { "gairleog", casein::native_ptr };
+struct app_stuff : vinyl::base_app_stuff {
   vee::render_pass rp = voo::single_att_render_pass(dq);
-  vee::descriptor_set_layout dsl = vee::create_descriptor_set_layout({
-    vee::dsl_fragment_sampler(),
-  });
-  vee::descriptor_pool dpool = vee::create_descriptor_pool(1, {
-    vee::combined_image_sampler(1),
-  });
+
+  vinyl::nearest_texture txt { "pixelite2.png" };
+
   vee::pipeline_layout pl = vee::create_pipeline_layout(
-      *dsl,
+      *txt.dsl,
       vee::vertex_push_constant_range<float>());
   vee::gr_pipeline ppl = vee::create_graphics_pipeline({
     .pipeline_layout = *pl,
@@ -50,9 +46,9 @@ struct app_stuff {
       v::max_sprites * sizeof(v::sprite),
       vee::buffer_usage::vertex_buffer);
 
-  vinyl::nearest_texture txt { "pixelite2.png" };
-
   unsigned count {};
+
+  app_stuff() : base_app_stuff("Gairleog") {}
 };
 
 struct ext_stuff {
