@@ -56,6 +56,8 @@ namespace v {
   void setup() {
     using namespace gelo;
 
+    if (!vert_shader || !frag_shader) return;
+
     auto p = g_program = create_program();
     attach_shader(p, vert_shader.id());
     attach_shader(p, frag_shader.id());
@@ -105,19 +107,18 @@ namespace v {
     enable_vertex_attrib_array(5);
     vertex_attrib_i_pointer(5, 1, UNSIGNED_INT, stride, traits::offset_of(&v::sprite::id));
     vertex_attrib_divisor(5, 1);
+
+    g_loaded = true;
   }
 
   void create_window() {
     sires::read("gairleog.vert.gles", nullptr, [](auto, hai::cstr & gles) {
-      vert_shader = { gles.begin(), gles.size() };;
-
-      // TODO: load in parallel
-      sires::read("gairleog.frag.gles", nullptr, [](auto, hai::cstr & gles) {
-        frag_shader = { gles.begin(), gles.size() };;
-
-        setup();
-        g_loaded = true;
-      });
+      vert_shader = { gles.begin(), gles.size() };
+      setup();
+    });
+    sires::read("gairleog.frag.gles", nullptr, [](auto, hai::cstr & gles) {
+      frag_shader = { gles.begin(), gles.size() };
+      setup();
     });
   }
 
