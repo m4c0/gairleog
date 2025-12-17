@@ -36,27 +36,22 @@ struct app_stuff : v::base_app_stuff {
       vee::vertex_attribute_uint(0, traits::offset_of(&v::sprite::id)),
     },
   });
-  voo::bound_buffer buf = voo::bound_buffer::create_from_host(
-      dq.physical_device(),
-      v::max_sprites * sizeof(v::sprite),
-      vee::buffer_usage::vertex_buffer);
-
-  unsigned count {};
 };
 
 struct ext_stuff {
   voo::swapchain_and_stuff sw { vv::as()->dq, *vv::as()->rp };
 };
 
-struct mapper : v::mapper, voo::memiter<v::sprite> {
-  mapper() : voo::memiter<v::sprite> { *vv::as()->buf.memory, &vv::as()->count } {}
-  virtual ~mapper() {}
-  void add_sprite(v::sprite s) override { *this += s; }
+struct mapper : v::mapper {
+  decltype(vv::as()->buffer.map()) m = vv::as()->buffer.map();
+
+  void add_sprite(v::sprite s) override { m += s; }
 };
 hai::uptr<v::mapper> v::map() {
   return hai::uptr<v::mapper> { new ::mapper {} };
 }
 
+// TODO: fix a rare sync issue between player and rest of game
 static void on_frame() try {
   if (!vv::as()->txt) return;
 
@@ -66,9 +61,6 @@ static void on_frame() try {
 
     auto cb = vv::ss()->sw.command_buffer();
     auto ext = vv::ss()->sw.extent();
-
-    // TODO: fix a rare sync issue between player and rest of game
-    auto ofs = 0U;
 
     float pc = vv::ss()->sw.aspect();
 
@@ -80,8 +72,8 @@ static void on_frame() try {
     vee::cmd_bind_gr_pipeline(cb, *vv::as()->ppl);
     vee::cmd_bind_descriptor_set(cb, *vv::as()->pl, 0, vv::as()->txt.dset);
     vee::cmd_push_vertex_constants(cb, *vv::as()->pl, &pc);
-    vee::cmd_bind_vertex_buffers(cb, 0, *vv::as()->buf.buffer, ofs);
-    vee::cmd_draw(cb, 4, vv::as()->count);
+    vv::as()->buffer.bind(cb);
+    vee::cmd_draw(cb, 4, vv::as()->buffer.count());
   });
   vv::ss()->sw.queue_present();
 } catch (const lispy::parser_error & e) {

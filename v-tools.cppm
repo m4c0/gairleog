@@ -14,6 +14,7 @@ namespace v {
     clay::nearest_texture txt { "pixelite2.png" };
     clay::vert_shader vert { "gairleog", [] {} };
     clay::frag_shader frag { "gairleog", [] {} };
+    clay::buffer<sprite> buffer { 10240 };
 
     base_app_stuff() : vinyl::base_app_stuff("Gairleog") {}
 

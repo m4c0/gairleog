@@ -10,15 +10,12 @@ import vinyl;
 
 using namespace jute::literals;
 
-static hai::varray<v::sprite> buffer { 10240 };
-
 struct app_stuff : v::base_app_stuff {};
 // TODO: fix wasm bug when resizing window
 struct ext_stuff {};
 
 namespace v {
   static int g_program;
-  static int g_inst_buffer;
   static int g_u_aspect;
   static int g_u_uni;
   static bool g_loaded = false;
@@ -49,8 +46,7 @@ namespace v {
 
     static constexpr const auto stride = sizeof(sprite);
 
-    auto b = g_inst_buffer = gelo::create_buffer();
-    bind_buffer(ARRAY_BUFFER, b);
+    vv::as()->buffer.bind();
 
     enable_vertex_attrib_array(0);
     vertex_attrib_pointer(0, 2, FLOAT, false, stride, traits::offset_of(&v::sprite::pos));
@@ -87,21 +83,16 @@ namespace v {
     clear_color(0, 0, 0, 1);
     clear(COLOR_BUFFER_BIT);
     viewport(0, 0, casein::window_size.x, casein::window_size.y);
-
-    bind_buffer(ARRAY_BUFFER, g_inst_buffer);
-    buffer_data(ARRAY_BUFFER, buffer.begin(), buffer.size() * sizeof(sprite), DYNAMIC_DRAW);
-    draw_arrays_instanced(TRIANGLE_STRIP, 0, 4, buffer.size());
+    draw_arrays_instanced(TRIANGLE_STRIP, 0, 4, vv::as()->buffer.count());
   }
-
 }
 
 struct mapper : v::mapper {
-  mapper() {
-    buffer.truncate(0);
-  }
+  decltype(vv::as()->buffer.map()) m = vv::as()->buffer.map();
+
   void add_sprite(v::sprite s) {
     s.grid_size.y *= -1;
-    buffer.push_back(s);
+    m += s;
   }
 };
 
