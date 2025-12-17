@@ -1,3 +1,4 @@
+#pragma leco add_impl v_windows_hack
 export module v:tools;
 import :objects;
 import clay;
@@ -19,5 +20,8 @@ namespace v {
     base_app_stuff() : vinyl::base_app_stuff("Gairleog") {}
 
     [[nodiscard]] operator bool() const { return txt && vert && frag; }
+
+    using vtx_attrs_t = decltype(buffer)::vertex_attributes_t;
+    static vtx_attrs_t vertex_attributes(); 
   };
 }

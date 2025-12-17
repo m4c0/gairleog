@@ -44,33 +44,10 @@ namespace v {
     auto u_tex = get_uniform_location(p, "tex");
     uniform1i(u_tex, 0); 
 
-    static constexpr const auto stride = sizeof(sprite);
-
     vv::as()->buffer.bind();
 
-    enable_vertex_attrib_array(0);
-    vertex_attrib_pointer(0, 2, FLOAT, false, stride, traits::offset_of(&v::sprite::pos));
-    vertex_attrib_divisor(0, 1);
-
-    enable_vertex_attrib_array(1);
-    vertex_attrib_pointer(1, 2, FLOAT, false, stride, traits::offset_of(&v::sprite::scale));
-    vertex_attrib_divisor(1, 1);
-
-    enable_vertex_attrib_array(2);
-    vertex_attrib_pointer(2, 4, FLOAT, false, stride, traits::offset_of(&v::sprite::mult));
-    vertex_attrib_divisor(2, 1);
-
-    enable_vertex_attrib_array(3);
-    vertex_attrib_pointer(3, 2, FLOAT, false, stride, traits::offset_of(&v::sprite::grid_pos));
-    vertex_attrib_divisor(3, 1);
-
-    enable_vertex_attrib_array(4);
-    vertex_attrib_pointer(4, 2, FLOAT, false, stride, traits::offset_of(&v::sprite::grid_size));
-    vertex_attrib_divisor(4, 1);
-
-    enable_vertex_attrib_array(5);
-    vertex_attrib_i_pointer(5, 1, UNSIGNED_INT, stride, traits::offset_of(&v::sprite::id));
-    vertex_attrib_divisor(5, 1);
+    auto attrs = vv::as()->vertex_attributes();
+    for (auto i = 0; i < attrs.size(); i++) attrs[i](i);
 
     g_loaded = true;
   }

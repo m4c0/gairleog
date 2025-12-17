@@ -24,17 +24,8 @@ struct app_stuff : v::base_app_stuff {
     .topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP,
     .back_face_cull = false,
     .shaders { *vert, *frag },
-    .bindings {
-      vee::vertex_input_bind_per_instance(sizeof(v::sprite)),
-    },
-    .attributes {
-      vee::vertex_attribute_vec2(0, traits::offset_of(&v::sprite::pos)),
-      vee::vertex_attribute_vec2(0, traits::offset_of(&v::sprite::scale)),
-      vee::vertex_attribute_vec4(0, traits::offset_of(&v::sprite::mult)),
-      vee::vertex_attribute_vec2(0, traits::offset_of(&v::sprite::grid_pos)),
-      vee::vertex_attribute_vec2(0, traits::offset_of(&v::sprite::grid_size)),
-      vee::vertex_attribute_uint(0, traits::offset_of(&v::sprite::id)),
-    },
+    .bindings { buffer.vertex_input_bind() },
+    .attributes = vertex_attributes(),
   });
 };
 
