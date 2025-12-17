@@ -12,10 +12,18 @@
   (splatspr environment/props/splatter_red))
 
 (entdef apple   (food) (fluorescent) (spr items/food/appletomato_red))
-(entdef berry   (food) (fluorescent) (spr items/food/cherriesberries_green))
+(entdef tomato  (food) (fluorescent) (spr items/food/appletomato_green))
+(entdef bberry  (food) (fluorescent) (spr items/food/cherriesberries_blue))
+(entdef gberry  (food) (fluorescent) (spr items/food/cherriesberries_green))
+(entdef rberry  (food) (fluorescent) (spr items/food/cherriesberries_red))
 (entdef chicken (food) (fluorescent) (spr items/food/chicken_raw))
 (entdef potato  (food) (fluorescent) (spr items/food/potato_orange))
+(entdef radish  (food) (fluorescent) (spr items/food/radishturnip_red))
 (entdef turnip  (food) (fluorescent) (spr items/food/radishturnip_brown))
+
+; =====================================================================
+; Must have as-is props
+; =====================================================================
 
 (entdef door
   (spr environment/props/door_closed)
