@@ -8,24 +8,13 @@
 #endif
 
 export module v;
-import dotz;
+export import :objects;
 import glispy;
 import hai;
 import silog;
 
 namespace v {
   constexpr const auto max_sprites = 10240;
-
-  export struct grid {
-    dotz::vec2 grid_pos;
-    dotz::vec2 grid_size;
-  };
-  export struct sprite : grid {
-    dotz::vec2 pos;
-    dotz::vec2 scale { 1 };
-    dotz::vec4 mult { 1 };
-    unsigned id;
-  };
 
   export class mapper {
   protected:

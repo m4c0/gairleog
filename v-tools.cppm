@@ -1,4 +1,5 @@
 export module v:tools;
+import :objects;
 import hai;
 import sv;
 import vinyl;
