@@ -12,24 +12,11 @@ using namespace jute::literals;
 
 static hai::varray<v::sprite> buffer { 10240 };
 
+struct app_stuff : v::base_app_stuff {};
+// TODO: fix wasm bug when resizing window
+struct ext_stuff {};
+
 namespace v {
-  static hai::cstr vert_shader {};
-  static hai::cstr frag_shader {};
-
-  static void shader(int prog, int type, jute::view src) {
-    using namespace gelo;
-  
-    auto v = create_shader(type);
-    shader_source(v, src.begin(), src.size());
-    compile_shader(v);
-    if (!get_shader_parameter_b(v, COMPILE_STATUS)) {
-      char buf[1024] {};
-      get_shader_info_log(v, buf, sizeof(buf) - 1);
-      silog::log(silog::error, "Error compiling shader:\n%s", buf);
-    }
-    attach_shader(prog, v);
-  }
-
   static int g_program;
   static int g_inst_buffer;
   static int g_u_aspect;
@@ -40,8 +27,8 @@ namespace v {
     using namespace gelo;
 
     auto p = g_program = create_program();
-    shader(p, VERTEX_SHADER, vert_shader);
-    shader(p, FRAGMENT_SHADER, frag_shader);
+    attach_shader(p, vv::as()->vert.id());
+    attach_shader(p, vv::as()->frag.id());
 
     link_program(p);
     if (!get_program_parameter_b(p, LINK_STATUS)) {
@@ -88,20 +75,8 @@ namespace v {
     enable_vertex_attrib_array(5);
     vertex_attrib_i_pointer(5, 1, UNSIGNED_INT, stride, traits::offset_of(&v::sprite::id));
     vertex_attrib_divisor(5, 1);
-  }
 
-  void create_window() {
-    sires::read("gairleog.vert.gles", nullptr, [](auto, hai::cstr & gles) {
-      vert_shader = traits::move(gles);
-
-      // TODO: load in parallel
-      sires::read("gairleog.frag.gles", nullptr, [](auto, hai::cstr & gles) {
-        frag_shader = traits::move(gles);
-
-        setup();
-        g_loaded = true;
-      });
-    });
+    g_loaded = true;
   }
 
   void render() {
@@ -134,14 +109,9 @@ hai::uptr<v::mapper> v::map() {
   return hai::uptr<v::mapper> { new ::mapper {} };
 }
 
-struct app_stuff : v::base_app_stuff {
-  app_stuff() { v::create_window(); }
-};
-// TODO: fix wasm bug when resizing window
-struct ext_stuff {};
-
 static void on_frame() {
-  if (!vv::as()->txt) return; // Last resource to load
+  if (!*vv::as()) return;
+  if (!v::g_program) v::setup();
   if (!v::g_loaded) return; // Last resource to load
   v::call_on_frame();
   v::render();
