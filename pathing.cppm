@@ -18,6 +18,9 @@ namespace pathing {
       if (dist > max_detection_steps) return;
 
       auto pp = p - step;
+      if (pp.x < 0 || pp.x >= map::w) return;
+      if (pp.y < 0 || pp.y >= map::h) return;
+
       auto & n = m_data[pp.y][pp.x];
       if (n.solid) return;
 
