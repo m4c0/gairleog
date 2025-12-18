@@ -116,7 +116,8 @@ namespace ents {
             int def = dice_roll(d.defense);
             if (atk > def) {
               sfxdefs::play(ent->name, "attack");
-              take_hit(&d, rng::rand(atk - def));
+              // TODO: introduce a new stat for the damage
+              take_hit(&d, rng::rand_i(1, atk - def));
             } else {
               sfxdefs::play(ent->name, "miss");
             }
