@@ -2,7 +2,7 @@
 
 layout(push_constant) uniform upc {
   float aspect;
-};
+} pc;
 
 layout(location = 0) in vec2 pos;
 layout(location = 1) in vec2 scale;
@@ -24,7 +24,7 @@ void main() {
   r_pos = mat2(cos(rad_rot), sin(rad_rot), -sin(rad_rot), cos(rad_rot)) * r_pos;
   r_pos += 0.5;
 
-  vec2 asp = vec2(aspect, 1);
+  vec2 asp = vec2(pc.aspect, 1);
   vec2 p = (r_pos * scale + pos - grid_pos) / (grid_size * asp);
 
   gl_Position = vec4(p, 0, 1);
