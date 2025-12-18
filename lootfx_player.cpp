@@ -14,6 +14,7 @@ lootfx::outcome lootfx::apply_on_player(const lootfx::action_list_t & actions) {
     switch (act) {
       using enum lootfx::action;
       case damage:
+        console::push("You got hurt");
         if (!ents::take_hit(player, 1)) return outcome::death;
         break;
       case defence:

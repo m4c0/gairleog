@@ -16,7 +16,6 @@ Work in progress.
 
 Known issues:
 
-* Damage does not show on console (TODO)
 * Most actions have no associated sound (TODO)
 * Web: Audio does not sync properly on certain browsers (won't fix)
 * Windows: Audio occasionally fails (TODO)
