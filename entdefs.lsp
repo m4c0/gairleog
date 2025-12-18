@@ -62,7 +62,7 @@
   (strength 1)
   (defense 0)
   (loot (fruit-loot))
-  (atkspr fx/themed/fx_frost_bite)
+  (atkspr fx/fx_brown_bite)
   (splatspr environment/props/splatter_red)
   (spr characters/beast_bat))
 
@@ -72,7 +72,7 @@
   (strength 3)
   (defense 3)
   (loot (fruit-loot))
-  (atkspr fx/themed/fx_frost_bite)
+  (atkspr fx/fx_gray_burn)
   (splatspr environment/props/splatter_red)
   (spr characters/beast_beholder))
 
@@ -82,7 +82,7 @@
   (strength 5)
   (defense 4)
   (loot (fruit-loot))
-  (atkspr fx/themed/fx_frost_bite)
+  (atkspr fx/fx_brown_slash)
   (splatspr environment/props/splatter_brown)
   (spr characters/demon_knight))
 
@@ -93,7 +93,7 @@
   (strength 4)
   (defense 4)
   (loot (fruit-loot))
-  (atkspr fx/themed/fx_frost_bite)
+  (atkspr fx/fx_red_burn)
   (splatspr environment/props/splatter_green)
   (spr characters/dragon_drake_red))
 
@@ -104,7 +104,7 @@
   (strength 4)
   (defense 4)
   (loot (fruit-loot))
-  (atkspr fx/themed/fx_frost_bite)
+  (atkspr fx/fx_red_bite)
   (splatspr environment/props/splatter_green)
   (spr characters/dragon_hydra_blue))
 
@@ -115,7 +115,7 @@
   (strength 4)
   (defense 4)
   (loot (fruit-loot))
-  (atkspr fx/themed/fx_frost_bite)
+  (atkspr fx/fx_red_slash)
   (splatspr environment/props/splatter_green)
   (spr characters/dragon_wyrm_green))
 
@@ -126,7 +126,7 @@
   (strength 2)
   (defense 3)
   (loot (fruit-loot))
-  (atkspr fx/themed/fx_frost_bite)
+  (atkspr fx/fx_green_bite)
   (splatspr environment/props/splatter_red)
   (spr characters/beast_leech))
 
@@ -136,7 +136,7 @@
   (strength 3)
   (defense 3)
   (loot (fruit-loot))
-  (atkspr fx/themed/fx_frost_bite)
+  (atkspr fx/fx_blue_impact)
   (splatspr environment/props/splatter_blue)
   (spr characters/beast_ooze_blue))
 
@@ -146,7 +146,7 @@
   (strength 1)
   (defense 0)
   (loot (fruit-loot))
-  (atkspr fx/themed/fx_frost_bite)
+  (atkspr fx/fx_green_impact)
   (splatspr environment/props/splatter_green)
   (spr characters/beast_slime_green))
 
@@ -156,7 +156,7 @@
   (strength 2)
   (defense 2)
   (loot (fruit-loot))
-  (atkspr fx/themed/fx_frost_bite)
+  (atkspr fx/fx_green_impact)
   (splatspr environment/props/splatter_green)
   (spr characters/beast_slime_green_large))
 
@@ -167,7 +167,7 @@
   (strength 1)
   (defense 0)
   (loot (fruit-loot))
-  (atkspr fx/themed/fx_frost_bite)
+  (atkspr fx/fx_green_bite)
   (splatspr environment/props/splatter_red)
   (spr characters/beast_snake))
 
@@ -177,7 +177,7 @@
   (strength 3)
   (defense 2)
   (loot (fruit-loot))
-  (atkspr fx/themed/fx_frost_bite)
+  (atkspr fx/fx_blue_impact)
   (splatspr environment/props/splatter_blue)
   (spr characters/spirit_will_o_the_wisp))
 
@@ -197,7 +197,7 @@
   (strength 1)
   (defense 0)
   (loot (fruit-loot))
-  (atkspr fx/themed/fx_frost_bite)
+  (atkspr fx/fx_brown_bite)
   (splatspr environment/props/splatter_red)
   (spr characters/beast_wolf_brown))
 

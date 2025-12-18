@@ -63,7 +63,7 @@ static void draw_console(auto & m) {
   });
 }
 
-// TODO: tweak attack sprite based on character
+// TODO: fix attack dice roll
 // TODO: increase enemy stats after each level
 // TODO: balance enemy health
 // TODO: some visual feedback for near-death
