@@ -595,9 +595,7 @@ static void do_main_menu() {
   };
 }
 static void on_init() {
-  using namespace casein;
-  reset_k(KEY_DOWN);
-  reset_k(KEY_UP);
+  reset_keys();
 
   v::on_frame = [] {};
 
@@ -607,9 +605,7 @@ static void on_init() {
   });
 }
 static void on_main_menu() {
-  using namespace casein;
-  reset_k(KEY_DOWN);
-  reset_k(KEY_UP);
+  reset_keys();
 
   v::on_frame = [] {};
 
