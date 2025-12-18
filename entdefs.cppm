@@ -21,6 +21,7 @@ namespace entdefs {
     unsigned u32 = 0;
     flags f;
   };
+  static_assert(sizeof(u32flags) == 4);
 
   export struct data {
     float        light         {};
