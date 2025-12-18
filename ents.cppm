@@ -86,6 +86,11 @@ namespace ents {
     if (!hok) silog::die("poison-hit must yield integers");
     return take_hit(ent, hit);
   }
+  static int dice_roll(unsigned n) {
+    int acc = 0;
+    for (auto i = 0; i < n; i++) acc += rng::rand_i(1, 6);
+    return acc;
+  }
   export move_outcome move(t * ent, dotz::ivec2 by) {
     if (!process_poison(ent)) return move_outcome::none;
 
@@ -107,8 +112,8 @@ namespace ents {
             fx::add(d.pos, ent->attack_sprite);
             p_pos = ent->pos;
 
-            int atk = rng::rand(ent->strength * 6);
-            int def = rng::rand(d.defense * 6);
+            int atk = dice_roll(ent->strength);
+            int def = dice_roll(d.defense);
             if (atk > def) {
               sfxdefs::play(ent->name, "attack");
               take_hit(&d, rng::rand(atk - def));
