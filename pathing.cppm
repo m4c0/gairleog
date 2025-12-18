@@ -4,6 +4,7 @@ import ents;
 import map;
 
 namespace pathing {
+  static constexpr const auto max_detection_steps = 15;
   struct node {
     dotz::ivec2 step {};
     unsigned distance {};
@@ -14,7 +15,7 @@ namespace pathing {
     node m_data[map::h][map::w] {};
 
     void check(dotz::ivec2 p, dotz::ivec2 step, unsigned dist) {
-      if (dist > 5) return;
+      if (dist > max_detection_steps) return;
 
       auto pp = p - step;
       auto & n = m_data[pp.y][pp.x];
@@ -53,6 +54,7 @@ namespace pathing {
       check(pl, { 0, +1 }, 1);
     }
 
+    // TODO: add a maximum range of detection (harder enemies detect farther)
     [[nodiscard]] dotz::ivec2 operator()(dotz::ivec2 start) const {
       return m_data[start.y][start.x].step;
     }
