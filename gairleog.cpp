@@ -99,15 +99,19 @@ static void on_game_frame() {
   ents::foreach([&](const auto & d) {
     auto p = d.pos;
     if (d.size.x < 1) p.x++;
+
+    auto anim = d.last_moved_timestamp.secs();
+    auto rot = dotz::clamp(1.0f - anim * 6.0f, 0.f, 1.f);
+
     dotz::vec3 l = dotz::pow(lights::at(d.pos).current * 3.0, 1.5);
     auto c = d.poison
       ? dotz::vec3 { timer_a, 1, timer_a }
       : dotz::vec3 { 1 };
-    // TODO: feedback anim from last_moved_timestamp
     m->push({
       .pos = p,
       .scale = d.size,
       .mult { l * c, 1.f },
+      .rotation = rot * 7.f,
       .id = d.sprite,
     });
   });

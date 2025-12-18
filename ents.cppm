@@ -24,7 +24,7 @@ namespace ents {
     unsigned poison {};
   };
   export struct t : entdefs::t, data {
-    sitime::stopwatch last_moved_timestamp {};
+    sitime::stopwatch last_moved_timestamp { 0 };
   };
   hai::varray<t> ents { 1024 };
 
