@@ -10,6 +10,7 @@ import jute;
 import rng;
 import sfxdefs;
 import silog;
+import sitime;
 import splats;
 import strings;
 
@@ -22,7 +23,9 @@ namespace ents {
     unsigned life {};
     unsigned poison {};
   };
-  export struct t : entdefs::t, data {};
+  export struct t : entdefs::t, data {
+    sitime::stopwatch last_moved_timestamp {};
+  };
   hai::varray<t> ents { 1024 };
 
   export void foreach(auto && fn) {
@@ -132,9 +135,8 @@ namespace ents {
       }
     });
     if (by.x != 0) ent->size.x = by.x;
-    if (ent->pos == p_pos) return res;
-
-    // TODO: feedback anim
+    ent->last_moved_timestamp = {};
+    ent->pos = p_pos;
     return res;
   }
 
@@ -155,7 +157,7 @@ namespace ents {
   export void write(file::writer * w) {
     silog::infof("Storing %d entities", ents.size());
     w->write(ents.size());
-    for (auto d : ents) {
+    for (const auto & d : ents) {
       w->write(static_cast<data>(d));
       w->write(static_cast<entdefs::data>(d));
       w->write(d.name);

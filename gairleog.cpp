@@ -103,6 +103,7 @@ static void on_game_frame() {
     auto c = d.poison
       ? dotz::vec3 { timer_a, 1, timer_a }
       : dotz::vec3 { 1 };
+    // TODO: feedback anim from last_moved_timestamp
     m->push({
       .pos = p,
       .scale = d.size,
