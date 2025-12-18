@@ -2,10 +2,14 @@ export module enemies;
 import dotz;
 import ents;
 import hitdefs;
+import pathing;
 import rng;
 
 namespace enemies {
-  static dotz::ivec2 next_move(const ents::t & e, dotz::ivec2 player) {
+  static dotz::ivec2 next_move(const ents::t & e, const pathing::t & m, dotz::ivec2 player) {
+    auto step = m(e.pos);
+    if (step.x || step.y) return step;
+
     auto d = e.pos - player;
     if (dotz::length(d) > 4) {
       switch (rng::rand(4)) {
@@ -17,7 +21,6 @@ namespace enemies {
       }
     }
 
-    // TODO: A*
     auto ad = dotz::abs(d);
     if (ad.x > ad.y) {
       return { -dotz::sign(d.x), 0 };
@@ -32,8 +35,10 @@ namespace enemies {
       player = p.pos;
     });
 
+    pathing::t m {};
+
     ents::foreach({ .enemy = true }, [&](auto & p) {
-      ents::move(&p, next_move(p, player));
+      ents::move(&p, next_move(p, m, player));
     });
   }
 }
