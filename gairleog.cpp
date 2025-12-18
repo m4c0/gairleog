@@ -88,12 +88,9 @@ static void on_game_frame() {
   auto m = v::map();
   m->set_grid({ player_pos + 0.5f, 6 });
   splats::for_each([&](const auto & d) {
-    auto p = d.pos;
-    if (d.size.x < 1) p.x++;
-    if (d.size.y < 1) p.y++;
+    // TODO: add scale
     m->push({
-      .pos = p,
-      .scale = d.size,
+      .pos = d.pos,
       .mult { 1, 1, 1, 0.3f },
       .rotation = d.rotation,
       .id = d.sprite,
