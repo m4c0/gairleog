@@ -76,8 +76,7 @@ static void on_game_frame() {
 
   dotz::vec2 player_pos {};
   bool dead = true;
-  ents::foreach([&](const auto & e) {
-    if (!e.flags.player) return;
+  ents::foreach({ .player = true }, [&](const auto & e) {
     player_pos = e.pos;
     dead = false;
   });
@@ -243,8 +242,8 @@ static void on_inventory() {
     m->set_grid({ 0, 12 });
 
     ents::t player {};
-    ents::foreach([&](auto p) {
-      if (p.flags.player) player = p;
+    ents::foreach({ .player = true }, [&](auto p) {
+      player = p;
     });
     if (!player.life) return on_game_over();
 
