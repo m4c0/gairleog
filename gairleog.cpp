@@ -239,8 +239,8 @@ static void on_inventory() {
     m->set_grid({ 0, 12 });
 
     ents::t player {};
-    ents::foreach({ .player = true }, [&](auto p) {
-      player = p;
+    ents::foreach([&](auto p) {
+      if (p.flags.player) player = p;
     });
     if (!player.life) return on_game_over();
 
