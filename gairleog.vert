@@ -9,7 +9,8 @@ layout(location = 1) in vec2 scale;
 layout(location = 2) in vec4 mult;
 layout(location = 3) in vec2 grid_pos;
 layout(location = 4) in vec2 grid_size;
-layout(location = 5) in uint id;
+layout(location = 5) in float rotation;
+layout(location = 6) in uint id;
 
 layout(location = 0) out vec2 f_uv;
 layout(location = 1) out vec4 f_mult;

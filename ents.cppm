@@ -115,7 +115,6 @@ namespace ents {
             break;
           }
           case miss:
-            // TODO: attack anim
             p_pos = ent->pos;
             sfxdefs::play(ent->name, "miss");
             break;
@@ -133,7 +132,9 @@ namespace ents {
       }
     });
     if (by.x != 0) ent->size.x = by.x;
-    ent->pos = p_pos;
+    if (ent->pos == p_pos) return res;
+
+    // TODO: feedback anim
     return res;
   }
 
