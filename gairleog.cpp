@@ -63,7 +63,6 @@ static void draw_console(auto & m) {
   });
 }
 
-// TODO: fix attack dice roll
 // TODO: increase enemy stats after each level
 // TODO: balance enemy health
 // TODO: some visual feedback for near-death
@@ -90,9 +89,14 @@ static void on_game_frame() {
   auto m = v::map();
   m->set_grid({ player_pos + 0.5f, 6 });
   splats::for_each([&](const auto & d) {
+    auto p = d.pos;
+    if (d.size.x < 1) p.x++;
+    if (d.size.y < 1) p.y++;
     m->push({
-      .pos = d.pos,
+      .pos = p,
+      .scale = d.size,
       .mult { 1, 1, 1, 0.3f },
+      .rotation = d.rotation,
       .id = d.sprite,
     });
   });

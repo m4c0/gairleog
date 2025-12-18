@@ -2,14 +2,16 @@ export module splats;
 import dotz;
 import file;
 import hai;
+import rng;
 import silog;
 import sprdef;
 
 namespace splats {
-  // TODO: rotate/flip for variety
   struct t {
     dotz::vec2 pos;
+    dotz::vec2 size { 1 };
     unsigned sprite;
+    float rotation = 0;
   };
   hai::varray<t> data { 128 };
 
@@ -18,6 +20,9 @@ namespace splats {
   }
 
   export void add(t t) {
+    t.rotation = rng::rand_i(0, 3) * 90;
+    t.size.x = rng::rand_i(0, 1) * 2 - 1;
+    t.size.y = rng::rand_i(0, 1) * 2 - 1;
     data.push_back_doubling(t);
   }
 
