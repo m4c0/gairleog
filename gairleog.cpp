@@ -63,9 +63,6 @@ static void draw_console(auto & m) {
   });
 }
 
-// TODO: add more food drops
-// TODO: setup enemy loot
-// TODO: tweak splat colours based on character
 // TODO: tweak attack sprite based on character
 // TODO: increase enemy stats after each level
 // TODO: balance enemy health

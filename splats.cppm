@@ -6,6 +6,7 @@ import silog;
 import sprdef;
 
 namespace splats {
+  // TODO: rotate/flip for variety
   struct t {
     dotz::vec2 pos;
     unsigned sprite;

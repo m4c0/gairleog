@@ -83,7 +83,7 @@
   (defense 4)
   (loot (fruit-loot))
   (atkspr fx/themed/fx_frost_bite)
-  (splatspr environment/props/splatter_red)
+  (splatspr environment/props/splatter_brown)
   (spr characters/demon_knight))
 
 (entdef dragon-drake
@@ -94,7 +94,7 @@
   (defense 4)
   (loot (fruit-loot))
   (atkspr fx/themed/fx_frost_bite)
-  (splatspr environment/props/splatter_red)
+  (splatspr environment/props/splatter_green)
   (spr characters/dragon_drake_red))
 
 (entdef dragon-hydra
@@ -105,7 +105,7 @@
   (defense 4)
   (loot (fruit-loot))
   (atkspr fx/themed/fx_frost_bite)
-  (splatspr environment/props/splatter_red)
+  (splatspr environment/props/splatter_green)
   (spr characters/dragon_hydra_blue))
 
 (entdef dragon-wyrm
@@ -116,7 +116,7 @@
   (defense 4)
   (loot (fruit-loot))
   (atkspr fx/themed/fx_frost_bite)
-  (splatspr environment/props/splatter_red)
+  (splatspr environment/props/splatter_green)
   (spr characters/dragon_wyrm_green))
 
 (entdef leech
@@ -137,6 +137,7 @@
   (defense 3)
   (loot (fruit-loot))
   (atkspr fx/themed/fx_frost_bite)
+  (splatspr environment/props/splatter_blue)
   (spr characters/beast_ooze_blue))
 
 (entdef slime
@@ -146,7 +147,7 @@
   (defense 0)
   (loot (fruit-loot))
   (atkspr fx/themed/fx_frost_bite)
-  (splatspr environment/props/splatter_red)
+  (splatspr environment/props/splatter_green)
   (spr characters/beast_slime_green))
 
 (entdef slime-big
@@ -156,7 +157,7 @@
   (defense 2)
   (loot (fruit-loot))
   (atkspr fx/themed/fx_frost_bite)
-  (splatspr environment/props/splatter_red)
+  (splatspr environment/props/splatter_green)
   (spr characters/beast_slime_green_large))
 
 (entdef snake
@@ -177,7 +178,7 @@
   (defense 2)
   (loot (fruit-loot))
   (atkspr fx/themed/fx_frost_bite)
-  (splatspr environment/props/splatter_red)
+  (splatspr environment/props/splatter_blue)
   (spr characters/spirit_will_o_the_wisp))
 
 (entdef spirit-faerie
@@ -187,7 +188,7 @@
   (defense 2)
   (loot (fruit-loot))
   (atkspr fx/fx_red_impact)
-  (splatspr environment/props/splatter_red)
+  (splatspr environment/props/splatter_blue)
   (spr characters/spirit_faerie))
 
 (entdef wolf
