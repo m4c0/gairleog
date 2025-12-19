@@ -86,7 +86,7 @@ static void on_frame() {
     }
   }
 
-  v::on_frame = [] {};
+  v::on_frame([] {});
 }
 
 static const node * load_room(const node * n, const node * const * aa, unsigned as) {
@@ -122,7 +122,7 @@ static void load(void *, const hai::cstr & src) try {
   ctx.fns["roomdefs"] = load_roomdefs;
   run<node>("roomdefs.lsp", src);
 
-  v::on_frame = on_frame;
+  v::on_frame(on_frame);
 } catch (const lispy::parser_error & e) {
   silog::error(lispy::to_file_err(e));
 }
@@ -183,7 +183,7 @@ static void on_save() {
 static constexpr auto cursor(int x, int y) {
   return [=] {
     cursor() = cursor() + dotz::ivec2 { x, y };
-    v::on_frame = on_frame;
+    v::on_frame(on_frame);
   };
 }
 const int i = [] {
@@ -199,21 +199,21 @@ const int i = [] {
   handle(KEY_DOWN, K_MINUS, [] {
     if (--save::current_stage < 1) save::current_stage = 1;
     glispy::reset();
-    v::on_frame = on_frame;
+    v::on_frame(on_frame);
   });
   handle(KEY_DOWN, K_EQUAL, [] {
     ++save::current_stage;
     glispy::reset();
-    v::on_frame = on_frame;
+    v::on_frame(on_frame);
   });
 
   handle(KEY_DOWN, K_TAB, [] {
     g_spr_id = theme_id;
-    if (!casein::keydown_repeating) v::on_frame = on_frame;
+    if (!casein::keydown_repeating) v::on_frame(on_frame);
   });
   handle(KEY_UP, K_TAB, [] {
     g_spr_id = font_id;
-    v::on_frame = on_frame;
+    v::on_frame(on_frame);
   });
 
   handle(KEY_DOWN, K_ENTER, on_save);
@@ -230,7 +230,7 @@ const int i = [] {
 
     auto [x, y] = cursor();
     g_table[y].data()[x] = c;
-    v::on_frame = on_frame;
+    v::on_frame(on_frame);
   });
 
   save::current_stage = 1;

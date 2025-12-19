@@ -40,13 +40,13 @@ static void on_frame() {
   map::build();
 
   load();
-  v::on_frame = [] {};
+  v::on_frame([] {});
 
   using namespace casein;
 
   handle(KEY_DOWN, K_TAB,   tick);
   handle(KEY_DOWN, K_SPACE, [] {
-    v::on_frame = on_frame;
+    v::on_frame(on_frame);
   });
 
   handle(KEY_DOWN, K_UP,    move(0, -1));
@@ -57,12 +57,12 @@ static void on_frame() {
   handle(KEY_DOWN, K_MINUS, [] {
     if (--save::current_stage < 1) save::current_stage = 1;
     glispy::reset();
-    v::on_frame = on_frame;
+    v::on_frame(on_frame);
   });
   handle(KEY_DOWN, K_EQUAL, [] {
     ++save::current_stage;
     glispy::reset();
-    v::on_frame = on_frame;
+    v::on_frame(on_frame);
   });
 }
 
@@ -71,7 +71,7 @@ const int i = [] {
     save::current_stage = 1;
     glispy::reset();
     res::load_all([] {
-      v::on_frame = on_frame;
+      v::on_frame(on_frame);
     });
   } catch (const lispy::parser_error & err) {
     silog::die("%s", lispy::to_file_err(err).begin());

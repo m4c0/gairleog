@@ -182,7 +182,7 @@ static void on_game_over() {
     using namespace casein;
     handle(KEY_DOWN, on_main_menu);
 
-    v::on_frame = do_game_over;
+    v::on_frame(do_game_over);
   });
 }
 
@@ -231,7 +231,7 @@ static void inv_setup() {
 static void on_inventory() {
   reset_keys();
 
-  v::on_frame = [] {
+  v::on_frame([] {
     if (g_sel == g_tgt_sel) inv_setup();
 
     auto font = sprdef::get("font").id;
@@ -338,7 +338,7 @@ static void on_inventory() {
     }
 
     draw_console(m);
-  };
+  });
 
   g_sel = 0;
 }
@@ -353,7 +353,7 @@ static constexpr const auto move(int dx, int dy) {
             enemies::tick();
             break;
           }
-          case exit: v::on_frame = on_exit; break;
+          case exit: v::on_frame(on_exit); break;
         }
       });
     } catch (const lispy::parser_error & e) {
@@ -367,7 +367,7 @@ static constexpr const auto move(int dx, int dy) {
 static void on_game() {
   reset_keys();
 
-  v::on_frame = on_game_frame;
+  v::on_frame(on_game_frame);
 
   using namespace casein;
   handle(KEY_DOWN, K_UP,    move(0, -1));
@@ -389,12 +389,12 @@ static void on_start() {
   inv::reset();
   console::reset();
   save::reset([] {
-    v::on_frame = on_start_level;
+    v::on_frame(on_start_level);
   });
 }
 #ifndef LECO_TARGET_WASM
 static void on_continue() {
-  v::on_frame = on_game;
+  v::on_frame(on_game);
 }
 #endif
 
@@ -424,7 +424,7 @@ static bool g_opt_clk = false;
 static void on_options() {
   menu(&g_opt_sel, &g_opt_clk);
 
-  v::on_frame = [] {
+  v::on_frame([] {
     auto m = v::map();
     m->set_grid({ {8,4}, 8 });
 
@@ -469,21 +469,21 @@ static void on_options() {
           audio::interrupt();
           sicfg::boolean("mute", !audio::enabled);
         }
-        if (menu_item("Back", [] {})) v::on_frame = do_main_menu;
+        if (menu_item("Back", [] {})) v::on_frame(do_main_menu);
       });
     });
 
     if (g_opt_sel < 0) g_opt_sel = id - 1;
     if (g_opt_sel >= id) g_opt_sel = 0;
     if (g_opt_clk) g_opt_clk = false;
-  };
+  });
 }
 #endif
 
 static void on_credits() {
   reset_keys();
 
-  v::on_frame = [] {
+  v::on_frame([] {
     auto m = v::map();
     m->set_grid({ 12, 12 });
 
@@ -516,7 +516,7 @@ static void on_credits() {
 #endif
       });
     });
-  };
+  });
 
   using namespace casein;
   handle(KEY_DOWN, K_ESCAPE, on_main_menu);
@@ -527,7 +527,7 @@ static bool g_menu_clk = false;
 static void do_main_menu() {
   menu(&g_menu_sel, &g_menu_clk);
 
-  v::on_frame = [] {
+  v::on_frame([] {
     auto m = v::map();
     m->set_grid({ {8,4}, 8 });
 
@@ -594,12 +594,12 @@ static void do_main_menu() {
     if (g_menu_sel < 0) g_menu_sel = id - 1;
     if (g_menu_sel >= id) g_menu_sel = 0;
     if (g_menu_clk) g_menu_clk = false;
-  };
+  });
 }
 static void on_init() {
   reset_keys();
 
-  v::on_frame = [] {};
+  v::on_frame([] {});
 
   save::prefetch([] {
     g_menu_sel = save::exists() ? 1 : 0;
@@ -609,7 +609,7 @@ static void on_init() {
 static void on_main_menu() {
   reset_keys();
 
-  v::on_frame = [] {};
+  v::on_frame([] {});
 
   if (g_menu_sel == 0) g_menu_sel = 1;
 

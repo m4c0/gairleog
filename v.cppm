@@ -32,12 +32,14 @@ namespace v {
   };
   export hai::uptr<mapper> map();
 
-  export hai::fn<void> on_frame = [] {};
+  using fn_t = void (*)(void);
+  _Atomic(fn_t) frame_fn = [] {};
+  export void on_frame(fn_t fn) { frame_fn = fn; }
 
   void call_on_frame() {
     auto g = glispy::frame_guard();
     try {
-      on_frame();
+      frame_fn();
     } catch (const lispy::parser_error & err) {
       silog::die("%s", lispy::to_file_err(err).begin());
     } catch (const hai::cstr & err) {
