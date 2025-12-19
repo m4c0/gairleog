@@ -14,8 +14,6 @@ import silog;
 import sires;
 import v;
 
-static constexpr inline const auto mp = &mainloop::push;
-
 static void load() {
   auto m = v::map();
   m->set_grid({ 16, 16 });
@@ -46,41 +44,36 @@ static void on_frame() {
   v::on_frame([] {});
 
   using namespace casein;
-
-  handle(KEY_DOWN, K_TAB,   tick);
-  handle(KEY_DOWN, K_SPACE, [] {
+  v::on(KEY_DOWN, K_TAB,   tick);
+  v::on(KEY_DOWN, K_SPACE, [] {
     v::on_frame(on_frame);
   });
 
-  handle(KEY_DOWN, K_UP,    move(0, -1));
-  handle(KEY_DOWN, K_DOWN,  move(0, +1));
-  handle(KEY_DOWN, K_LEFT,  move(-1, 0));
-  handle(KEY_DOWN, K_RIGHT, move(+1, 0));
+  v::on(KEY_DOWN, K_UP,    move(0, -1));
+  v::on(KEY_DOWN, K_DOWN,  move(0, +1));
+  v::on(KEY_DOWN, K_LEFT,  move(-1, 0));
+  v::on(KEY_DOWN, K_RIGHT, move(+1, 0));
 
-  handle(KEY_DOWN, K_MINUS, [] {
+  v::on(KEY_DOWN, K_MINUS, [] {
     if (--save::current_stage < 1) save::current_stage = 1;
     glispy::reset();
     v::on_frame(on_frame);
   });
-  handle(KEY_DOWN, K_EQUAL, [] {
+  v::on(KEY_DOWN, K_EQUAL, [] {
     ++save::current_stage;
     glispy::reset();
     v::on_frame(on_frame);
   });
 }
 
-static void on_static_init() try {
+static void on_static_init() {
   save::current_stage = 1;
   glispy::reset();
   res::load_all([] {
     v::on_frame(on_frame);
   });
-} catch (const lispy::parser_error & err) {
-  silog::die("%s", lispy::to_file_err(err).begin());
-} catch (const hai::cstr & e) {
-  silog::die("%s", e.begin());
 }
 const int i = [] {
-  mp(on_static_init);
+  v::push(on_static_init);
   return 0;
 }();

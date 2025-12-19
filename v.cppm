@@ -9,8 +9,10 @@
 
 export module v;
 export import :objects;
+import casein;
 import glispy;
 import hai;
+import mainloop;
 import silog;
 
 namespace v {
@@ -45,5 +47,30 @@ namespace v {
     } catch (const hai::cstr & err) {
       silog::die("%s", err.begin());
     }
+  }
+
+  export void on(auto e, auto k, mainloop::fn_t fn) {
+    casein::handle(e, k, mainloop::wrap([fn] mutable {
+      auto g = glispy::frame_guard();
+      try {
+        fn();
+      } catch (const lispy::parser_error & err) {
+        silog::die("%s", lispy::to_file_err(err).begin());
+      } catch (const hai::cstr & err) {
+        silog::die("%s", err.begin());
+      }
+    }));
+  }
+  export void push(auto && fn) {
+    mainloop::push([fn] {
+      auto g = glispy::frame_guard();
+      try {
+        fn();
+      } catch (const lispy::parser_error & err) {
+        silog::die("%s", lispy::to_file_err(err).begin());
+      } catch (const hai::cstr & err) {
+        silog::die("%s", err.begin());
+      }
+    });
   }
 }

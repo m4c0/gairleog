@@ -1,11 +1,16 @@
 export module mainloop;
+import hai;
 import mtx;
 import silog;
 import sith;
 
 export namespace mainloop {
-  using fn_t = void (*)(void);
+  using fn_t = hai::fn<void>;
   void push(fn_t);
+
+  inline auto wrap(fn_t f) {
+    return [=] { push(f); };
+  }
 }
 
 module : private;
@@ -23,7 +28,7 @@ static mainloop::fn_t take() {
   mtx::lock l { &g_mtx };
   if (g_next_prod == g_next_cons) {
     g_cond_cons.wait(&l, 1);
-    if (g_next_prod == g_next_cons) return nullptr;
+    if (g_next_prod == g_next_cons) return {};
   }
 
   auto res = g_queue[g_next_cons];
