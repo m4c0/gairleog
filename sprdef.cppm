@@ -18,11 +18,7 @@ namespace sprdef {
   export bool has(jute::view key) { return map().has(key); }
   export const auto & get(jute::view key) { return map()[key]; }
 
-  struct custom_node : lispy::node {
-    int spr_id;
-    bool valid;
-  };
-  static auto sprdef(const lispy::node * n, const custom_node * def, const custom_node * val, const custom_node * qty) {
+  static auto sprdef(const lispy::node * n, const lispy::node * def, const lispy::node * val, const lispy::node * qty) {
     if (!lispy::is_atom(def)) lispy::erred(def, "def name must be an atom");
     map()[def->atom] = {
       .id  = lispy::to_u32(val),
@@ -31,9 +27,9 @@ namespace sprdef {
     return n;
   }
   export void run(jute::view fname, jute::view src) {
-    lispy::temp_arena<custom_node> a {};
+    lispy::temp_arena<lispy::node> a {};
     lispy::temp_frame ctx {};
-    ctx.fns["sprdef"] = lispy::experimental::wrap<custom_node, sprdef>;
-    lispy::run<custom_node>(fname, src);
+    ctx.fns["sprdef"] = lispy::experimental::wrap<lispy::node, sprdef>;
+    lispy::run<lispy::node>(fname, src);
   }
 }
