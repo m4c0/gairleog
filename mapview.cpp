@@ -36,18 +36,15 @@ static constexpr const auto move(int dx, int dy) {
     });
   };
 }
-static void on_frame() {
+static void on_refresh() {
   ents::reset();
   map::build();
 
   load();
-  v::on_frame([] {});
 
   using namespace casein;
   v::on(KEY_DOWN, K_TAB,   tick);
-  v::on(KEY_DOWN, K_SPACE, [] {
-    v::on_frame(on_frame);
-  });
+  v::on(KEY_DOWN, K_SPACE, on_refresh);
 
   v::on(KEY_DOWN, K_UP,    move(0, -1));
   v::on(KEY_DOWN, K_DOWN,  move(0, +1));
@@ -57,21 +54,19 @@ static void on_frame() {
   v::on(KEY_DOWN, K_MINUS, [] {
     if (--save::current_stage < 1) save::current_stage = 1;
     glispy::reset();
-    v::on_frame(on_frame);
+    on_refresh();
   });
   v::on(KEY_DOWN, K_EQUAL, [] {
     ++save::current_stage;
     glispy::reset();
-    v::on_frame(on_frame);
+    on_refresh();
   });
 }
 
 static void on_static_init() {
   save::current_stage = 1;
   glispy::reset();
-  res::load_all([] {
-    v::on_frame(on_frame);
-  });
+  res::load_all(on_refresh);
 }
 const int i = [] {
   v::push(on_static_init);
