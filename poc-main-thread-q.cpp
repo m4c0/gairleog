@@ -13,6 +13,7 @@ static fn_t g_queue[queue_size] {};
 static int g_next_prod = 0;
 static int g_next_cons = 0;
 static mtx::mutex g_mtx {};
+static mtx::cond g_cond {};
 
 static fn_t take() {
   mtx::lock l { &g_mtx };
@@ -20,13 +21,18 @@ static fn_t take() {
 
   auto res = g_queue[g_next_cons];
   g_next_cons = (g_next_cons + 1) % queue_size;
+  g_cond.wake_one();
   return res;
 }
 static void push(fn_t fn) {
   mtx::lock l { &g_mtx };
 
   auto p = (g_next_prod + 1) % queue_size;
-  if (p == g_next_cons) silog::die("event thread overrun");
+  if (p == g_next_cons) {
+    silog::warning("event thread queue is full - this might slow down the whole app");
+    g_cond.wait(&l, 1);
+    if (p == g_next_cons) silog::die("event thread became too busy - bailing out");
+  }
 
   g_queue[g_next_prod] = fn;
   g_next_prod = p;
