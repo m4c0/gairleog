@@ -6,12 +6,15 @@ import ents;
 import errs;
 import glispy;
 import hai;
+import mainloop;
 import map;
 import res;
 import save;
 import silog;
 import sires;
 import v;
+
+static constexpr inline const auto mp = &mainloop::push;
 
 static void load() {
   auto m = v::map();
@@ -66,17 +69,18 @@ static void on_frame() {
   });
 }
 
+static void on_static_init() try {
+  save::current_stage = 1;
+  glispy::reset();
+  res::load_all([] {
+    v::on_frame(on_frame);
+  });
+} catch (const lispy::parser_error & err) {
+  silog::die("%s", lispy::to_file_err(err).begin());
+} catch (const hai::cstr & e) {
+  silog::die("%s", e.begin());
+}
 const int i = [] {
-  try {
-    save::current_stage = 1;
-    glispy::reset();
-    res::load_all([] {
-      v::on_frame(on_frame);
-    });
-  } catch (const lispy::parser_error & err) {
-    silog::die("%s", lispy::to_file_err(err).begin());
-  } catch (const hai::cstr & e) {
-    silog::die("%s", e.begin());
-  }
+  mp(on_static_init);
   return 0;
 }();
