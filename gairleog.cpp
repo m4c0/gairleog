@@ -388,7 +388,9 @@ static void on_start() {
   lootfx::reset();
   inv::reset();
   console::reset();
-  v::on_frame = on_start_level;
+  save::reset([] {
+    v::on_frame = on_start_level;
+  });
 }
 #ifndef LECO_TARGET_WASM
 static void on_continue() {
