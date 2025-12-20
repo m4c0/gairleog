@@ -398,7 +398,7 @@ static void on_continue() {
 }
 #endif
 
-template<int * Opt, bool * Clk>
+template<_Atomic(int) * Opt, _Atomic(bool) * Clk>
 static void setup_menu_keys() {
   reset_keys();
 
@@ -420,8 +420,8 @@ static void setup_menu_keys() {
 static void do_main_menu();
 
 #ifndef LECO_TARGET_WASM
-static int g_opt_sel = 0;
-static bool g_opt_clk = false;
+static _Atomic(int)  g_opt_sel = 0;
+static _Atomic(bool) g_opt_clk = false;
 static void on_options() {
   setup_menu_keys<&g_opt_sel, &g_opt_clk>();
 
@@ -523,8 +523,8 @@ static void on_credits() {
   handle(KEY_DOWN, K_ESCAPE, on_main_menu);
 }
 
-static int g_menu_sel = 0;
-static bool g_menu_clk = false;
+static _Atomic(int)  g_menu_sel = 0;
+static _Atomic(bool) g_menu_clk = false;
 static void do_main_menu() {
   setup_menu_keys<&g_menu_sel, &g_menu_clk>();
 
