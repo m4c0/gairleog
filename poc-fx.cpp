@@ -17,24 +17,21 @@ static void on_frame() {
   fx::draw(m);
 }
 
+static void on_res_loaded() {
+  using namespace casein;
+  v::on<KEY_DOWN, K_SPACE, [] {
+    float x = rng::rand(6) - 3.f;
+    float y = rng::rand(6) - 3.f;
+    fx::add({x, y}, sprdef::get("fx/fx_blue_bite"));
+  }>();
+
+  v::on_frame(on_frame);
+}
+
 const int i = [] {
-  try {
-    rng::seed();
-
-    res::load_all([] {
-      using namespace casein;
-      handle(KEY_DOWN, K_SPACE, [] {
-        float x = rng::rand(6) - 3.f;
-        float y = rng::rand(6) - 3.f;
-        fx::add({x, y}, sprdef::get("fx/fx_blue_bite"));
-      });
-
-      v::on_frame(on_frame);
-    });
-  } catch (const lispy::parser_error & err) {
-    silog::die("%s", lispy::to_file_err(err).begin());
-  } catch (const hai::cstr & e) {
-    silog::die("%s", e.begin());
-  }
+  rng::seed();
+  v::push<[] {
+    res::load_all(on_res_loaded);
+  }>();
   return 0;
 }();

@@ -181,44 +181,42 @@ static void on_save() {
 }
 
 static constexpr auto cursor(int x, int y) {
-  return [=] {
-    cursor() = cursor() + dotz::ivec2 { x, y };
-    v::on_frame(on_frame);
-  };
+  cursor() = cursor() + dotz::ivec2 { x, y };
+  v::on_frame(on_frame);
 }
 const int i = [] {
   using namespace casein;
-  handle(KEY_DOWN, K_LBRACKET, [] { ed(0xFFFF)--; on_init(); });
-  handle(KEY_DOWN, K_RBRACKET, [] { ed(0xFFFF)++; on_init(); });
+  v::on<KEY_DOWN, K_LBRACKET, [] { ed(0xFFFF)--; on_init(); }>();
+  v::on<KEY_DOWN, K_RBRACKET, [] { ed(0xFFFF)++; on_init(); }>();
 
-  handle(KEY_DOWN, K_UP,    cursor( 0, -1));
-  handle(KEY_DOWN, K_DOWN,  cursor( 0, +1));
-  handle(KEY_DOWN, K_LEFT,  cursor(-1,  0));
-  handle(KEY_DOWN, K_RIGHT, cursor(+1,  0));
+  v::on<KEY_DOWN, K_UP,    [] { cursor( 0, -1); }>();
+  v::on<KEY_DOWN, K_DOWN,  [] { cursor( 0, +1); }>();
+  v::on<KEY_DOWN, K_LEFT,  [] { cursor(-1,  0); }>();
+  v::on<KEY_DOWN, K_RIGHT, [] { cursor(+1,  0); }>();
 
-  handle(KEY_DOWN, K_MINUS, [] {
+  v::on<KEY_DOWN, K_MINUS, [] {
     if (--save::current_stage < 1) save::current_stage = 1;
     glispy::reset();
     v::on_frame(on_frame);
-  });
-  handle(KEY_DOWN, K_EQUAL, [] {
+  }>();
+  v::on<KEY_DOWN, K_EQUAL, [] {
     ++save::current_stage;
     glispy::reset();
     v::on_frame(on_frame);
-  });
+  }>();
 
-  handle(KEY_DOWN, K_TAB, [] {
+  v::on<KEY_DOWN, K_TAB, [] {
     g_spr_id = theme_id;
     if (!casein::keydown_repeating) v::on_frame(on_frame);
-  });
-  handle(KEY_UP, K_TAB, [] {
+  }>();
+  v::on<KEY_UP, K_TAB, [] {
     g_spr_id = font_id;
     v::on_frame(on_frame);
-  });
+  }>();
 
-  handle(KEY_DOWN, K_ENTER, on_save);
+  v::on<KEY_DOWN, K_ENTER, on_save>();
 
-  handle(KEY_DOWN, [] {
+  v::on<KEY_DOWN, [] {
     auto g = glispy::frame_guard();
     temp_arena<node> a {};
     temp_frame ctx {};
@@ -231,10 +229,12 @@ const int i = [] {
     auto [x, y] = cursor();
     g_table[y].data()[x] = c;
     v::on_frame(on_frame);
-  });
+  }>();
 
-  save::current_stage = 1;
-  glispy::reset();
-  res::load_all(on_init);
+  v::push<[] {
+    save::current_stage = 1;
+    glispy::reset();
+    res::load_all(on_init);
+  }>();
   return 0;
 }();
