@@ -20,3 +20,8 @@
 (def mute           "") ; Any invalid file suffices
 (def menu-selection (player-walk))
 (def menu-click     (player-attack))
+
+(def bat-attack       01_Bat_cry_short_a.wav)
+(def wolf-attack      05_Wolf_growl_1.wav)
+(def slime-attack     01_Slime_damage.wav)
+(def slime-big-attack 01_Slime_damage.wav)
