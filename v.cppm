@@ -13,6 +13,7 @@ import casein;
 import glispy;
 import hai;
 import mainloop;
+import mtx;
 import silog;
 
 namespace v {
@@ -38,7 +39,10 @@ namespace v {
   _Atomic(fn_t) frame_fn = [] {};
   export void on_frame(fn_t fn) { frame_fn = fn; }
 
+  mtx::mutex mutex {};
+
   void call_on_frame() {
+    mtx::lock l { &mutex };
     auto g = glispy::frame_guard();
     try {
       frame_fn();
@@ -51,6 +55,7 @@ namespace v {
 
   export template<mainloop::fn_t Fn> inline void push() {
     mainloop::push([] {
+      mtx::lock l { &mutex };
       auto g = glispy::frame_guard();
       try {
         Fn();
