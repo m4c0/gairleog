@@ -5,12 +5,8 @@ import silog;
 import sith;
 
 export namespace mainloop {
-  using fn_t = hai::fn<void>;
+  using fn_t = void (*)(void);
   void push(fn_t);
-
-  inline auto wrap(fn_t f) {
-    return [=] { push(f); };
-  }
 }
 
 module : private;

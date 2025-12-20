@@ -49,28 +49,21 @@ namespace v {
     }
   }
 
-  export void on(auto e, auto k, mainloop::fn_t fn) {
-    casein::handle(e, k, mainloop::wrap([fn] mutable {
+  export template<mainloop::fn_t Fn> inline void push() {
+    mainloop::push([] {
       auto g = glispy::frame_guard();
       try {
-        fn();
-      } catch (const lispy::parser_error & err) {
-        silog::die("%s", lispy::to_file_err(err).begin());
-      } catch (const hai::cstr & err) {
-        silog::die("%s", err.begin());
-      }
-    }));
-  }
-  export void push(auto && fn) {
-    mainloop::push([fn] {
-      auto g = glispy::frame_guard();
-      try {
-        fn();
+        Fn();
       } catch (const lispy::parser_error & err) {
         silog::die("%s", lispy::to_file_err(err).begin());
       } catch (const hai::cstr & err) {
         silog::die("%s", err.begin());
       }
     });
+  }
+  export
+  template<casein::event_type E, casein::keys K, mainloop::fn_t Fn>
+  inline void on() {
+    casein::handle(E, K, [] { push<Fn>(); });
   }
 }

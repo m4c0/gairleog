@@ -398,22 +398,23 @@ static void on_continue() {
 }
 #endif
 
-static void setup_menu_keys(int * opt, bool * clk) {
+template<int * Opt, bool * Clk>
+static void setup_menu_keys() {
   reset_keys();
 
   using namespace casein;
-  v::on(KEY_DOWN, K_UP, [opt] {
-    (*opt)--;
+  v::on<KEY_DOWN, K_UP, [] {
+    (*Opt)--;
     sfxdefs::play("menu_selection");
-  });
-  v::on(KEY_DOWN, K_DOWN, [opt] {
-    (*opt)++;
+  }>();
+  v::on<KEY_DOWN, K_DOWN, [] {
+    (*Opt)++;
     sfxdefs::play("menu_selection");
-  });
-  v::on(KEY_DOWN, K_ENTER, [clk] {
-    *clk = true;
+  }>();
+  v::on<KEY_DOWN, K_ENTER, [] {
+    *Clk = true;
     sfxdefs::play("menu_click");
-  });
+  }>();
 }
 
 static void do_main_menu();
@@ -422,7 +423,7 @@ static void do_main_menu();
 static int g_opt_sel = 0;
 static bool g_opt_clk = false;
 static void on_options() {
-  setup_menu_keys(&g_opt_sel, &g_opt_clk);
+  setup_menu_keys<&g_opt_sel, &g_opt_clk>();
 
   v::on_frame([] {
     auto m = v::map();
@@ -525,7 +526,7 @@ static void on_credits() {
 static int g_menu_sel = 0;
 static bool g_menu_clk = false;
 static void do_main_menu() {
-  setup_menu_keys(&g_menu_sel, &g_menu_clk);
+  setup_menu_keys<&g_menu_sel, &g_menu_clk>();
 
   v::on_frame([] {
     auto m = v::map();
@@ -571,12 +572,12 @@ static void do_main_menu() {
         hbox([&] {});
 
         using namespace casein;
-        if (menu_item(true,           "New Game")) v::push(on_start);
+        if (menu_item(true,           "New Game")) v::push<on_start>();
 #ifndef LECO_TARGET_WASM
-        if (menu_item(save::exists(), "Continue")) v::push(on_continue);
-        if (menu_item(true,           "Options"))  v::push(on_options);
+        if (menu_item(save::exists(), "Continue")) v::push<on_continue>();
+        if (menu_item(true,           "Options"))  v::push<on_options>();
 #endif
-        if (menu_item(true,           "Credits"))  v::push(on_credits);
+        if (menu_item(true,           "Credits"))  v::push<on_credits>();
 #ifndef LECO_TARGET_WASM
         if (menu_item(true,           "Exit"))     interrupt(IRQ_QUIT);
 #endif
@@ -607,7 +608,7 @@ static void on_main_menu() {
 }
 
 const int i = [] {
-  v::push([] {
+  v::push<[] {
     audio::init();
     audio::enabled = !sicfg::boolean("mute");
     casein::fullscreen = !sicfg::boolean("windowed");
@@ -617,6 +618,6 @@ const int i = [] {
         do_main_menu();
       });
     });
-  });
+  }>();
   return 0;
 }();
