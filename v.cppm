@@ -71,4 +71,9 @@ namespace v {
   inline void on() {
     casein::handle(E, K, [] { push<Fn>(); });
   }
+  export
+  template<casein::event_type E, mainloop::fn_t Fn>
+  inline void on() {
+    casein::handle(E, [] { push<Fn>(); });
+  }
 }

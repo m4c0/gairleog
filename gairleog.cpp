@@ -180,7 +180,7 @@ static void on_game_over() {
 
   save::reset([] {
     using namespace casein;
-    handle(KEY_DOWN, on_main_menu);
+    v::on<KEY_DOWN, on_main_menu>();
 
     v::on_frame(do_game_over);
   });
@@ -213,20 +213,20 @@ static void on_inv_use() try {
 static void inv_setup() {
   using namespace casein;
 
-  handle(KEY_DOWN, K_ESCAPE, on_game);
-  handle(KEY_DOWN, K_TAB,    on_game);
-  handle(KEY_DOWN, K_UP,   [] {
+  v::on<KEY_DOWN, K_ESCAPE, on_game>();
+  v::on<KEY_DOWN, K_TAB,    on_game>();
+  v::on<KEY_DOWN, K_UP, [] {
     reset_keys();
     g_sel_anim = {};
     g_tgt_sel = (g_sel == 0) ? 0 : g_sel - 1;
-  });
-  handle(KEY_DOWN, K_DOWN, [] {
+  }>();
+  v::on<KEY_DOWN, K_DOWN, [] {
     reset_keys();
     g_sel_anim = {};
     g_tgt_sel = (g_sel < inv::size() - 1) ? g_sel + 1 : g_sel;
-  });
+  }>();
 
-  handle(KEY_DOWN, K_ENTER, on_inv_use);
+  v::on<KEY_DOWN, K_ENTER, on_inv_use>();
 }
 static void on_inventory() {
   reset_keys();
@@ -344,24 +344,13 @@ static void on_inventory() {
 }
 
 static constexpr const auto move(int dx, int dy) {
-  return [=] {
-    try {
-      ents::foreach({ .player = true }, [&](auto & p) {
-        switch (ents::move(&p, { dx, dy })) {
-          using enum ents::move_outcome;
-          case none: {
-            enemies::tick();
-            break;
-          }
-          case exit: v::on_frame(on_exit); break;
-        }
-      });
-    } catch (const lispy::parser_error & e) {
-      silog::die("%s", lispy::to_file_err(e).begin());
-    } catch (const hai::cstr & msg) {
-      silog::die("Error: %s", msg.begin());
+  ents::foreach({ .player = true }, [&](auto & p) {
+    switch (ents::move(&p, { dx, dy })) {
+      using enum ents::move_outcome;
+      case none: enemies::tick(); break;
+      case exit: v::on_frame(on_exit); break;
     }
-  };
+  });
 }
 
 static void on_game() {
@@ -370,16 +359,16 @@ static void on_game() {
   v::on_frame(on_game_frame);
 
   using namespace casein;
-  handle(KEY_DOWN, K_UP,    move(0, -1));
-  handle(KEY_DOWN, K_DOWN,  move(0, +1));
-  handle(KEY_DOWN, K_LEFT,  move(-1, 0));
-  handle(KEY_DOWN, K_RIGHT, move(+1, 0));
+  v::on<KEY_DOWN, K_UP,    [] { move(0, -1); }>();
+  v::on<KEY_DOWN, K_DOWN,  [] { move(0, +1); }>();
+  v::on<KEY_DOWN, K_LEFT,  [] { move(-1, 0); }>();
+  v::on<KEY_DOWN, K_RIGHT, [] { move(+1, 0); }>();
 
-  handle(KEY_DOWN, K_TAB,    on_inventory);
+  v::on<KEY_DOWN, K_TAB, on_inventory>();
 #ifndef LECO_TARGET_WASM
-  handle(KEY_DOWN, K_ESCAPE, [] {
+  v::on<KEY_DOWN, K_ESCAPE, [] {
     save::store(on_main_menu);
-  });
+  }>();
 #endif
 }
 
@@ -520,7 +509,7 @@ static void on_credits() {
   });
 
   using namespace casein;
-  handle(KEY_DOWN, K_ESCAPE, on_main_menu);
+  v::on<KEY_DOWN, K_ESCAPE, on_main_menu>();
 }
 
 static _Atomic(int)  g_menu_sel = 0;
