@@ -51,9 +51,17 @@ namespace sfxdefs {
     });
   }
 
+  hashley::niamh g_warns { 127 };
   export void play(sv name) {
     auto n = g_ctx->defs[name];
-    if (!n) return;
+    if (!n) {
+      auto & warned = g_warns[name];
+      if (warned) return;
+
+      warned = 1;
+      silog::warning(jute::fmt<"sound file does not exist: %s">(name));
+      return;
+    }
 
     using namespace lispy;
     
