@@ -3,6 +3,7 @@ import dotz;
 import ents;
 import entdefs;
 import hai;
+import metric;
 import rng;
 import roomdefs;
 import save;
@@ -84,6 +85,9 @@ namespace {
 void make_walls(map::t & map);
 
 void map::build() {
+  static metric m { "map::build" };
+  auto tm = m();
+
   // Hack to use heap for this. On WASM this overflows the stack.
   struct mapt { map::t data; };
   auto dptr = hai::uptr<mapt>::make();
