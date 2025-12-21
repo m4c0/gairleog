@@ -78,11 +78,11 @@ namespace ents {
   static bool process_poison(t * ent) {
     if (!ent->poison) return true;
 
-    auto [decay, dok] = jute::to_u32(strings::get("poison-decay"));
+    auto [decay, dok] = jute::to_u32(strings::eval_standalone("poison-decay"));
     if (!dok) silog::die("poison-decay must yield integers");
     ent->poison -= dotz::min(ent->poison, decay);
 
-    auto [hit, hok] = jute::to_u32(strings::get("poison-hit"));
+    auto [hit, hok] = jute::to_u32(strings::eval_standalone("poison-hit"));
     if (!hok) silog::die("poison-hit must yield integers");
     return take_hit(ent, hit);
   }

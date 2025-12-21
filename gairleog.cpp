@@ -134,7 +134,8 @@ static void on_start_level() try {
   silog::die("%s", err.begin());
 }
 static void on_exit() try {
-  switch (lootfx::apply_by_name(strings::get("level-exit-fx"))) {
+  // TODO: migrate level-exit-fx to lootfx.lsp
+  switch (lootfx::apply_by_name(strings::eval_standalone("level-exit-fx"))) {
     using enum lootfx::outcome;
     case death: return on_game_over();
     case none: return on_start_level();
@@ -176,7 +177,7 @@ static void do_game_over() {
 }
 static void on_game_over() {
   reset_keys();
-  g_game_over_msg = strings::get("gameover-sub");
+  g_game_over_msg = strings::eval_standalone("gameover-sub");
 
   save::reset([] {
     using namespace casein;

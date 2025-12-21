@@ -27,7 +27,7 @@ void make_walls(map::t & map) {
     auto g = glispy::frame_guard();
     lispy::temp_frame ctx {};
     ctx.ptrs["map-coord"] = &p;
-    auto spr_name = strings::get("wall-sprites");
+    auto spr_name = strings::eval("wall-sprites");
     return sprdef::get(spr_name).id;
   };
 

@@ -29,3 +29,11 @@ public:
     return timer { &m_acc };
   }
 };
+
+// Usage:
+//
+// metric m { "name" };
+// void potentially_slow_method() {
+//   auto t = m();
+//   ...
+// }

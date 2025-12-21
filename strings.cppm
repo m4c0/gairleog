@@ -21,11 +21,13 @@ namespace strings {
     });
   }
 
-  export jute::heap get(sv key) {
+  export jute::heap eval(sv key) {
     frame_guard c { g_ctx };
     temp_frame ctx {};
-    temp_arena<node> mem {};
-
     return jute::heap { eval<node>(context()->def(key))->atom };
+  }
+  export jute::heap eval_standalone(sv key) {
+    temp_arena<node> mem {};
+    return eval(key);
   }
 }
