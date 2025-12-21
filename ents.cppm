@@ -166,8 +166,8 @@ namespace ents {
     for (const auto & d : g_data) {
       w->write(static_cast<data>(d));
       w->write(static_cast<entdefs::data>(d));
-      w->write(d.name);
       w->write(d.loot);
+      w->write(d.name);
     }
   }
 }
