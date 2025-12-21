@@ -111,7 +111,6 @@
 (entdef dragon-wyrm
   (solid)
   (enemy)
-  (poison)
   (strength 4)
   (defense 4)
   (loot (fruit-loot))
