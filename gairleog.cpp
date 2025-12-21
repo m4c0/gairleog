@@ -394,15 +394,15 @@ static void setup_menu_keys() {
   using namespace casein;
   v::on<KEY_DOWN, K_UP, [] {
     (*Opt)--;
-    sfxdefs::play("menu_selection");
+    sfxdefs::play("menu-selection");
   }>();
   v::on<KEY_DOWN, K_DOWN, [] {
     (*Opt)++;
-    sfxdefs::play("menu_selection");
+    sfxdefs::play("menu-selection");
   }>();
   v::on<KEY_DOWN, K_ENTER, [] {
     *Clk = true;
-    sfxdefs::play("menu_click");
+    sfxdefs::play("menu-click");
   }>();
 }
 
