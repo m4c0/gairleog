@@ -26,7 +26,6 @@ namespace roomdefs {
   };
   hai::varray<def> rooms { 128 };
 
-  auto arena = lispy::arena<lispy::node>::make();
   export void run(jute::view src) {
     lispy::temp_frame ctx {};
     ctx.fns["roomdefs"] = [](auto n, auto aa, auto as) -> const lispy::node * {
@@ -60,6 +59,7 @@ namespace roomdefs {
       return n;
     };
 
+    static auto arena = lispy::arena<lispy::node>::make();
     auto a = arena->use();
     lispy::run<lispy::node>("roomdefs.lsp", src);
   }
