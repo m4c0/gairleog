@@ -23,6 +23,7 @@ static void load() {
       .id = d.sprite,
     });
   });
+  v::on_frame([] {});
 }
 static void tick() {
   enemies::tick();
@@ -38,7 +39,7 @@ static void on_refresh() {
   ents::reset();
   map::build();
 
-  load();
+  v::on_frame(load);
 
   using namespace casein;
   v::on<KEY_DOWN, K_TAB,   tick>();
