@@ -25,14 +25,10 @@ static void on_frame() {
 }
 
 const int i = [] {
-  try {
+  v::push<[] {
     res::load_all([] {
       v::on_frame(on_frame);
     });
-  } catch (const lispy::parser_error & err) {
-    silog::die("%s", lispy::to_file_err(err).begin());
-  } catch (const hai::cstr & e) {
-    silog::die("%s", e.begin());
-  }
+  }>();
   return 0;
 }();

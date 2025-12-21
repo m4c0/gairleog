@@ -4,6 +4,7 @@ import ents;
 import map;
 
 namespace pathing {
+  // TODO: increase this based on game stage or enemy type
   static constexpr const auto max_detection_steps = 15;
   struct node {
     dotz::ivec2 step {};
