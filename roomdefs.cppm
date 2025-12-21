@@ -89,7 +89,7 @@ namespace roomdefs {
         if (!n) lispy::erred(row, "unknown def", x);
 
         auto cell = lispy::eval<lispy::node>(n);
-        if (!lispy::is_atom(cell)) lispy::erred(row, "cell must be a sprite name", x);
+        if (!lispy::is_atom(cell)) lispy::erred(row, "cell must be an entdef name", x);
         if (!entdefs::has(cell->atom)) lispy::erred(cell, "unknown entdef");
         data[y * d->w + x] = entdefs::get(cell->atom);
       }
