@@ -111,7 +111,7 @@ static void on_game_frame() {
       .pos = p,
       .scale = d.size,
       .mult { l * c, 1.f },
-      .rotation = rot * 7.f,
+      .rotation = d.rotation + rot * 7.f,
       .id = d.sprite,
     });
   });

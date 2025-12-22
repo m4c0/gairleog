@@ -18,7 +18,7 @@ namespace {
     if (!n) return false;
     for (auto y = aa.y; y <= bb.y; y++) {
       for (auto x = aa.x; x <= bb.x; x++) {
-        map[y][x] = { n->fn(*n, x - aa.x, y - aa.y) };
+        map[y][x] = n->fn(*n, x - aa.x, y - aa.y);
       }
     }
 

@@ -20,6 +20,7 @@ static void load() {
   ents::foreach([&](const auto & d) {
     m->push({
       .pos = d.pos,
+      .rotation = static_cast<float>(d.rotation),
       .id = d.sprite,
     });
   });

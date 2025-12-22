@@ -29,6 +29,13 @@ namespace entdefs {
     if (!entdefs::has(n->atom)) lispy::erred(n, "unknown entdef");
     return jute::heap { n->atom };
   }
+  static unsigned to_rotation(const lispy::node * n) {
+    auto i = lispy::to_i(n);
+    switch (i) {
+      case 0: case 90: case 180: case 270: return i;
+      default: lispy::erred(n, "rotation can only be 0, 90, 180 or 270");
+    }
+  }
   static unsigned to_spr(const lispy::node * name) {
     if (!lispy::is_atom(name)) lispy::erred(name, "spr expects atom as name");
     if (!sprdef::has(name->atom)) lispy::erred(name, "invalid sprite name");
@@ -67,6 +74,7 @@ namespace entdefs {
     ctx->fns["life"]     = conv<&t::max_life,      to_life>;
     ctx->fns["light"]    = conv<&t::light,         to_light>;
     ctx->fns["loot"]     = conv<&t::loot,          to_loot>;
+    ctx->fns["rotation"] = conv<&t::rotation,      to_rotation>;
     ctx->fns["splatspr"] = conv<&t::splat_sprite,  to_spr_pair>;
     ctx->fns["spr"]      = conv<&t::sprite,        to_spr>;
     ctx->fns["strength"] = conv<&t::strength,      to_i>;
