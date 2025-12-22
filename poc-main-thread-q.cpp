@@ -1,4 +1,6 @@
+#ifndef LECO_TARGET_WASM
 #pragma leco tool
+#endif
 
 import mainloop;
 import silog;
