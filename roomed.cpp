@@ -71,6 +71,7 @@ static void on_frame() {
   auto m = v::map();
   m->set_grid({ p, g_grid_size + 1 });
 
+  // TODO: bring rotation logic from roomdefs
   for (auto y = 0; y < g_table.size(); y++) {
     auto & row = g_table[y];
     for (auto x = 0; x < row.size(); x++) {
@@ -127,9 +128,8 @@ static void load(void *, const hai::cstr & src) try {
   silog::error(lispy::to_file_err(e));
 }
 
-static auto mem = arena<node>::make();
 static void on_init() {
-  auto a = mem->use();
+  temp_arena<node> a {};
   sires::read("roomdefs.lsp", nullptr, load);
 }
 
