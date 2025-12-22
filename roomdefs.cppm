@@ -102,7 +102,7 @@ namespace roomdefs {
         .d = traits::move(data),
       }}; 
       if (ew == r->w) {
-        switch (rng::rand(3)) {
+        switch (rng::rand_i(3)) {
           case 0:
             r->fn = [](auto t, auto x, auto y) {
               return t.d[y * t.w + x];
@@ -125,7 +125,7 @@ namespace roomdefs {
             break;
         }
       } else {
-        switch (rng::rand(3)) {
+        switch (rng::rand_i(3)) {
           case 0:
             r->fn = [](auto t, auto y, auto x) {
               return t.d[y * t.w + x];
