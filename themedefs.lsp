@@ -39,6 +39,7 @@
 
 (def i statue)
 (def o (random spiderweb spiderweb empty))
+(def 0 (random spiderweb-180 spiderweb-180 empty))
 (def l pillar)
 (def m mannequin)
 (def - empty)

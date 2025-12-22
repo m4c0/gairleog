@@ -317,6 +317,11 @@
   (rotates)
   (spr environment/props/spiderweb))
 
+(entdef spiderweb-180
+  (rotates)
+  (rotation 180)
+  (spr environment/props/spiderweb))
+
 (entdef statue
   (solid)
   (ceramic)

@@ -65,7 +65,7 @@ namespace roomdefs {
   }
 
   static constexpr entdefs::t rot(entdefs::t val, int rot) {
-    if (val.flags.rotates) val.rotation = rot;
+    if (val.flags.rotates) val.rotation += rot;
     return val;
   }
 
