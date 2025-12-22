@@ -38,7 +38,7 @@
 ))
 
 (def i statue)
-(def o (random spiderweb empty))
+(def o (random spiderweb spiderweb empty))
 (def l pillar)
 (def m mannequin)
 (def - empty)
@@ -51,11 +51,11 @@
 (def e (per-level-enemy))
 (random
   (do
-    (def . (random grass empty empty))
+    (def . (random grass grass empty))
     (def , (random boulder boulder))
     )
   (do
-    (def . (random grass empty empty))
+    (def . (random grass grass empty))
     (def , (random tree tree tree_withered))
     )
   (do
