@@ -23,6 +23,7 @@ namespace entdefs {
   };
   static_assert(sizeof(u32flags) == 4);
 
+  // TODO: add rotation (ex: web)
   export struct data {
     float        light         {};
     unsigned     max_life      {};
