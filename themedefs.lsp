@@ -50,15 +50,18 @@
 (def w wall)
 
 (random
+  (do (def / empty)  (def \ empty))
+  (do (def / statue) (def \ pillar))
+  (do (def / pillar) (def \ statue))
   (do
-    (def / statue)
-    (def \ pillar)
-    )
-  (do
-    (def / pillar)
-    (def \ statue)
-    )
+    (def / empty)
+    (random (def \ pillar) (def \ statue))
   )
+  (do
+    (def \ empty)
+    (random (def / pillar) (def / statue))
+  )
+)
 
 (def e (per-level-enemy))
 (random
