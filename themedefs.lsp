@@ -49,6 +49,17 @@
 (def q door)
 (def w wall)
 
+(random
+  (do
+    (def / statue)
+    (def \ pillar)
+    )
+  (do
+    (def / pillar)
+    (def \ statue)
+    )
+  )
+
 (def e (per-level-enemy))
 (random
   (do
