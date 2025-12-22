@@ -80,15 +80,14 @@ namespace roomdefs {
     auto * d = opts[rng::rand(opts.size())];
 
     lispy::temp_arena<lispy::node> a {};
+    lispy::temp_frame ctx {};
+    themedefs::eval();
 
     hai::array<entdefs::t> data { d->w * d->h };
     for (auto y = 0; y < d->h; y++) {
       auto row = d->rows[y];
       for (auto x = 0; x < d->w; x++) {
         auto c = row->atom.subview(x, 1).middle;
-
-        lispy::temp_frame ctx {};
-        themedefs::eval();
 
         auto n = lispy::context()->def(c);
         if (!n) lispy::erred(row, "unknown def", x);
