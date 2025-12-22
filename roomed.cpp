@@ -47,7 +47,6 @@ static unsigned theme_id(char c) {
   auto g = glispy::frame_guard();
   temp_arena<node> a {};
   temp_frame ctx {};
-  themedefs::eval();
 
   jute::view str { &c, 1 };
   auto d = context()->def(str);
@@ -63,6 +62,11 @@ static unsigned theme_id(char c) {
 static unsigned (*g_spr_id)(char) = font_id;
 
 static void on_frame() {
+  auto g = glispy::frame_guard();
+  temp_arena<node> a {};
+  temp_frame ctx {};
+  themedefs::eval();
+
   dotz::vec2 p {
     (g_table[0].size() + 0.5f) / 2.0f,
     (g_table.size() + 0.5f) / 2.0f,
