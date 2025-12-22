@@ -64,6 +64,11 @@ namespace roomdefs {
     lispy::run<lispy::node>("roomdefs.lsp", src);
   }
 
+  static constexpr entdefs::t rot(entdefs::t val, int rot) {
+    if (val.flags.rotates) val.rotation = rot;
+    return val;
+  }
+
   export hai::sptr<t> for_size(unsigned ew, unsigned eh) {
     hai::varray<const def *> opts { rooms.size() };
     for (auto & d : rooms) {
@@ -110,17 +115,17 @@ namespace roomdefs {
             break;
           case 1:
             r->fn = [](auto t, auto x, auto y) {
-              return t.d[y * t.w + (t.w - x - 1)];
+              return rot(t.d[y * t.w + (t.w - x - 1)], 270);
             };
             break;
           case 2:
             r->fn = [](auto t, auto x, auto y) {
-              return t.d[(t.h - y - 1) * t.w + x];
+              return rot(t.d[(t.h - y - 1) * t.w + x], 90);
             };
             break;
           case 3:
             r->fn = [](auto t, auto x, auto y) {
-              return t.d[(t.h - y - 1) * t.w + (t.w - x - 1)];
+              return rot(t.d[(t.h - y - 1) * t.w + (t.w - x - 1)], 180);
             };
             break;
         }
@@ -128,17 +133,17 @@ namespace roomdefs {
         switch (rng::rand_i(3)) {
           case 0:
             r->fn = [](auto t, auto y, auto x) {
-              return t.d[y * t.w + x];
+              return rot(t.d[y * t.w + x], 180);
             };
             break;
           case 1:
             r->fn = [](auto t, auto y, auto x) {
-              return t.d[y * t.w + (t.w - x - 1)];
+              return rot(t.d[y * t.w + (t.w - x - 1)], 270);
             };
             break;
           case 2:
             r->fn = [](auto t, auto y, auto x) {
-              return t.d[(t.h - y - 1) * t.w + x];
+              return rot(t.d[(t.h - y - 1) * t.w + x], 90);
             };
             break;
           case 3:
