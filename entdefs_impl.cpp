@@ -78,6 +78,7 @@ namespace entdefs {
     ctx->fns["food"]        = set<{ .food        = true }>;
     ctx->fns["player"]      = set<{ .player      = true }>;
     ctx->fns["poison"]      = set<{ .poison      = true }>;
+    ctx->fns["rotates"]     = set<{ .rotates     = true }>;
     ctx->fns["solid"]       = set<{ .solid       = true }>;
     ctx->fns["wall"]        = set<{ .wall        = true }>;
     return ctx;

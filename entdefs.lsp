@@ -282,6 +282,7 @@
   ))
 
 (entdef lilypad
+  (rotates)
   (random
     (spr environment/props/lilypad1)
     (spr environment/props/lilypad2)
@@ -312,7 +313,9 @@
   (life 10)
   (spr environment/props/pillar))
 
-(entdef spiderweb (spr environment/props/spiderweb))
+(entdef spiderweb
+  (rotates)
+  (spr environment/props/spiderweb))
 
 (entdef statue
   (solid)
