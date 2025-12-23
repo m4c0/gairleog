@@ -17,7 +17,6 @@ struct ext_stuff {};
 namespace v {
   static int g_program;
   static int g_u_aspect;
-  static int g_u_uni;
   static bool g_loaded = false;
 
   void setup() {
@@ -40,9 +39,7 @@ namespace v {
     blend_func(ONE, ONE_MINUS_SRC_ALPHA);
 
     g_u_aspect = get_uniform_location(p, "pc.aspect");
-    g_u_uni = get_uniform_block_index(p, "uni");
-    auto u_tex = get_uniform_location(p, "tex");
-    uniform1i(u_tex, 0); 
+    uniform1i(get_uniform_location(p, "tex"), 0); 
 
     vv::as()->buffer.bind();
 
