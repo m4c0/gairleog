@@ -39,7 +39,6 @@ namespace v {
     blend_func(ONE, ONE_MINUS_SRC_ALPHA);
 
     g_u_aspect = get_uniform_location(p, "pc.aspect");
-    uniform1i(get_uniform_location(p, "tex"), 0); 
 
     vv::as()->buffer.bind();
 
