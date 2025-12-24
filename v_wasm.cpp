@@ -16,19 +16,6 @@ struct ext_stuff : v::base_extent_stuff {
   ext_stuff() : v::base_extent_stuff { vv::as() } {}
 };
 
-namespace v {
-  static int g_u_aspect;
-
-  void render() {
-    using namespace gelo;
-
-    uniform1f(g_u_aspect, casein::window_size.x / casein::window_size.y);
-
-    vv::ss()->clear({ 0, 0, 0, 1 });
-    vv::as()->ppl.cmd_draw();
-  }
-}
-
 struct mapper : v::mapper {
   decltype(vv::as()->ppl.map()) m = vv::as()->ppl.map();
 
@@ -45,16 +32,21 @@ hai::uptr<v::mapper> v::map() {
 static void on_frame() {
   vv::ss()->frame([] {
     if (!vv::as()->ppl.program()) return;
+    using namespace gelo;
 
     static bool loaded = false;
+    static int u_aspect;
     if (!loaded) {
-      using namespace gelo;
       auto p = vv::as()->ppl.program();
-      v::g_u_aspect = get_uniform_location(p, "pc.aspect");
+      u_aspect = get_uniform_location(p, "pc.aspect");
       loaded = true;
     }
     v::call_on_frame();
-    v::render();
+
+    uniform1f(u_aspect, casein::window_size.x / casein::window_size.y);
+
+    vv::ss()->clear({ 0, 0, 0, 1 });
+    vv::as()->ppl.cmd_draw();
   });
 }
 
