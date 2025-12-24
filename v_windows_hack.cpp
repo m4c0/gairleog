@@ -5,7 +5,7 @@ import :tools;
 // weird reason
 
 v::base_app_stuff::vtx_attrs_t v::base_app_stuff::vertex_attributes() {
-  return decltype(buffer)::vertex_attributes(
+  return clay::buffer<sprite>::vertex_attributes(
       &v::sprite::pos,
       &v::sprite::scale,
       &v::sprite::mult,

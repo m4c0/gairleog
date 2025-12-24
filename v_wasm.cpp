@@ -15,38 +15,7 @@ struct app_stuff : v::base_app_stuff {};
 struct ext_stuff {};
 
 namespace v {
-  static int g_program;
   static int g_u_aspect;
-  static bool g_loaded = false;
-
-  void setup() {
-    using namespace gelo;
-
-    auto p = g_program = create_program();
-    attach_shader(p, vv::as()->vert.id());
-    attach_shader(p, vv::as()->frag.id());
-
-    link_program(p);
-    if (!get_program_parameter_b(p, LINK_STATUS)) {
-      char buf[1024] {};
-      get_program_info_log(p, buf, sizeof(buf) - 1);
-      silog::log(silog::error, "Error linking program:\n%s", buf);
-    }
-
-    use_program(p);
-
-    enable(BLEND);
-    blend_func(ONE, ONE_MINUS_SRC_ALPHA);
-
-    g_u_aspect = get_uniform_location(p, "pc.aspect");
-
-    vv::as()->buffer.bind();
-
-    auto attrs = vv::as()->vertex_attributes();
-    for (auto i = 0; i < attrs.size(); i++) attrs[i](i);
-
-    g_loaded = true;
-  }
 
   void render() {
     using namespace gelo;
@@ -56,12 +25,12 @@ namespace v {
     clear_color(0, 0, 0, 1);
     clear(COLOR_BUFFER_BIT);
     viewport(0, 0, casein::window_size.x, casein::window_size.y);
-    draw_arrays_instanced(TRIANGLE_STRIP, 0, 4, vv::as()->buffer.count());
+    vv::as()->ppl.cmd_draw();
   }
 }
 
 struct mapper : v::mapper {
-  decltype(vv::as()->buffer.map()) m = vv::as()->buffer.map();
+  decltype(vv::as()->ppl.map()) m = vv::as()->ppl.map();
 
   void add_sprite(v::sprite s) {
     s.grid_size.y *= -1;
@@ -74,9 +43,15 @@ hai::uptr<v::mapper> v::map() {
 }
 
 static void on_frame() {
-  if (!*vv::as()) return;
-  if (!v::g_program) v::setup();
-  if (!v::g_loaded) return; // Last resource to load
+  if (!vv::as()->ppl.program()) return;
+
+  static bool loaded = false;
+  if (!loaded) {
+    using namespace gelo;
+    auto p = vv::as()->ppl.program();
+    v::g_u_aspect = get_uniform_location(p, "pc.aspect");
+    loaded = true;
+  }
   v::call_on_frame();
   v::render();
 }
