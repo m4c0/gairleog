@@ -1,5 +1,5 @@
 #ifndef LECO_TARGET_WASM
-#pragma leco test
+#pragma leco pretest
 #include <stdio.h>
 #endif
 
@@ -19,7 +19,7 @@ static unsigned next_id = 1;
 static FILE * lsp;
 
 static void process(jute::view file) {
-  auto fid = file.split('/').after.rsplit('.').before;
+  auto fid = file.split('/').after.split('/').after.rsplit('.').before;
   auto id = next_id;
   auto img = stbi::load(jojo::slurp(file));
   auto data = reinterpret_cast<const stbi::pixel *>(*img.data);
@@ -88,7 +88,7 @@ int main() {
   fputln(lsp, "(sprdef empty 0 0)");
 
   ::lsp = lsp;
-  recurse("PixeLike2_AssetPack");
+  recurse("assets/PixeLike2_AssetPack");
 
   embed_font();
 
