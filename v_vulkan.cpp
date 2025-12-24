@@ -15,9 +15,8 @@ import wagen;
 struct app_stuff : v::base_app_stuff {
 };
 
-struct ext_stuff {
-  vee::render_pass rp = voo::single_att_render_pass(vv::as()->dq);
-  voo::swapchain_and_stuff sw { vv::as()->dq, *rp };
+struct ext_stuff : v::base_extent_stuff {
+  ext_stuff() : v::base_extent_stuff { vv::as() } {}
 };
 
 struct mapper : v::mapper {
@@ -31,23 +30,15 @@ hai::uptr<v::mapper> v::map() {
 
 // TODO: fix a rare sync issue between player and rest of game
 static void on_frame() try {
-  vv::ss()->sw.acquire_next_image();
-  vv::ss()->sw.queue_one_time_submit([] {
+  vv::ss()->frame([] {
     v::call_on_frame();
 
+    auto rp = vv::ss()->clear({ 0, 0, 0, 1 });
+
     auto cb = vv::ss()->sw.command_buffer();
-    auto ext = vv::ss()->sw.extent();
-
     float pc = vv::ss()->sw.aspect();
-
-    auto rp = vv::ss()->sw.cmd_render_pass({
-      .clear_colours { vee::clear_colour(0, 0, 0, 1) },
-    });
-    vee::cmd_set_viewport(cb, ext);
-    vee::cmd_set_scissor(cb, ext);
     vv::as()->ppl.cmd_draw(cb, &pc);
   });
-  vv::ss()->sw.queue_present();
 } catch (const lispy::parser_error & e) {
   silog::die("%s", lispy::to_file_err(e).begin());
 } catch (const hai::cstr & msg) {

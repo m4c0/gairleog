@@ -12,7 +12,9 @@ using namespace jute::literals;
 
 struct app_stuff : v::base_app_stuff {};
 // TODO: fix wasm bug when resizing window
-struct ext_stuff {};
+struct ext_stuff : v::base_extent_stuff {
+  ext_stuff() : v::base_extent_stuff { vv::as() } {}
+};
 
 namespace v {
   static int g_u_aspect;
@@ -22,9 +24,7 @@ namespace v {
 
     uniform1f(g_u_aspect, casein::window_size.x / casein::window_size.y);
 
-    clear_color(0, 0, 0, 1);
-    clear(COLOR_BUFFER_BIT);
-    viewport(0, 0, casein::window_size.x, casein::window_size.y);
+    vv::ss()->clear({ 0, 0, 0, 1 });
     vv::as()->ppl.cmd_draw();
   }
 }
@@ -43,17 +43,19 @@ hai::uptr<v::mapper> v::map() {
 }
 
 static void on_frame() {
-  if (!vv::as()->ppl.program()) return;
+  vv::ss()->frame([] {
+    if (!vv::as()->ppl.program()) return;
 
-  static bool loaded = false;
-  if (!loaded) {
-    using namespace gelo;
-    auto p = vv::as()->ppl.program();
-    v::g_u_aspect = get_uniform_location(p, "pc.aspect");
-    loaded = true;
-  }
-  v::call_on_frame();
-  v::render();
+    static bool loaded = false;
+    if (!loaded) {
+      using namespace gelo;
+      auto p = vv::as()->ppl.program();
+      v::g_u_aspect = get_uniform_location(p, "pc.aspect");
+      loaded = true;
+    }
+    v::call_on_frame();
+    v::render();
+  });
 }
 
 const int i = [] {
