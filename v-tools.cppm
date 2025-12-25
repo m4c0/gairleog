@@ -6,12 +6,12 @@ import hai;
 import sv;
 import vinyl;
 
-struct app_stuff;
-struct ext_stuff;
-using vv = vinyl::v<app_stuff, ext_stuff>;
-
 namespace v {
-  struct base_app_stuff : vinyl::base_app_stuff {
+  struct app_stuff;
+  struct extent_stuff;
+  using vv = vinyl::v<app_stuff, extent_stuff>;
+
+  struct app_stuff : vinyl::base_app_stuff {
     clay::das::pipeline<sprite> ppl {{
       .app = this,
       .shader = "gairleog",
@@ -21,12 +21,12 @@ namespace v {
       .push_constant = clay::vertex_push_constant<float>(),
     }};
 
-    base_app_stuff() : vinyl::base_app_stuff("Gairleog") {}
+    app_stuff() : vinyl::base_app_stuff("Gairleog") {}
 
     using vtx_attrs_t = clay::vertex_attributes_t;
     static vtx_attrs_t vertex_attributes(); 
   };
-  struct base_extent_stuff : vinyl::base_extent_stuff {
-    base_extent_stuff(base_app_stuff * app) : vinyl::base_extent_stuff { app } {}
+  struct extent_stuff : vinyl::base_extent_stuff {
+    extent_stuff() : vinyl::base_extent_stuff { vv::as() } {}
   };
 }
