@@ -1,26 +1,27 @@
-(fx Heal (do
+(fxdef Heal (do
   (heal)
   (random (heal) ())
   (random (heal) ())))
 
-(fx Damage (damage))
-(fx Defence (defence))
-(fx Strength (strength))
+(fxdef Damage (damage))
+(fxdef Defence (defence))
+(fxdef Strength (strength))
 
-(fx "+1Str -1Def" (do (strength) (wither)))
-(fx "+1Def -1Str" (do (weakness) (defence)))
+(fxdef "+1Str -1Def" (do (strength) (wither)))
+(fxdef "+1Def -1Str" (do (weakness) (defence)))
 
-(fx "+1 Life" (maxlife))
+(fxdef "+1 Life" (maxlife))
 
-(fx Poison (do
+(fxdef Poison (do
   (poison)
   (random (poison) ())
   (random (poison) ())))
 
-(fx "Random" (random
+(fxdef "Random" (random
   (heal)
   (defence)
   (strength)
   (maxlife)
 ))
 
+(def level-exit-fx ("Random"))

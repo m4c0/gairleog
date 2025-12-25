@@ -8,16 +8,14 @@ using namespace lispy;
 using namespace lispy::experimental;
 
 namespace lootfx {
-  hashley::fin<const node *> nodes { 127 };
   hai::varray<jute::view> keys { 128 };
 
   auto src_arena = arena<node>::make();
   auto src_ctx = [] {
     auto ctx = frame::make();
-    ctx->fns["fx"] = [](auto n, auto aa, auto as) -> const node * {
+    ctx->fns["fxdef"] = [](auto n, auto aa, auto as) -> const node * {
       if (as != 2) erred(n, "expecting a name and an action");
-      if (!is_atom(aa[0])) erred(aa[0], "expecting an atom as the name");
-      nodes[aa[0]->atom] = aa[1];
+      context()->def(to_atom(aa[0]), aa[1]);
       keys.push_back_doubling(aa[0]->atom);
       return n;
     };
@@ -44,10 +42,10 @@ namespace lootfx {
     return n;
   }
   void apply(jute::view key, action_list_t * r) {
-    if (!nodes.has(key)) {
-      silog::die("missing lootfx [%s]", key.cstr().begin());
-      return;
-    }
+    auto n = src_ctx->defs[key];
+    if (!n) silog::die("missing lootfx [%s]", key.cstr().begin());
+
+    frame_guard sc { src_ctx };
 
     lispy::temp_frame ctx {};
     ctx.ptrs["list"] = r;
@@ -59,7 +57,7 @@ namespace lootfx {
     ctx.fns["strength"] = act<action::strength>;
     ctx.fns["weakness"] = act<action::weakness>;
     ctx.fns["wither"]   = act<action::wither>;
-    auto _ = eval<node>(nodes[key]);
+    auto _ = eval<node>(n);
   }
 
   void read(file::reader * r) {
