@@ -3,10 +3,7 @@ import :tools;
 import casein;
 import gelo;
 
-void v::mapper::add_sprite(v::sprite s) {
-  s.grid_size.y *= -1;
-  m += s;
-}
+void v::mapper::normalise(v::sprite & s) { s.grid_size.y *= -1; }
 
 void v::extent_stuff::render() {
   using namespace gelo;

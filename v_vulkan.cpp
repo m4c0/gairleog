@@ -1,7 +1,7 @@
 module v;
 import :tools;
 
-void v::mapper::add_sprite(v::sprite s) { m += s; }
+void v::mapper::normalise(v::sprite & s) {}
 
 // TODO: fix a rare sync issue between player and rest of game
 void v::extent_stuff::render() {

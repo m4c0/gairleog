@@ -25,13 +25,14 @@ namespace v {
     decltype(v::vv::as()->ppl.map()) m = v::vv::as()->ppl.map();
     grid m_grid {};
 
-    void add_sprite(sprite s);
+    void normalise(sprite & s);
 
   public:
     void set_grid(grid g) { m_grid = g; }
     void push(sprite s) { 
       static_cast<grid &>(s) = m_grid;
-      add_sprite(s);
+      normalise(s);
+      m += s;
     }
   };
   export hai::uptr<mapper> map() { return hai::uptr { new mapper {} }; }
