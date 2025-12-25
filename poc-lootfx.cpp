@@ -1,4 +1,6 @@
+#ifndef LECO_TARGET_WASM
 #pragma leco test
+#endif
 
 import glispy;
 import hai;
