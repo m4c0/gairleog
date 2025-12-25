@@ -37,22 +37,20 @@ namespace lootfx {
     lispy::run<node>("lootfx.lsp", src);
   }
 
-  static action_list_t * current;
   template<action A>
   static const node * act(const node * n, const node * const * aa, unsigned as) {
     if (as != 0) erred(n, "expecting no parameter");
-    current->push_back(A);
+    static_cast<action_list_t *>(context()->ptr("list"))->push_back(A);
     return n;
   }
   void apply(jute::view key, action_list_t * r) {
     if (!nodes.has(key)) {
-      silog::errorf("missing lootfx [%s]", key.cstr().begin());
+      silog::die("missing lootfx [%s]", key.cstr().begin());
       return;
     }
 
-    current = r;
-
     lispy::temp_frame ctx {};
+    ctx.ptrs["list"] = r;
     ctx.fns["damage"]   = act<action::damage>;
     ctx.fns["defence"]  = act<action::defence>;
     ctx.fns["heal"]     = act<action::heal>;

@@ -5,6 +5,7 @@ import hai;
 import jojo;
 import lootfx;
 import print;
+import silog;
 
 // Mostly testing lisp syntax
 int main() try {
@@ -45,5 +46,7 @@ int main() try {
   return 2;
 } catch (death) {
   return 3;
+} catch (...) {
+  return 4;
 }
 
