@@ -8,36 +8,33 @@ using namespace lispy;
 using namespace lispy::experimental;
 
 namespace lootfx {
-  struct {
-    jute::heap src {};
-    hashley::fin<const node *> nodes { 127 };
-    hai::varray<jute::view> keys { 128 };
-    hai::uptr<arena<node>> arena {};
-  } data {};
+  hashley::fin<const node *> nodes { 127 };
+  hai::varray<jute::view> keys { 128 };
+
+  auto src_arena = arena<node>::make();
+  auto src_ctx = [] {
+    auto ctx = frame::make();
+    ctx->fns["fx"] = [](auto n, auto aa, auto as) -> const node * {
+      if (as != 2) erred(n, "expecting a name and an action");
+      if (!is_atom(aa[0])) erred(aa[0], "expecting an atom as the name");
+      nodes[aa[0]->atom] = aa[1];
+      keys.push_back_doubling(aa[0]->atom);
+      return n;
+    };
+    return ctx;
+  }();
 
   void reset() {
     for (auto & m : map) m = {};
 
     rest.truncate(0);
-    for (auto k : data.keys) rest.push_back_doubling(jute::heap { k });
+    for (auto k : keys) rest.push_back_doubling(jute::heap { k });
   }
 
   void run(jute::view src) {
-    data = {
-      .src = jute::heap { src },
-      .arena = arena<node>::make(),
-    };
-    auto a = data.arena->use();
-
-    lispy::temp_frame ctx {};
-    ctx.fns["fx"] = [](auto n, auto aa, auto as) -> const node * {
-      if (as != 2) erred(n, "expecting a name and an action");
-      if (!is_atom(aa[0])) erred(aa[0], "expecting an atom as the name");
-      data.nodes[aa[0]->atom] = aa[1];
-      data.keys.push_back_doubling(aa[0]->atom);
-      return n;
-    };
-    lispy::run<node>("lootfx.lsp", data.src);
+    auto a = src_arena->use();
+    frame_guard ctx { src_ctx };
+    lispy::run<node>("lootfx.lsp", src);
   }
 
   static action_list_t * current;
@@ -48,7 +45,7 @@ namespace lootfx {
     return n;
   }
   void apply(jute::view key, action_list_t * r) {
-    if (!data.nodes.has(key)) return;
+    if (!nodes.has(key)) return;
     current = r;
 
     lispy::temp_frame ctx {};
@@ -60,7 +57,7 @@ namespace lootfx {
     ctx.fns["strength"] = act<action::strength>;
     ctx.fns["weakness"] = act<action::weakness>;
     ctx.fns["wither"]   = act<action::wither>;
-    auto _ = eval<node>(data.nodes[key]);
+    auto _ = eval<node>(nodes[key]);
   }
 
   void read(file::reader * r) {
