@@ -133,8 +133,7 @@ static void on_start_level() try {
   silog::die("%s", err.begin());
 }
 static void on_exit() try {
-  // TODO: migrate level-exit-fx to lootfx.lsp
-  switch (lootfx::apply_by_name(strings::eval_standalone("level-exit-fx"))) {
+  switch (lootfx::apply_by_name("level-exit-fx")) {
     using enum lootfx::outcome;
     case death: return on_game_over();
     case none: return on_start_level();
