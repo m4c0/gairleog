@@ -108,7 +108,7 @@ static const node * load_room(const node * n, const node * const * aa, unsigned 
     if (len0 == -1) len0 = len;
     else if (len != len0) err(aa[i], "all rows must have the same length");
 
-    g_table[i] = (aa[i]->atom).cstr();
+    g_table[i] = (*aa[i]->atom).cstr();
   }
   g_grid_size = static_cast<float>(dotz::max(as, len0)) / 2;
   return n;

@@ -87,7 +87,7 @@ namespace roomdefs {
     for (auto y = 0; y < d->h; y++) {
       auto row = d->rows[y];
       for (auto x = 0; x < d->w; x++) {
-        auto c = row->atom.subview(x, 1).middle;
+        auto c = (*row->atom).subview(x, 1).middle;
 
         auto n = lispy::context()->def(c);
         if (!n) lispy::erred(row, "unknown def", x);
