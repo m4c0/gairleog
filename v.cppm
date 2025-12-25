@@ -78,3 +78,19 @@ namespace v {
     casein::handle(E, [] { push<Fn>(); });
   }
 }
+
+module : private;
+
+const int i = [] {
+  v::vv::setup([] {
+    v::vv::ss()->frame([] {
+      if (!v::vv::as()->ppl) return;
+
+      v::call_on_frame();
+
+      auto rp = v::vv::ss()->clear({ 0, 0, 0, 1 });
+      v::vv::ss()->render();
+    });
+  });
+  return 0;
+}();

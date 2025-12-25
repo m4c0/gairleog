@@ -29,5 +29,7 @@ namespace v {
 
   struct extent_stuff : vinyl::base_extent_stuff {
     extent_stuff() : vinyl::base_extent_stuff { vv::as() } {}
+
+    void render();
   };
 }
