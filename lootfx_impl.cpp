@@ -45,7 +45,11 @@ namespace lootfx {
     return n;
   }
   void apply(jute::view key, action_list_t * r) {
-    if (!nodes.has(key)) return;
+    if (!nodes.has(key)) {
+      silog::errorf("missing lootfx [%s]", key.cstr().begin());
+      return;
+    }
+
     current = r;
 
     lispy::temp_frame ctx {};
