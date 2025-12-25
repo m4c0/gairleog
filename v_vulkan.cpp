@@ -12,17 +12,10 @@ import vinyl;
 import voo;
 import wagen;
 
-struct mapper : v::mapper {
-  decltype(v::vv::as()->ppl.map()) m = v::vv::as()->ppl.map();
-
-  void add_sprite(v::sprite s) override { m += s; }
-};
-hai::uptr<v::mapper> v::map() {
-  return hai::uptr<v::mapper> { new ::mapper {} };
-}
+void v::mapper::add_sprite(v::sprite s) { m += s; }
 
 // TODO: fix a rare sync issue between player and rest of game
-static void on_frame() try {
+static void on_frame() {
   v::vv::ss()->frame([] {
     v::call_on_frame();
 
@@ -32,10 +25,6 @@ static void on_frame() try {
     float pc = v::vv::ss()->sw.aspect();
     v::vv::as()->ppl.cmd_draw(cb, &pc);
   });
-} catch (const lispy::parser_error & e) {
-  silog::die("%s", lispy::to_file_err(e).begin());
-} catch (const hai::cstr & msg) {
-  silog::die("Error: %s", msg.begin());
 }
 
 const int i = [] {

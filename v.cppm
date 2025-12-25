@@ -9,6 +9,7 @@
 
 export module v;
 export import :objects;
+import :tools;
 import casein;
 import glispy;
 import hai;
@@ -21,19 +22,19 @@ namespace v {
 
   export class mapper {
   protected:
+    decltype(v::vv::as()->ppl.map()) m = v::vv::as()->ppl.map();
     grid m_grid {};
 
-    virtual void add_sprite(sprite s) = 0;
+    void add_sprite(sprite s);
 
   public:
-    virtual ~mapper() {}
     void set_grid(grid g) { m_grid = g; }
     void push(sprite s) { 
       static_cast<grid &>(s) = m_grid;
       add_sprite(s);
     }
   };
-  export hai::uptr<mapper> map();
+  export hai::uptr<mapper> map() { return hai::uptr { new mapper {} }; }
 
   using fn_t = void (*)(void);
   _Atomic(fn_t) frame_fn = [] {};

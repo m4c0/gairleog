@@ -26,6 +26,7 @@ namespace v {
     using vtx_attrs_t = clay::vertex_attributes_t;
     static vtx_attrs_t vertex_attributes(); 
   };
+
   struct extent_stuff : vinyl::base_extent_stuff {
     extent_stuff() : vinyl::base_extent_stuff { vv::as() } {}
   };
