@@ -41,22 +41,27 @@ namespace lootfx {
     static_cast<action_list_t *>(context()->ptr("list"))->push_back(A);
     return n;
   }
+  auto act_ctx = [] {
+    auto ctx = frame::make();
+    ctx->fns["damage"]   = act<action::damage>;
+    ctx->fns["defence"]  = act<action::defence>;
+    ctx->fns["heal"]     = act<action::heal>;
+    ctx->fns["maxlife"]  = act<action::max_life>;
+    ctx->fns["poison"]   = act<action::poison>;
+    ctx->fns["strength"] = act<action::strength>;
+    ctx->fns["weakness"] = act<action::weakness>;
+    ctx->fns["wither"]   = act<action::wither>;
+    return ctx;
+  }();
   void apply(jute::view key, action_list_t * r) {
     auto n = src_ctx->defs[key];
     if (!n) silog::die("missing lootfx [%s]", key.cstr().begin());
 
     frame_guard sc { src_ctx };
+    frame_guard ac { act_ctx };
 
-    lispy::temp_frame ctx {};
+    temp_frame ctx {};
     ctx.ptrs["list"] = r;
-    ctx.fns["damage"]   = act<action::damage>;
-    ctx.fns["defence"]  = act<action::defence>;
-    ctx.fns["heal"]     = act<action::heal>;
-    ctx.fns["maxlife"]  = act<action::max_life>;
-    ctx.fns["poison"]   = act<action::poison>;
-    ctx.fns["strength"] = act<action::strength>;
-    ctx.fns["weakness"] = act<action::weakness>;
-    ctx.fns["wither"]   = act<action::wither>;
     auto _ = eval<node>(n);
   }
 
