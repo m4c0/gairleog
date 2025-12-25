@@ -59,6 +59,7 @@
 (entdef bat
   (solid)
   (enemy)
+  (life 1)
   (strength 1)
   (defense 0)
   (loot (fruit-loot))
@@ -69,6 +70,7 @@
 (entdef beholder
   (solid)
   (enemy)
+  (life (level))
   (strength 3)
   (defense 3)
   (loot (fruit-loot))
@@ -79,8 +81,9 @@
 (entdef demon
   (solid)
   (enemy)
-  (strength 5)
-  (defense 4)
+  (life (level))
+  (strength (level))
+  (defense (/ (level) 2))
   (loot (fruit-loot))
   (atkspr fx/fx_brown_slash)
   (splatspr environment/props/splatter_brown)
@@ -90,6 +93,7 @@
   (solid)
   (enemy)
   (poison)
+  (life (/ (level) 2))
   (strength 4)
   (defense 4)
   (loot (fruit-loot))
@@ -101,6 +105,7 @@
   (solid)
   (enemy)
   (poison)
+  (life (/ (level) 2))
   (strength 4)
   (defense 4)
   (loot (fruit-loot))
@@ -111,8 +116,9 @@
 (entdef dragon-wyrm
   (solid)
   (enemy)
-  (strength 4)
-  (defense 4)
+  (life (level))
+  (strength (/ (level) 2))
+  (defense (level))
   (loot (fruit-loot))
   (atkspr fx/fx_red_slash)
   (splatspr environment/props/splatter_green)
@@ -122,6 +128,7 @@
   (solid)
   (enemy)
   (poison)
+  (life (/ (level) 4))
   (strength 2)
   (defense 3)
   (loot (fruit-loot))
@@ -142,6 +149,7 @@
 (entdef slime
   (solid)
   (enemy)
+  (life 4)
   (strength 1)
   (defense 0)
   (loot (fruit-loot))
@@ -152,6 +160,7 @@
 (entdef slime-big
   (solid)
   (enemy)
+  (life 6)
   (strength 2)
   (defense 2)
   (loot (fruit-loot))
@@ -163,6 +172,7 @@
   (solid)
   (enemy)
   (poison)
+  (life 1)
   (strength 1)
   (defense 0)
   (loot (fruit-loot))
@@ -173,6 +183,7 @@
 (entdef spirit-wotw
   (solid)
   (enemy)
+  (life (/ (level) 3))
   (strength 3)
   (defense 2)
   (loot (fruit-loot))
@@ -183,6 +194,7 @@
 (entdef spirit-faerie
   (solid)
   (enemy)
+  (life (/ (level) 3))
   (strength 3)
   (defense 2)
   (loot (fruit-loot))
@@ -193,6 +205,7 @@
 (entdef wolf
   (solid)
   (enemy)
+  (life 2)
   (strength 1)
   (defense 0)
   (loot (fruit-loot))

@@ -63,7 +63,6 @@ static void draw_console(auto & m) {
   });
 }
 
-// TODO: increase enemy stats after each level
 // TODO: balance enemy health
 // TODO: some visual feedback for near-death
 // TODO: add sounds for more entities
