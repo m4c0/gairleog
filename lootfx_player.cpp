@@ -4,7 +4,7 @@ import ents;
 import lispy;
 
 lootfx::outcome lootfx::apply_on_player(const lootfx::action_list_t & actions) {
-  ents::t * player;
+  ents::t * player = nullptr;
   ents::foreach({ .player = true }, [&](auto & p) {
     player = &p;
   });
