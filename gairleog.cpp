@@ -365,7 +365,9 @@ static void on_game() {
   v::on<KEY_DOWN, K_RIGHT, [] { move(+1, 0); }>();
 
   v::on<KEY_DOWN, K_TAB, on_inventory>();
-#ifndef LECO_TARGET_WASM
+#ifdef LECO_TARGET_WASM
+  v::on<KEY_DOWN, K_ESCAPE, on_inventory>();
+#else
   v::on<KEY_DOWN, K_ESCAPE, [] {
     save::store(on_main_menu);
   }>();
