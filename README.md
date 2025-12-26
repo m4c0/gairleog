@@ -1,4 +1,4 @@
-# gairleog - Version 1.0.0-beta
+# gairleog - Version 1.0.0-rc
 
 Me having fun making an dungeon-crawler in C++.
 
@@ -10,21 +10,25 @@ Using assets from these packs:
 
 ## Change log
 
-### Version 1.0.0-beta
+### Version 1.0.0-rc
 
-Work in progress.
+Mostly done. Work on final balancing.
 
 Known issues:
 
 * Web: Audio does not sync properly on certain browsers (won't fix)
 * Errors in resource files are only found when they are accessed. This means
-  certain failures might only appear late in the game.
+  certain failures might only appear late in the game. (won't fix)
 
 Where:
 
 * "won't fix" = will not fix in this version
 * "todo" = will be fixed before release of this version
 * no tags = no defined priority
+
+### Version 1.0.0-beta
+
+Not released
 
 ### Version 1.0.0-alpha
 

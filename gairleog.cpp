@@ -32,7 +32,7 @@ import sv;
 import v;
 
 #define BLINK "\e[5m"
-#define VERSION "1.0.0-beta"
+#define VERSION "1.0.0-rc"
 
 static void reset_keys() {
   using namespace casein;
