@@ -1,4 +1,5 @@
 #pragma leco app
+#pragma leco display_name "Gairleog"
 
 import audio;
 import casein;
