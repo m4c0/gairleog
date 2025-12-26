@@ -139,6 +139,7 @@
 (entdef ooze
   (solid)
   (enemy)
+  (life 6)
   (strength 3)
   (defense 3)
   (loot (fruit-loot))
