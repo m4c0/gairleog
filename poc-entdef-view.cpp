@@ -30,12 +30,24 @@ int main() try {
 
   res::load_locally([] {});
 
-  save::current_stage = 1;
+  save::current_stage = 40;
   glispy::reset();
 
+  putln("                Lif Att Def");
   auto g = glispy::frame_guard();
   for (auto n : names) {
     auto t = entdefs::get(n);
+    if (!t.flags.enemy) continue;
+
+    auto name = (t.name + "               ").heap();
+    auto life = ("        " + jute::to_s(t.max_life)).heap();
+    auto attk = ("        " + jute::to_s(t.strength)).heap();
+    auto defn = ("        " + jute::to_s(t.defense)).heap();
+    putan(
+        (*name).subview(15).before,
+        (*life).subview(life.size() - 3).after,
+        (*attk).subview(attk.size() - 3).after,
+        (*defn).subview(defn.size() - 3).after);
   }
 } catch (const parser_error & e) {
   errln(to_file_err(e));
