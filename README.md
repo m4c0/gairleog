@@ -16,7 +16,10 @@ Mostly done. Work on final balancing.
 
 Known issues:
 
+* Certain monsters requires balancing (todo)
 * Web: Audio does not sync properly on certain browsers (won't fix)
+* Web: Window does not resize
+* Web: Arrow keys also scroll itch.io's window (todo)
 * Errors in resource files are only found when they are accessed. This means
   certain failures might only appear late in the game. (won't fix)
 

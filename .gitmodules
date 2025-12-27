@@ -2,3 +2,4 @@
 	path = assets
 	url = git@github.com:m4c0/asset-bucket.git
 	shallow = true
+	ignore = dirty
