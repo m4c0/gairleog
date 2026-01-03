@@ -28,6 +28,6 @@ void main() {
   vec2 p = (r_pos * scale + pos - grid_pos) / (grid_size * asp);
 
   gl_Position = vec4(p, 0, 1);
-  f_uv = v_pos + ivec2(id % 64, id / 64);
+  f_uv = ivec2(id % 64, id / 64) + v_pos * 0.999 + 0.001;
   f_mult = mult;
 }
